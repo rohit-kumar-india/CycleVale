@@ -1,0 +1,35 @@
+/* styles/Header.module.css */
+
+.header {
+    background-color: #333;
+    color: #fff;
+    padding: 1rem;
+  }
+  
+  .logo {
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+  
+  .navbar {
+    margin-top: 1rem;
+  }
+  
+  .navList {
+    display: flex;
+    list-style: none;
+  }
+  
+  .navList li {
+    margin-right: 1rem;
+  }
+  
+  .navList li a {
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .navList li a:hover {
+    text-decoration: underline;
+  }
+  
