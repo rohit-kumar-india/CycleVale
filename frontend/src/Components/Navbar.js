@@ -10,7 +10,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="bg-gradient-to-r from-yellow-300 to-orange-500">
+    <nav className="fixed top-0 w-full z-50 bg-gradient-to-r from-yellow-300 to-orange-500">
       <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
         {/* Mobile menu button */}
         <div className="md:hidden flex items-center">
@@ -23,7 +23,7 @@ const Navbar = () => {
         <div>
         <Link href="/" legacyBehavior>
             <a className="flex items-center">
-              <img src="/images/logo.jpg" alt="BikeShop Logo" width={250} height={250} />
+              <img src="/images/logo.png" alt="BikeShop Logo" width={250} height={250} />
               {/* <span className="font-bold text-gray-700 ml-2">BikeShop</span> */}
             </a>
           </Link>
