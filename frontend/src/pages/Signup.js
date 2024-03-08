@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
+import axios from "axios";
 
 const Signup = () => {
   const [email, setEmail] = useState('');
