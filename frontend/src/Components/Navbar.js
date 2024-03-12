@@ -1,12 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { MenuIcon, ShoppingCartIcon, UserIcon } from '@heroicons/react/outline';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    const token = localStorage.getItem('userToken');
+    setIsLoggedIn(!!token);
+  }, []);
 
   const toggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('token');
+    setIsLoggedIn(false);
+    // Redirect to home page or show logout feedback
   };
 
   return (
@@ -35,12 +47,19 @@ const Navbar = () => {
           <Link href="/products" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Cycles</a></Link>
           <Link href="/about" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">About</a></Link>
           <Link href="/contact" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Contact</a></Link>
+          <Link href="/wishlist" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Wishlist</a></Link>
           <Link href="/cart" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900 flex items-center"><ShoppingCartIcon className="h-5 w-5 mr-1"/> Cart</a></Link>
         </div>
 
         {/* Secondary Nav - Always visible */}
         <div className="flex items-center space-x-1">
-          <Link href="/Login" legacyBehavior><a className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded"><UserIcon className="h-5 w-5 mr-1"/> Login</a></Link>
+          {isLoggedIn ? (
+            <button onClick={handleLogout} className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded">
+              <UserIcon className="h-5 w-5 mr-1"/> Logout
+            </button>
+          ) : (
+            <Link href="/Login" legacyBehavior><a className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded"><UserIcon className="h-5 w-5 mr-1"/> Login</a></Link>
+          )}
         </div>
       </div>
 
