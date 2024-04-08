@@ -1,4 +1,4 @@
-const User = require("../models/user");
+const User = require("../models/User");
 const jwt = require('jsonwebtoken');
 
 exports.getUserbyId = async (req, res, next) => {
@@ -69,7 +69,7 @@ exports.login = async (req, res, next) => {
     } catch (error) {
       res.status(500).json({ message: 'Internal server error. ',error });
     }
-  };
+};
 
 exports.signup = async (req, res, next) => {
     try {

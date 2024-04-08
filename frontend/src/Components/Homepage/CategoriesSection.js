@@ -4,16 +4,16 @@ import React from 'react';
 const CategoriesSection = () => {
   // Define your categories data
   const categories = [
-    { name: 'Mountain Bikes', image: './images/urban.jpg' },
-    { name: 'Road Bikes', image: '/images/mountain.jpg' },
-    { name: 'Hybrid Bikes', image: '/images/road.jpg' },
+    { name: 'Hybrid Bikes', image: './images/urban.jpg' },
+    { name: 'Mountain Bikes', image: '/images/mountain.jpg' },
+    { name: 'Road Bikes', image: '/images/road.jpg' },
     // Add more categories as needed
   ];
 
   return (
-    <section className="py-12 bg-gray-100">
+    <section className="py-8 bg-gray-100">
       <div className="container mx-auto">
-        <h2 className="text-3xl font-semibold text-gray-800 mb-6">Shop by Category</h2>
+        <h2 className="text-3xl font-bold text-center text-gray-800 mb-14">Shop by Category</h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {categories.map((category, index) => (
             <div key={index} className="relative">

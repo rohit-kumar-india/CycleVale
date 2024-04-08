@@ -1,24 +1,23 @@
 const router = require('express').Router();
-const jwt = require('jsonwebtoken');
-const {getUserbyId, getAllUser, updateUser, deleteUser, login, signup} = require('../controllers/userController');
+const userController = require('../controllers/userController');
 
 // get user by Id
-router.get('/:id', getUserbyId);
+router.get('/:id', userController.getUserbyId);
 
 // get all users
-router.get('/', getAllUser);
+router.get('/', userController.getAllUser);
 
 //Update users
-router.patch('/:id', updateUser);
+router.patch('/:id', userController.updateUser);
 
 //Update users
-router.delete('/:id', deleteUser);
+router.delete('/:id', userController.deleteUser);
 
 // Login route
-router.post('/login', login);
+router.post('/login', userController.login);
 
 // Add users
-router.post('/signup', signup);
+router.post('/signup', userController.signup);
 
 
 module.exports = router;

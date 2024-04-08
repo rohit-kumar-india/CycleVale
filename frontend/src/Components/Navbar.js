@@ -45,8 +45,8 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-1">
           <Link href="/" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Home</a></Link>
           <Link href="/products" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Cycles</a></Link>
-          <Link href="/about" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">About</a></Link>
-          <Link href="/contact" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Contact</a></Link>
+          <Link href="/AboutUs" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">About</a></Link>
+          <Link href="/ContactUs" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Contact</a></Link>
           <Link href="/wishlist" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Wishlist</a></Link>
           <Link href="/cart" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900 flex items-center"><ShoppingCartIcon className="h-5 w-5 mr-1"/> Cart</a></Link>
         </div>

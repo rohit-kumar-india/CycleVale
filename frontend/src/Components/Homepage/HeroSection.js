@@ -1,19 +1,20 @@
-// First, ensure you import Swiper and SwiperSlide components, and the Autoplay module correctly
 import { Swiper, SwiperSlide } from 'swiper/react';
-import SwiperCore, { Autoplay } from 'swiper';
+import { Autoplay } from 'swiper/modules';
+import { Typewriter } from 'react-simple-typewriter';
+import 'swiper/css';
 
-// Then, use SwiperCore to install the Autoplay module
-SwiperCore.use([Autoplay]);
-
-import 'swiper/css'; // Basic Swiper styles
-import 'swiper/css/autoplay'; // Styles for the Autoplay module
-
-import Image from 'next/image';
 
 const HeroSection = () => {
+  const images = [
+    "/images/slide1.png",
+    "/images/slide2.png",
+  ]
+
+
   return (
-    <div className="relative h-[500px] overflow-hidden">
+    <div className="mt-[60px] relative h-screen overflow-hidden ">
       <Swiper
+       modules={[Autoplay]}
         spaceBetween={30}
         centeredSlides={true}
         autoplay={{
@@ -21,25 +22,38 @@ const HeroSection = () => {
           disableOnInteraction: false,
         }}
         loop={true}
+        effect="fade"
         className="w-full h-full"
       >
-        {/* SwiperSlide components for images */}
-        <SwiperSlide>
-          <Image src="/images/slide1.jpeg" layout="fill" objectFit="cover" alt="Men's Bicycles" />
+        
+     {
+      images.map((img) => {
+        return (
+          <SwiperSlide>
+          <div className='h-[90vh] w-[100%] bg-white flex justify-center'>
+          <img className='mix-blend-multiply' src={img} layout='fill' objectFit="contain" alt="Men's Bicycles" priority />
+          </div>
         </SwiperSlide>
-        <SwiperSlide>
-          <Image src="/images/slide2.jpeg" layout="fill" objectFit="cover" alt="Women's Bicycles" />
-        </SwiperSlide>
-        {/* Additional slides as needed */}
+        )
+      })
+     }
       </Swiper>
 
-      {/* Overlay Content */}
-      <div className="absolute top-0 left-0 right-0 flex justify-between items-center p-4 md:p-12">
-        <div className="bg-black bg-opacity-50 text-Black py-2 px-4 md:py-3 md:px-6 rounded">
-          <h2 className="text-lg md:text-2xl font-semibold">Men's Section</h2>
-        </div>
-        <div className="bg-black bg-opacity-50 text-Black py-2 px-4 md:py-3 md:px-6 rounded">
-          <h2 className="text-lg md:text-2xl font-semibold">Women's Section</h2>
+      <div className="absolute w-full  top-10 text-black inset-0 flex z-10 justify-center items-center px-4 md:px-12">
+        <div className="text-center p-5 rounded-xl text-orange-500 bg-glassy md:text-left">
+          <h2 className="text-2xl md:text-5xl font-bold  drop-shadow-md">Discover Your Perfect Ride</h2>
+          <span className="flex justify-center text-lg font-bold" >
+          <Typewriter
+                            words={['Explore our Men\'s and Women\'s collections',
+                                'Dream up your perfect cycle. Let TrippyAI plan it for you.',]}
+                            loop={true}
+                            cursor
+                            cursorStyle='|'
+                            typeSpeed={70}
+                            deleteSpeed={50}
+                            delaySpeed={1000}
+                        />
+                        </span>
         </div>
       </div>
     </div>
