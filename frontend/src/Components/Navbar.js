@@ -23,7 +23,7 @@ const Navbar = () => {
 
   return (
     <nav className="fixed top-0 w-full z-50 bg-gradient-to-r from-yellow-300 to-orange-500">
-      <div className="max-w-6xl mx-auto px-4 flex justify-between items-center">
+      <div className="max-w-7xl mx-auto px-4 flex justify-between items-center">
         {/* Mobile menu button */}
         <div className="md:hidden flex items-center">
           <button onClick={toggleMobileMenu} className="mr-2">
@@ -33,7 +33,7 @@ const Navbar = () => {
 
         {/* Logo */}
         <div>
-        <Link href="/" legacyBehavior>
+          <Link href="/" legacyBehavior>
             <a className="flex items-center">
               <img src="/images/logo.png" alt="BikeShop Logo" width={250} height={250} />
               {/* <span className="font-bold text-gray-700 ml-2">BikeShop</span> */}
@@ -48,17 +48,17 @@ const Navbar = () => {
           <Link href="/AboutUs" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">About</a></Link>
           <Link href="/ContactUs" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Contact</a></Link>
           <Link href="/wishlist" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Wishlist</a></Link>
-          <Link href="/cart" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900 flex items-center"><ShoppingCartIcon className="h-5 w-5 mr-1"/> Cart</a></Link>
+          <Link href="/cart" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900 flex items-center"><ShoppingCartIcon className="h-5 w-5 mr-1" /> Cart</a></Link>
         </div>
 
-        {/* Secondary Nav - Always visible */}
+        {/* Secondary Nav - depends on session*/}
         <div className="flex items-center space-x-1">
           {isLoggedIn ? (
             <button onClick={handleLogout} className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded">
-              <UserIcon className="h-5 w-5 mr-1"/> Logout
+              <UserIcon className="h-5 w-5 mr-1" /> Logout
             </button>
           ) : (
-            <Link href="/Login" legacyBehavior><a className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded"><UserIcon className="h-5 w-5 mr-1"/> Login</a></Link>
+            <Link href="/Login" legacyBehavior><a className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded"><UserIcon className="h-5 w-5 mr-1" /> Login</a></Link>
           )}
         </div>
       </div>
@@ -69,7 +69,7 @@ const Navbar = () => {
         <Link href="/products" legacyBehavior><a className="block py-2 px-4 text-sm text-gray-700 hover:bg-orange-500">Cycles</a></Link>
         <Link href="/about" legacyBehavior><a className="block py-2 px-4 text-sm text-gray-700 hover:bg-orange-500">About</a></Link>
         <Link href="/contact" legacyBehavior><a className="block py-2 px-4 text-sm text-gray-700 hover:bg-orange-500">Contact</a></Link>
-        <Link href="/cart" legacyBehavior><a className="block py-2 px-4 text-sm text-gray-700 hover:bg-orange-500 flex items-center"><ShoppingCartIcon className="h-5 w-5 mr-1"/> Cart</a></Link>
+        <Link href="/cart" legacyBehavior><a className="block py-2 px-4 text-sm text-gray-700 hover:bg-orange-500 flex items-center"><ShoppingCartIcon className="h-5 w-5 mr-1" /> Cart</a></Link>
       </div>
     </nav>
   );

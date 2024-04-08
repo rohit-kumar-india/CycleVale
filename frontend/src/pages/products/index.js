@@ -20,26 +20,68 @@ const Products = () => {
     fetchProducts().then(setProducts);
   }, []);
 
+  const [filters, setFilters] = useState({
+    ratings: {
+      '5 Star': false,
+      '4 Star': false,
+      '3 Star': false,
+      '2 Star': false,
+      '2 Star': false
+    },
+  });
+
+  const handleCheckboxChange = (category, value) => {
+    // If category is an object (e.g., duration), handle its nested state
+    if (typeof filters[category] === 'object') {
+      setFilters({
+        ...filters,
+        [category]: { ...filters[category], [value]: !filters[category][value] },
+      });
+    } else {
+      // If category is a boolean, toggle its state
+      setFilters({ ...filters, [category]: !filters[category] });
+    }
+  };
+
   const currentDate = new Date();
   // const isDiscountActive = product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd);
   // const discountedPrice = isDiscountActive ? (product.price - (product.price * product.discountPercentage / 100)).toFixed(2) : product.price;
   return (
     <div className="w-full flex justify-center">
-      <div className="flex gap-10 flex-col w-[70%]">
+      <div className="flex gap-10 flex-col max-w-7xl">
 
         <div className="flex flex-row gap-6 border-1 p-6">
 
-          <div className='flex flex-col justify-left gap-2 border-2 w-full'>
+          <div className='flex flex-col justify-left gap-2 w-full shadow-lg'>
             <div className='font-bold text-xl text-center'>Filters</div>
-            <div className='flex flex-col border-2'>
-              <h2 className='font-bold text-l'>Raitings</h2>
-              <label className='flex flex-col justify-left item-left border-2'>
-                <div><input type='checkbox' className='form-checkbox' /> 5 Star</div>
-                <input type='checkbox' className='form-checkbox' /> 4 Star
-                <input type='checkbox' /> 3 Star
-                <input type='checkbox' /> 2 Star
-                <input type='checkbox' /> 1 Star
-              </label>
+            <div className='mb-6 pl-2 hover:shadow-lg'>
+              <h2 className='font-bold text-l mb-2'>Ratings</h2>
+              {Object.keys(filters.ratings).map((key) => (
+                <label key={key} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={filters.ratings[key]}
+                    onChange={() => handleCheckboxChange('ratings', key)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">{key}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className='mb-6 pl-2 hover:shadow-lg'>
+              <h2 className='font-bold text-l mb-2'>Ratings</h2>
+              {Object.keys(filters.ratings).map((key) => (
+                <label key={key} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={filters.ratings[key]}
+                    onChange={() => handleCheckboxChange('ratings', key)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">{key}</span>
+                </label>
+              ))}
             </div>
           </div>
 

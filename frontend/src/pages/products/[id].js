@@ -38,47 +38,49 @@ const ProductDetails = () => {
       <Head>
         <title>{product.name}</title>
       </Head>
-      <div className="bg-white shadow overflow-hidden sm:rounded-lg">
-        <div className="px-4 py-5 sm:px-6">
-          <h3 className="text-lg leading-6 font-medium text-gray-900">
+      <div className="w-full flex flex-row bg-white shadow max-w-7xl mx-auto">
+        {/* Left Section for Images */}
+      <div className=" flex flex-col bg-white px-4 py-5 sm:px-6 w-[50%]">
+              {/* <img src={product.image || '/images/cyclefront2.jpeg'} alt={product.name} width={500} height={500} objectFit="contain" /> */}
+              <img src={'/images/cyclefront2.jpeg'} alt={product.name} width={800} height={800} objectFit="contain" />
+              <div className='flex flex-row w-full mt-5'>
+              <img src={'/images/cyclefront2.jpeg'} alt={product.name} width={80} objectFit="contain" />
+              <img src={'/images/cyclefront2.jpeg'} alt={product.name} width={80}  objectFit="contain" />
+              </div>
+      </div>
+
+        {/* Right Section for product details */}
+        <div className="px-4 sm:px-6 border-t border-gray-200">
+          
+        <div className="py-5">
+          <h3 className="font-bold text-xl leading-6 text-gray-900">
             {product.name}
           </h3>
           <p className="mt-1 max-w-2xl text-sm text-gray-500">
             Product details and specifications.
           </p>
         </div>
-        <div className="border-t border-gray-200">
-          <dl>
-            <div className="bg-gray-50 px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                Price
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                {isDiscountActive ? (
+        <div className="flex items-center mb-1">
+          <span className="text-m">{product.rating}</span>
+          <svg className="w-5 h-5 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.921-.755 1.688-1.54 1.118l-3.976-2.888a1 1 0 00-1.175 0l-3.976 2.888c-.785.57-1.84-.197-1.54-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.783-.57-.38-1.81.588-1.81h4.915a1 1 0 00.95-.69l1.519-4.674z" />
+          </svg>
+          <span className="ml-2 text-sm"> ({product.numReviews} Reviews)</span>
+        </div>
+        <div className=''>
+         <div className='font-semibold text-green-600'>Special Price</div>
+         {isDiscountActive ? (
                   <>
-                    <span className="line-through">₹{product.price}</span>{" "}
-                    <span className="text-green-600">₹{discountedPrice}</span>
+                  
+                    <span className="font-bold text-xl text-green-600">₹{discountedPrice}</span>
+                    <span className="ml-2 line-through">₹{product.price}</span>{" "}
+                    <span className="font-bold ml-2 text-xl text-green-600">{product.discountPercentage}% off</span>
                   </>
                 ) : (
-                  `₹${product.price}`
+                  <span className="font-bold text-xl">₹${product.price}</span>
                 )}
-              </dd>
-            </div>
-            {/* Include other product details like brand, category, etc., similar to the layout above */}
-            <div className="bg-white px-4 py-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                Description
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                {product.description}
-              </dd>
-            </div>
-            {/* Consider adding an image section */}
-            <div className="bg-white px-4 py-5 sm:px-6">
-              {/* <img src={product.image || '/images/cyclefront2.jpeg'} alt={product.name} width={500} height={500} objectFit="contain" /> */}
-              <img src={'/images/cyclefront2.jpeg'} alt={product.name} width={500} height={500} objectFit="contain" />
-            </div>
-          </dl>
+        </div>
+        
         </div>
       </div>
     </>
