@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
+import ProductCard from '@/Components/ProductCard';
+
 // Placeholder data fetching function
 async function fetchProducts() {
   // Replace with actual data fetching logic
@@ -47,7 +49,7 @@ const Products = () => {
   // const isDiscountActive = product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd);
   // const discountedPrice = isDiscountActive ? (product.price - (product.price * product.discountPercentage / 100)).toFixed(2) : product.price;
   return (
-    <div className="w-full flex justify-center">
+    <div className="mt-[60px] w-full flex justify-center">
       <div className="flex gap-10 flex-col max-w-7xl">
 
         <div className="flex flex-row gap-6 border-1 p-6">
@@ -88,8 +90,8 @@ const Products = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             {products.map((product) => (
-
-              //<ProductCard key={product._id} product={product} />
+<>
+              <ProductCard key={product._id} product={product} />
               <Link href={`/products/${product._id}`} className="transform overflow-hidden hover:shadow-lg bg-white duration-200 hover:scale-105 cursor-pointer">
                 <img src="/images/cyclefront2.jpeg" alt="Product image" className="w-full px-5" />
                 <div className="p-4 text-black/[0.9]">
@@ -115,6 +117,7 @@ const Products = () => {
                   </div>
                 </div>
               </Link>
+              </>
             ))}
           </div>
 

@@ -45,7 +45,7 @@ const HeroSection = () => {
           <span className="flex justify-center text-lg font-bold" >
           <Typewriter
                             words={['Explore our Men\'s and Women\'s collections',
-                                'Dream up your perfect cycle. Let TrippyAI plan it for you.',]}
+                                'Dream up your perfect cycle. Let CycleVale help you with it.',]}
                             loop={true}
                             cursor
                             cursorStyle='|'

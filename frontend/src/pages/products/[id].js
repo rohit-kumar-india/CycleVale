@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Head from 'next/head';
-import Image from 'next/image';
+import { ShoppingBagIcon, ShoppingCartIcon } from '@heroicons/react/outline';
 
 // Placeholder for fetching a single product's details
 async function fetchProduct(id) {
@@ -14,10 +14,42 @@ async function fetchProduct(id) {
   }
 }
 
+async function addToCart(userId, productId, quantity) {
+  const response = await fetch('http://localhost:5000/api/carts', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      userId,
+      productId,
+      quantity,
+    }),
+  });
+
+  if (!response.ok) {
+    throw new Error('Failed to add to cart');
+  }
+
+  const data = await response.json();
+}
+
 const ProductDetails = () => {
   const [product, setProduct] = useState(null);
   const router = useRouter();
   const { id } = router.query; // Get the ID from the URL
+
+  
+  
+  // Example usage
+  // addToCart('507f1f77bcf86cd799439011', '507f1f77bcf86cd799439012', 1)
+  //   .then(() => console.log('Item added to cart'))
+  //   .catch(error => console.error('Error:', error));
+  
+
+  // const handleClick = () => {
+  //   router.push('/')
+  // }
 
   useEffect(() => {
     if (id) {
@@ -38,14 +70,19 @@ const ProductDetails = () => {
       <Head>
         <title>{product.name}</title>
       </Head>
-      <div className="w-full flex flex-row bg-white shadow max-w-7xl mx-auto">
+      <div className="mt-[60px] w-full flex justify-center flex-row bg-white shadow  mx-auto">
         {/* Left Section for Images */}
+        <div className='max-w-7xl flex'>
       <div className=" flex flex-col bg-white px-4 py-5 sm:px-6 w-[50%]">
               {/* <img src={product.image || '/images/cyclefront2.jpeg'} alt={product.name} width={500} height={500} objectFit="contain" /> */}
-              <img src={'/images/cyclefront2.jpeg'} alt={product.name} width={800} height={800} objectFit="contain" />
-              <div className='flex flex-row w-full mt-5'>
+              <img src={'/images/cyclefront2.jpeg'} alt={product.name} className='w-full h-full object-contain' />
+              <div className='flex flex-row gap-2 w-full mt-5'>
               <img src={'/images/cyclefront2.jpeg'} alt={product.name} width={80} objectFit="contain" />
               <img src={'/images/cyclefront2.jpeg'} alt={product.name} width={80}  objectFit="contain" />
+              </div>
+              <div className='flex flex-row gap-2 justify-center w-full h-15 mt-5'>
+              <div onClick={()=> router.push('/')} className='w-full py-2 px-3 bg-yellow-400 transition-all duration-500 hover:cursor-pointer text-gray-700 hover:bg-yellow-500 hover:text-white flex justify-center items-center rounded'><ShoppingBagIcon className="h-10 mr-1" /> Buy Now</div>
+              <div onClick={() => addToCart('65db29ba433a6266a8d13f40',product._id,1)} className='w-full py-2 px-3 bg-yellow-400 transition-all duration-500 hover:cursor-pointer text-gray-700 hover:bg-yellow-500 hover:text-white flex justify-center items-center rounded'><ShoppingCartIcon className="h-10 mr-1" /> Add to Cart</div>
               </div>
       </div>
 
@@ -80,8 +117,16 @@ const ProductDetails = () => {
                   <span className="font-bold text-xl">₹${product.price}</span>
                 )}
         </div>
-        
+        <div className="w-full bg-white px-4 py-5">
+              <dt className="text-sm font-medium text-gray-500">
+                Description
+              </dt>
+              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
+                {/* {product.description} */}
+              </dd>
+            </div>
         </div>
+      </div>
       </div>
     </>
   );

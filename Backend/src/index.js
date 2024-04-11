@@ -1,10 +1,9 @@
 const express = require('express');
-const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const cors = require('cors');
-// const productRoutes = require('./src/routes/productRoutes');
 const userRoutes = require('./routes/userRoutes');
 const productRoutes = require('./routes/productRoutes');
+const cartRoutes = require('./routes/cartRoutes');
 // const orderRoutes = require('./src/routes/orderRoutes');
 // const errorHandler = require('./src/middleware/errorMiddleware');
 require('./middleware/mongoose');
@@ -27,6 +26,7 @@ app.use(express.json()); // for parsing application/json
 //app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/carts', cartRoutes);
 //app.use('/api/orders', orderRoutes);
 
 // Error handler middleware
