@@ -19,5 +19,19 @@ router.post('/login', userController.login);
 // Add users
 router.post('/signup', userController.signup);
 
+//Get wishlist by UserId
+router.get('/:userId/wishlists',userController.getwishlistbyUserId);
+
+// Add Wishlist
+router.post('/Wishlist', userController.createWishlist);
+
+// Add Item to Wishlist
+router.post('/wishlist/item', userController.addWishlistItem);
+
+// Delete Item to Wishlist
+//router.delete('/:userId/wishlists/:wishlistId/items', userController.removeWishlistItem1);
+router.delete('/wishlist/item', userController.removeWishlistItem);
+
+
 
 module.exports = router;

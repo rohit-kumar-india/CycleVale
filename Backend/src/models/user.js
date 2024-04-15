@@ -1,5 +1,53 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
+const wishlistSchema = require('./Wishlist');
+
+// Address subdocument schema
+const addressSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  mobile: { type: String, required: true, match: [/^\d{10}$/, 'Please fill a valid mobile number'] },
+  address: { type: String, required: true },
+  landmark: { type: String },
+  city: { type: String, required: true },
+  state: { type: String, required: true },
+  pincode: { type: String, required: true, match: [/^\d{6}$/, 'Please fill a valid pincode'] }
+}, { _id: true, timestamps: true });
+
+const cartSchema = new mongoose.Schema({
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+    unique: true,
+    required: true,
+  },
+  quantity: {
+    type: Number,
+    required: true,
+    min: 1,
+  },
+}, { _id: false });
+
+// const wishlistItemSchema = new mongoose.Schema({
+//   product: {
+//     type: mongoose.Schema.Types.ObjectId,
+//     ref: 'Product',
+//     unique: true,
+//     required: true,
+//   },
+//   addedAt: {
+//     type: Date,
+//     default: Date.now,
+//   },
+// }, { _id: false });
+
+// const wishlistSchema = new mongoose.Schema({
+//   name: {
+//     type: String,
+//     required: true,
+//     trim: true,
+//   },
+//   items: [wishlistItemSchema],
+// });
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -9,11 +57,11 @@ const userSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-      required: true,
-      unique: true,
-      trim: true,
-      lowercase: true,
-      match: [/.+\@.+\..+/, 'Please fill a valid email address'],
+    required: true,
+    unique: true,
+    trim: true,
+    lowercase: true,
+    match: [/.+\@.+\..+/, 'Please fill a valid email address'],
   },
   password: {
     type: String,
@@ -46,6 +94,9 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  addresses: [addressSchema],
+  cart: [cartSchema],
+  wishlists: [wishlistSchema],
 }, { timestamps: true });
 
 // Pre-save middleware to hash password

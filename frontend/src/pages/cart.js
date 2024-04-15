@@ -88,7 +88,7 @@ const cart = () => {
   
 
   if (isLoading) {
-    return <div className='mt-15'>Loading cart...</div>;
+    return <div className='mt-[60px]'>Loading cart...</div>;
   }
   // Example cart items and total calculation
   // Replace this with your actual cart context or state management logic

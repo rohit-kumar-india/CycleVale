@@ -6,8 +6,8 @@ import SpecialOffers from '@/Components/Homepage/SpecialOffers'
 import Testimonials from '@/Components/Homepage/Testimonials'
 import BlogHighlights from '@/Components/Homepage/BlogHighlights'
 import NewsletterSignup from '@/Components/Homepage/NewsletterSignup'
-import AboutUs from './AboutUs'
-import ContactUS from './ContactUs'
+import AboutUs from './about'
+import ContactUS from './contact'
 
 export const Homepage = () => {
   return (

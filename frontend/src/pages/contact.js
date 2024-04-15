@@ -30,7 +30,7 @@ const ContactUs = () => {
   };
 
   return (
-    <div className="container mx-auto px-4">
+    <div className="mt-[70px] container mx-auto px-4">
       <Head>
         <title>Contact Us - CycleVale</title>
       </Head>

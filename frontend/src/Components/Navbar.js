@@ -5,15 +5,15 @@ import { MenuIcon, ShoppingCartIcon, UserIcon } from '@heroicons/react/outline';
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleMobileMenu = () => setIsMobileMenuOpen(!isMobileMenuOpen);
+  const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
   useEffect(() => {
     const token = localStorage.getItem('userToken');
     setIsLoggedIn(!!token);
   }, []);
-
-  const toggleMobileMenu = () => {
-    setIsMobileMenuOpen(!isMobileMenuOpen);
-  };
 
   const handleLogout = () => {
     localStorage.removeItem('token');
@@ -35,8 +35,7 @@ const Navbar = () => {
         <div>
           <Link href="/" legacyBehavior>
             <a className="flex items-center">
-              <img src="/images/logo.png" alt="BikeShop Logo" width={250} height={250} />
-              {/* <span className="font-bold text-gray-700 ml-2">BikeShop</span> */}
+              <img src="/images/logo.png" alt="BikeShop Logo" className="h-16 w-50" /> {/* Adjusted size for better fit */}
             </a>
           </Link>
         </div>
@@ -45,18 +44,28 @@ const Navbar = () => {
         <div className="hidden md:flex items-center space-x-1">
           <Link href="/" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Home</a></Link>
           <Link href="/products" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Cycles</a></Link>
-          <Link href="/AboutUs" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">About</a></Link>
-          <Link href="/ContactUs" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Contact</a></Link>
+          <Link href="/about" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">About</a></Link>
+          <Link href="/contact" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Contact</a></Link>
           <Link href="/wishlist" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900">Wishlist</a></Link>
           <Link href="/cart" legacyBehavior><a className="py-5 px-3 text-gray-700 hover:text-gray-900 flex items-center"><ShoppingCartIcon className="h-5 w-5 mr-1" /> Cart</a></Link>
         </div>
 
-        {/* Secondary Nav - depends on session*/}
-        <div className="flex items-center space-x-1">
+        {/* User Dropdown */}
+        <div className="flex items-center space-x-1 relative">
           {isLoggedIn ? (
-            <button onClick={handleLogout} className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded">
-              <UserIcon className="h-5 w-5 mr-1" /> Logout
-            </button>
+            <div onMouseEnter={() => setIsDropdownOpen(true)} onMouseLeave={() => setIsDropdownOpen(false)}>
+              <button onClick={toggleDropdown} className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded">
+                <UserIcon className="h-5 w-5 mr-1" /> Profile
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute right-0 top-10 mt-100 py-2 w-48 bg-white rounded-lg shadow-xl">
+                  <Link href="/profile" legacyBehavior><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Profile</a></Link>
+                  <Link href="/wishlist" legacyBehavior><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Wishlist</a></Link>
+                  <Link href="/orders" legacyBehavior><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</a></Link>
+                  <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                </div>
+              )}
+            </div>
           ) : (
             <Link href="/Login" legacyBehavior><a className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded"><UserIcon className="h-5 w-5 mr-1" /> Login</a></Link>
           )}

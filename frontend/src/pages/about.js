@@ -2,7 +2,7 @@ import Head from 'next/head';
 
 const AboutUs = () => {
   return (
-    <div className="min-h-screen bg-gray-50 py-10 px-3 sm:px-5">
+    <div className="mt-[60px] min-h-screen bg-gray-50 py-10 px-3 sm:px-5">
       <Head>
         <title>About Us - CycleVale</title>
       </Head>
