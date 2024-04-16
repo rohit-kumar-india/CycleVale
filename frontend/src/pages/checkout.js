@@ -1,20 +1,60 @@
-import React from 'react'
+import React, { useState } from 'react';
+import CartSummary from '../Components/CartSummary';
+import AddressSelection from '../Components/AddressSelection';
+import PaymentOptions from '../Components/PaymentOptions';
+import OrderConfirmation from '../Components/OrderConfirmation';
 
-const checkout = () => {
+const steps = [
+  'Cart Summary',
+  'Shipping Address',
+  'Payment Options',
+  'Review & Confirm'
+];
+
+const CheckoutPage = () => {
+  const [currentStep, setCurrentStep] = useState(0);
+
+  const nextStep = () => {
+    if (currentStep < steps.length - 1) {
+      setCurrentStep(currentStep + 1);
+    }
+  };
+
+  const previousStep = () => {
+    if (currentStep > 0) {
+      setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 0:
+        return <CartSummary onNext={nextStep} />;
+      case 1:
+        return <AddressSelection addresses={user.addresses} onNext={nextStep} onBack={previousStep} />;
+      case 2:
+        return <PaymentOptions onNext={nextStep} onBack={previousStep} />;
+      case 3:
+        return <OrderConfirmation onBack={previousStep} />;
+      default:
+        return <div>Not Found</div>;
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-4">Checkout</h1>
-      <form>
-        {/* Simplified for demonstration; add form fields as needed */}
-        <div className="mb-4">
-          <label htmlFor="email" className="block mb-2">Email Address</label>
-          <input type="email" id="email" name="email" className="border px-2 py-1 w-full" required />
-        </div>
-        {/* Add additional fields and a submit button */}
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2">Place Order</button>
-      </form>
+    <div className="mt-[60px] container mx-auto px-4 py-8">
+      <div className="mb-8">
+        <ul className="flex justify-around">
+          {steps.map((step, index) => (
+            <li key={step} className={`px-4 py-2 text-sm font-bold ${currentStep === index ? 'text-blue-500 border-b-2 border-blue-500' : 'text-gray-500'}`}>
+              {step}
+            </li>
+          ))}
+        </ul>
+      </div>
+      {renderStep()}
     </div>
-  )
-}
+  );
+};
 
-export default checkout
+export default CheckoutPage;

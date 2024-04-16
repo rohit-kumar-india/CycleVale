@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from 'react';
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 import axios from 'axios';
 import Head from 'next/head';
@@ -14,25 +16,7 @@ async function fetchProduct(id) {
   }
 }
 
-async function addToCart(userId, productId, quantity) {
-  const response = await fetch('http://localhost:5000/api/carts', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      userId,
-      productId,
-      quantity,
-    }),
-  });
 
-  if (!response.ok) {
-    throw new Error('Failed to add to cart');
-  }
-
-  const data = await response.json();
-}
 
 const ProductDetails = () => {
   const [product, setProduct] = useState(null);
@@ -40,7 +24,38 @@ const ProductDetails = () => {
   const { id } = router.query; // Get the ID from the URL
 
   
+  const toastOptions = {
+    position: "top-right",
+autoClose: 2000,
+hideProgressBar: false,
+closeOnClick: true,
+pauseOnHover: true,
+draggable: true,
+progress: undefined,
+theme: "light",
+
+  }
+
+  async function addToCart(userId, productId, quantity) {
+    const response = await fetch('http://localhost:5000/api/carts', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        userId,
+        productId,
+        quantity,
+      }),
+    });
   
+    if (!response.ok) {
+      throw new Error('Failed to add to cart');
+    }
+  
+    const data = await response.json();
+    toast.success("added in cart successfully", toastOptions)
+  }
   // Example usage
   // addToCart('507f1f77bcf86cd799439011', '507f1f77bcf86cd799439012', 1)
   //   .then(() => console.log('Item added to cart'))
@@ -128,6 +143,7 @@ const ProductDetails = () => {
         </div>
       </div>
       </div>
+      <ToastContainer/>
     </>
   );
 };
