@@ -3,14 +3,28 @@ import Link from 'next/link';
 import axios from "axios";
 
 const Signup = () => {
+  const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    password: '',
+});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // Implement signup functionality
-    console.log(email, password, confirmPassword);
+    try {
+      if (password === confirmPassword) {
+          await axios.post("http://localhost:5000/api/users/signup",{name,email,password});
+      } else {
+          console.error("Password and confirmPassword are not same.")
+      }
+      closeModal();
+  } catch (error) {
+      console.error('Failed to save address:', error);
+  }
   };
 
   return (
@@ -19,6 +33,10 @@ const Signup = () => {
   {/* Set text color to white and add transparency, blur effect, and shadow */}
         <h1 className="text-3xl font-bold mb-4 text-center">Sign Up</h1>
         <form onSubmit={handleSubmit}>
+        <div className="mb-4">
+            <label htmlFor="name" className="block mb-2">Full Name</label>
+            <input type="name" id="name" value={name} onChange={(e) => setName(e.target.value)} className="border px-3 py-2 w-full rounded-md text-black" required />
+          </div>
           <div className="mb-4">
             <label htmlFor="email" className="block mb-2">Email</label>
             <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="border px-3 py-2 w-full rounded-md text-black" required />

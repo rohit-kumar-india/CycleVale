@@ -93,7 +93,7 @@ exports.signup = async (req, res, next) => {
 
     res.status(201).json({ message: 'User created successfully.' });
   } catch (error) {
-    res.status(500).json({ message: 'Internal server error.' });
+    res.status(500).json({ message: 'Internal server error.',error });
   }
 };
 
@@ -203,4 +203,48 @@ exports.removeWishlistItem = async (req, res) => {
   }
 }
 
+// Create a payment detail for a user
+exports.addPaymentDetails = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const { paymentType, paymentDetail } = req.body;
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    
+    switch (paymentType) {
+      case 'cards':
+        user.paymentDetails.cards.push(paymentDetail);
+        break;
+      case 'upis':
+        user.paymentDetails.upis.push(paymentDetail);
+        break;
+      case 'wallets':
+        user.paymentDetails.wallets.push(paymentDetail);
+        break;
+      default:
+        return res.status(400).json({ success: false, error: 'Invalid payment type' });
+    }
+    
+    await user.save();
+    res.status(201).json({ success: true, data: user.paymentDetails });
+  } catch (error) {
+    res.status(400).json({ success: false, error: error.message });
+  }
+};
 
+// Get all payment details for a user
+exports.getPaymentDetails = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ success: false, error: 'User not found' });
+    }
+    res.status(200).json({ success: true, data: user.paymentDetails });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};

@@ -7,7 +7,7 @@ import { HeartIcon as HeartSolid } from '@heroicons/react/solid'; // For the fil
 
 const ProductCard = ({ Product }) => {
   const id = '65db29ba433a6266a8d13f40';
-  const wishlistId = '6618364d2292691daf46872c';
+  const wishlistId = '661fae3cbd1bceabfc32e805';
   const [product, setProduct] = useState(Product);
   const [wishlistItems, setWishlistItems] = useState(['66123921333320dfc5c3c8e0',]);
   const currentDate = new Date();
@@ -16,7 +16,7 @@ const ProductCard = ({ Product }) => {
 
   const removeFromWishlist = async (productId) => {
     try {
-      const response = await axios.delete('http://localhost:5000/api/users/wishlist/item', { data: { userId: id, wishlistId, productId } });
+      const response = await axios.delete('http://localhost:5000/api/wishlists/item', { data: { userId: id, wishlistId, productId } });
       console.log(response);
       // const updatedWishlistItems = wishlistItems.filter(item => item !== productId);
       // setWishlistItems(updatedWishlistItems);
@@ -31,7 +31,7 @@ const ProductCard = ({ Product }) => {
 
   const addToWishlist = async (productId) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/users/wishlist/item', { userId: id, wishlistId, productId });
+      const response = await axios.post('http://localhost:5000/api/wishlists/item', { userId: id, wishlistId, productId });
       console.log(response);
       setProduct({...product,wishlisted:true});
       // const updatedCartItems = cartItems.filter(item => item.product !== productId);

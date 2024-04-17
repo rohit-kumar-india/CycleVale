@@ -32,6 +32,12 @@ router.post('/wishlist/item', userController.addWishlistItem);
 //router.delete('/:userId/wishlists/:wishlistId/items', userController.removeWishlistItem1);
 router.delete('/wishlist/item', userController.removeWishlistItem);
 
+// Add payment
+router.post('/:userId/paymentDetails', userController.addPaymentDetails);
+
+// Get payment
+router.get('/:userId/paymentDetails', userController.getPaymentDetails);
+
 
 
 module.exports = router;

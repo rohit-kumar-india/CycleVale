@@ -59,16 +59,17 @@ exports.addWishlistItem = async (req, res) => {
             return res.status(404).send('User not found');
         }
 
-        let wishlist = user.wishlists.find(wl => wl.id === wishlistId);
+        let wishlist = user.wishlists.find(wl => wl._id.toString() === wishlistId);
         if (!wishlist) {
             return res.status(404).send("Wishlist does not exists");
         }
-
+        //console.log(wishlist)
         let item = wishlist.items.find(item => item.product.toString() === productId);
 
         if (item) {
             return res.status(400).send("Item already present in Wishlist");
         }
+        
         // Add the product to the wishlist
         wishlist.items.push({ product: productId });
         await user.save();
@@ -83,22 +84,21 @@ exports.addWishlistItem = async (req, res) => {
 exports.removeWishlistItem = async (req, res) => {
     const { userId, wishlistId, productId } = req.body;
 
-    console.log(userId, wishlistId, productId);
     try {
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).send('User not found');
         }
 
-        let wishlist = user.wishlists.id(wishlistId);
+        let wishlist = user.wishlists.find(wl => wl._id.toString() === wishlistId);
+        
         if (!wishlist) {
             return res.status(404).send("Wishlist does not exists");
         }
 
-        let updateditems = wishlist.items.find(item => item.product.toString() !== productId);
+        let updateditems = wishlist.items.filter(item => item.product.toString() !== productId);
 
         wishlist.items = updateditems ? updateditems : [];
-
         await user.save();
 
         res.status(200).send({ message: 'Product removed from wishlist' });

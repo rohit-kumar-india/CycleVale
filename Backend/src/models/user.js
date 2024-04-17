@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
-const wishlistSchema = require('./Wishlist');
+//const wishlistSchema = require('./Wishlist');
 
 // Address subdocument schema
 const addressSchema = new mongoose.Schema({
@@ -11,7 +11,37 @@ const addressSchema = new mongoose.Schema({
   city: { type: String, required: true },
   state: { type: String, required: true },
   pincode: { type: String, required: true, match: [/^\d{6}$/, 'Please fill a valid pincode'] }
-}, { _id: true, timestamps: true });
+}, { timestamps: true });
+
+// const paymentDetailSchema = new mongoose.Schema({
+//   type: { type: String, enum: ['Credit/Debit/ATM Card', 'UPI', 'Wallet'], required: true },
+//   details: {
+//     cardName: { type: String, required: function () { return this.type === 'Credit/Debit/ATM Card'; } },
+//     cardNumber: { type: String, required: function () { return this.type === 'Credit/Debit/ATM Card'; } },
+//     expiryDate: { type: String, required: function () { return this.type === 'Credit/Debit/ATM Card'; } },
+//     upiId: { type: String, required: function () { return this.type === 'UPI'; } },
+//     walletName: { type: String, required: function () { return this.type === 'Wallet'; } },
+//     walletBalance: { type: String, required: function () { return this.type === 'Wallet'; } },
+//     // Add more card details as needed
+//     // For UPI, you can store UPI ID, bank details, etc.
+//     // For Wallet, you can store wallet ID, balance, etc.
+//   }
+// }, { _id: false, timestamps: true });
+
+const paymentDetailSchema = new mongoose.Schema({
+  cards: [{
+    cardName: { type: String, required: true },
+    cardNumber: { type: String, required: true },
+    expiryDate: { type: String, required: true },
+  }],
+  upis: [{
+    upiId: { type: String, required: true }
+  }],
+  wallets: [{
+    walletName: { type: String, required: true },
+    walletBalance: { type: String, required: true },
+  }]
+}, { _id: false });
 
 const cartSchema = new mongoose.Schema({
   product: {
@@ -27,27 +57,27 @@ const cartSchema = new mongoose.Schema({
   },
 }, { _id: false });
 
-// const wishlistItemSchema = new mongoose.Schema({
-//   product: {
-//     type: mongoose.Schema.Types.ObjectId,
-//     ref: 'Product',
-//     unique: true,
-//     required: true,
-//   },
-//   addedAt: {
-//     type: Date,
-//     default: Date.now,
-//   },
-// }, { _id: false });
+const wishlistItemSchema = new mongoose.Schema({
+  product: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product',
+    unique: true,
+    required: true,
+  },
+  addedAt: {
+    type: Date,
+    default: Date.now,
+  },
+}, { _id: false });
 
-// const wishlistSchema = new mongoose.Schema({
-//   name: {
-//     type: String,
-//     required: true,
-//     trim: true,
-//   },
-//   items: [wishlistItemSchema],
-// });
+const wishlistSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true,
+    trim: true,
+  },
+  items: [wishlistItemSchema],
+});
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -94,6 +124,14 @@ const userSchema = new mongoose.Schema({
     required: true,
     default: false,
   },
+  paymentDetails: {
+    type: paymentDetailSchema,
+    default: {
+      cards: [],
+      upis: [],
+      wallets: [],
+    }
+  },
   addresses: [addressSchema],
   cart: [cartSchema],
   wishlists: [wishlistSchema],
@@ -106,6 +144,16 @@ userSchema.pre('save', async function (next) {
 
   const salt = await bcrypt.genSalt(10);
   this.password = await bcrypt.hash(this.password, salt);
+
+  if (this.isNew) {
+    // Create a default wishlist only for new users
+    this.wishlists.push({
+      name: 'My Wishlist',
+      items: []
+    });
+  }
+  next();
+
 });
 
 // Method to check the password on signin
