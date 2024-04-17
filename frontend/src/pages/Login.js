@@ -15,10 +15,12 @@ const Login = () => {
     console.log("entered");
     e.preventDefault();
     try {
-      console.log(credentials);
+      
       const response = await axios.post('http://localhost:5000/api/users/login', credentials);
       localStorage.setItem('userToken', response.data.token);
-      console.log(localStorage);
+      localStorage.setItem('userId', response.data.userId);
+      localStorage.setItem('userName', response.data.userName);
+      
       router.push('/');
       // Handle login success (e.g., store token, redirect)
     } catch (error) {

@@ -82,8 +82,14 @@ const PaymentOptions = ({ onSelect }) => {
     };
 
     const handleProceed = () => {
-        if (selectedOption) {
-            onSelect(selectedOption);
+        if (selectedOption == 'Credit Card') {
+            onSelect({selectedOption , selectedCard});
+        }else if(selectedOption == 'UPI') {
+            onSelect({selectedOption , selectedUPI});
+        }else if(selectedOption == 'Wallet'){
+            onSelect({selectedOption , selectedWallet});
+        }else if(selectedOption == 'Cash on Delivery'){
+            onSelect({selectedOption});
         }
     };
 

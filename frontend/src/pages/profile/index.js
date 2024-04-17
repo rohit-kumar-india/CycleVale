@@ -1,8 +1,16 @@
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 import { MenuIcon, ShoppingCartIcon, UserIcon } from '@heroicons/react/solid';
 
 const ProfileLayout = ({ children }) => {
+  const [userName, setUserName] = useState();
+  
+
+  useEffect(() => {
+    let username = localStorage.getItem('userName');
+    setUserName(username)
+  }, []);
 
   return (
     <div className="mt-[60px] flex min-h-screen max-w-7xl mx-auto">
@@ -14,7 +22,7 @@ const ProfileLayout = ({ children }) => {
           <UserIcon className="h-12 w-12  mr-1" />
           <div>
             <div className="text-blue-700 hover:text-blue-900 w-full text-left">Welcome,</div>
-            <div className="font-bold text-xl hover:text-blue-900 w-full text-left">Rohit Kumar</div>
+            <div className="font-bold text-xl hover:text-blue-900 w-full text-left">{userName}</div>
             </div>
           </li>
           {/* Account with submenu */}

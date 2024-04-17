@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import axios from 'axios';
 import { useRouter } from 'next/router';
 import OrderSummary from '@/Components/OrderSummary';
+import { toast } from 'react-toastify';
 // Import your cart context or state management hook
 // import { CartContext } from '../path/to/your/context';
 
@@ -10,9 +11,21 @@ import OrderSummary from '@/Components/OrderSummary';
 
 const cart = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [orderSummary, setOrderSummary] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const id = '65db29ba433a6266a8d13f40';
   const router = useRouter();
+
+  const toastOptions = {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  }
   // {
   //   id: "1",
   //   name: "",
@@ -25,16 +38,15 @@ const cart = () => {
     try {
       const cartResponse = await axios.get(`http://localhost:5000/api/carts/${id}`);
       const cartData = cartResponse.data.cart;
-
       const productDetails = await Promise.all(cartData.items.map(async (item) => {
         const productResponse = await axios.get(`http://localhost:5000/api/products/${item.product}`);
-
         return {
           ...item,
           productDetails: productResponse.data.product,
         };
       }));
       setCartItems(productDetails);
+      
     } catch (error) {
       console.error('Failed to fetch cart or product details', error);
     } finally {
@@ -48,6 +60,7 @@ const cart = () => {
       console.log(response);
       const updatedCartItems = cartItems.filter(item => item.product !== productId);
       setCartItems(updatedCartItems);
+      toast.success("Product removed from Cart", toastOptions)
       //fetchCartDetails(id);
     } catch (error) {
       console.error('Failed to delete item from cart', error);
@@ -56,6 +69,7 @@ const cart = () => {
 
   const updateQuantity = async (productId, newQuantity) => {
     if (newQuantity < 1) {
+      toast.warning("Minimum quantity is 1", toastOptions)
       console.log("Minimum quantity is 1");
       return;
     }
@@ -71,6 +85,7 @@ const cart = () => {
         return item;
       });
       setCartItems(updatedCartItems);
+      toast.success(`Quantity is updated to ${newQuantity}`, toastOptions)
     } catch (error) {
       console.error("Failed to update quantity", error);
     }
@@ -97,8 +112,14 @@ const cart = () => {
   // Replace this with your actual cart context or state management logic
   //const cartItems = useContext(CartContext);
 
-  const totalPrice = cartItems.reduce((total, item) => total + item.price * item.quantity, 0);
-  const discountPrice = 580.80;
+  const totalPrice = cartItems.reduce((total, item) => total + item.productDetails.price * item.quantity, 0);
+  const currentDate = new Date();
+  //const isDiscountActive = product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd);
+  const discountPrice = cartItems.reduce((totalD, item) => 
+        //(item.productDetails.discountPercentage > 0 && currentDate >= new Date(item.productDetails.discountStart) && currentDate <= new Date(item.productDetails.discountEnd)) ? 
+        totalD + ((item.productDetails.discountPercentage > 0 && currentDate >= new Date(item.productDetails.discountStart) && currentDate <= new Date(item.productDetails.discountEnd)) ? item.productDetails.price * item.productDetails.discountPercentage/ 100 * item.quantity : 0) , 0);
+
+        //setOrderSummary({totalPrice,discountPrice, itemNo: cartItems.length})
 
   // useEffect(() => {
   //   const handleScroll = () => {
@@ -162,9 +183,9 @@ const cart = () => {
                 {/* <input className="mx-2 border text-center w-8" type="text" value={item.quantity} readOnly /> */}
               </div>
               {/* Price */}
-              <span className="text-center w-1/5 font-semibold text-sm">₹{item.price}</span>
+              <span className="text-center w-1/5 font-semibold text-sm">₹{item.productDetails.price}</span>
               {/* Total */}
-              <span className="text-center w-1/5 font-semibold text-sm">₹{(item.price * item.quantity).toFixed(2)}</span>
+              <span className="text-center w-1/5 font-semibold text-sm">₹{(item.productDetails.price * item.quantity).toFixed(2)}</span>
             </div>
           ))}
 
@@ -172,7 +193,7 @@ const cart = () => {
 
         {/* Right Panel - Pricing Details */}
         
-        <OrderSummary/>
+        <OrderSummary TotalPrice={totalPrice} DiscountPrice={discountPrice} itemNo={cartItems.length} />
       </div>
     </div>
   );

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import { HeartIcon as HeartOutline } from '@heroicons/react/outline'; // For the hollow heart
 import { HeartIcon as HeartSolid } from '@heroicons/react/solid'; // For the filled heart
+import { toast } from 'react-toastify';
 
 
 const ProductCard = ({ Product }) => {
@@ -14,14 +15,26 @@ const ProductCard = ({ Product }) => {
   const isDiscountActive = product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd);
   const discountedPrice = isDiscountActive ? (product.price - (product.price * product.discountPercentage / 100)).toFixed(2) : product.price;
 
+  const toastOptions = {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  }
+
   const removeFromWishlist = async (productId) => {
     try {
       const response = await axios.delete('http://localhost:5000/api/wishlists/item', { data: { userId: id, wishlistId, productId } });
       console.log(response);
+      toast.success("removed from Wishlist", toastOptions)
       // const updatedWishlistItems = wishlistItems.filter(item => item !== productId);
       // setWishlistItems(updatedWishlistItems);
       // product.wishlisted = false;
-      setProduct({...product,wishlisted:false});
+      setProduct({ ...product, wishlisted: false });
       //console.log(product);
       //fetchCartDetails(id);
     } catch (error) {
@@ -33,7 +46,8 @@ const ProductCard = ({ Product }) => {
     try {
       const response = await axios.post('http://localhost:5000/api/wishlists/item', { userId: id, wishlistId, productId });
       console.log(response);
-      setProduct({...product,wishlisted:true});
+      toast.success("added to Wishlist", toastOptions)
+      setProduct({ ...product, wishlisted: true });
       // const updatedCartItems = cartItems.filter(item => item.product !== productId);
       //setWishlistItems([...wishlistItems, productId]);
       //product.wishlisted = true;
@@ -48,8 +62,10 @@ const ProductCard = ({ Product }) => {
     e.preventDefault(); // Prevent link navigation
     if (product.wishlisted) {
       removeFromWishlist(product._id);
+
     } else {
       addToWishlist(product._id);
+
     }
   };
 
