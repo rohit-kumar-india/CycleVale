@@ -2,22 +2,37 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import AddressModal from './addressModel';
 import ProfileLayout from '.';
+import { toast } from 'react-toastify';
 
 const Addresses = () => {
-    const userId = "65db29ba433a6266a8d13f40";
+    const [userId,setUserId] =useState('');
     const [addresses, setAddresses] = useState([]);
     const [currentAddress, setCurrentAddress] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
 
+    const toastOptions = {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      }
+
     const fetchAddressDetails = async (id) => {
+        //userId=id;
         setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
         try {
+            console.log(userId);
             // Fetch the user's address
             const addressResponse = await axios.get(`http://localhost:5000/api/users/address/${id}`);
+            console.log(addressResponse)
             const addresss = addressResponse.data;
             setAddresses(addresss); // Update the state once after processing all items
-
+            setUserId(id);
         } catch (error) {
             console.error('Failed to fetch address or product details', error);
         } finally {
@@ -28,7 +43,12 @@ const Addresses = () => {
     const deleteAddress = async (addressId) => {
         try {
             const response = await axios.delete('http://localhost:5000/api/users/address/delete', { data: { userId, addressId } });
-            console.log(response);
+            //console.log(response);
+            if(response.status===200){
+                toast.success(response.data.message, toastOptions)
+            }else{
+                toast.error(response.data.message, toastOptions)
+            }
             const updatedAddresses = addresses.filter(address => address._id !== addressId);
             // setWishlistItems(updatedWishlistItems);
             // product.wishlisted = false;
@@ -40,12 +60,13 @@ const Addresses = () => {
     };
 
     useEffect(() => {
-        fetchAddressDetails(userId);
-        //fetchAddresses();
+        let id = localStorage.getItem('userId');
+        console.log(id);
+        fetchAddressDetails(id);
     }, []);
 
 
-
+console.log(userId);
 
     if (isLoading) {
         return <div className='mt-[60px] height-[600px]'>Loading Products...</div>;
@@ -92,7 +113,7 @@ const Addresses = () => {
                 ))}
 
                 {modalOpen && (
-                    <AddressModal address={currentAddress} closeModal={closeModal} />
+                    <AddressModal userId={userId} address={currentAddress} closeModal={closeModal} />
                 )}
             </div>
         </ProfileLayout>

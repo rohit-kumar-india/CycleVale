@@ -28,10 +28,10 @@ const productSchema = new Schema(
       required: true,
       trim: true,
     },
-    image: {
+    imageURLs: [{
       type: String,
       required: true,
-    },
+    }],
     brand: {
       type: String,
       required: true,
@@ -49,12 +49,12 @@ const productSchema = new Schema(
     reviews: [reviewSchema],
     rating: {
       type: Number,
-      required: true,
+      //required: true,
       default: 0,
     },
     numReviews: {
       type: Number,
-      required: true,
+      //required: true,
       default: 0,
     },
     price: {

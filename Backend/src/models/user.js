@@ -103,6 +103,9 @@ const userSchema = new mongoose.Schema({
   phoneNo: {
     type: String
   },
+  dob:{
+    type: Date
+  },
   country: {
     type: String,
   },

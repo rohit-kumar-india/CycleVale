@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { toast } from 'react-toastify';
 
-const AddressModal = ({ address, closeModal }) => {
-    const userId = "65db29ba433a6266a8d13f40";
+const AddressModal = ({ userId, address, closeModal }) => {
+    console.log(userId)
+    //const userId = "65db29ba433a6266a8d13f40";
     const [formData, setFormData] = useState({
         name: '',
         mobile: '',
@@ -12,6 +14,17 @@ const AddressModal = ({ address, closeModal }) => {
         state: '',
         pincode: ''
     });
+
+    const toastOptions = {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+        theme: "light",
+      }
 
     const states = [
         "Andaman and Nicobar Islands",
@@ -85,9 +98,19 @@ const AddressModal = ({ address, closeModal }) => {
         e.preventDefault();
         try {
             if (address) {
-                await axios.put(`http://localhost:5000/api/users/address/${address._id}`,{userId, updatedAddress: formData});
+                const response = await axios.put(`http://localhost:5000/api/users/address/${address._id}`,{userId, updatedAddress: formData});
+                if(response.status===200){
+                    toast.success(response.data.message, toastOptions)
+                }else{
+                    toast.error(response.data.message, toastOptions)
+                }
             } else {
-                await axios.post('http://localhost:5000/api/users/address',{userId,newAddress: formData});
+                const response = await axios.post('http://localhost:5000/api/users/address',{userId,newAddress: formData});
+                if(response.status===200){
+                    toast.success(response.data.message, toastOptions)
+                }else{
+                    toast.error(response.data.message, toastOptions)
+                }
             }
             closeModal();
         } catch (error) {

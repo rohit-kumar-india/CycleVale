@@ -50,7 +50,7 @@ const Login = () => {
           </div>
           <div className="mb-4">
             <label htmlFor="password" className="block mb-2">Password</label>
-            <input type="password" id="password" value={credentials.password} onChange={handleChange} className="border px-3 py-2 w-full rounded-md" required />
+            <input type="password" id="password" value={credentials.password} onChange={handleChange} className="border px-3 py-2 w-full rounded-md text-black" required />
           </div>
           <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md w-full">Login</button>
           <p className="mt-4 text-center">

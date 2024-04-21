@@ -40,8 +40,7 @@ exports.updateAddress = async (req, res) => {
         await user.save();
 
         //res.send(user); // Send the updated user data
-        console.log('Address added successfully');
-        res.status(200).send({ message: 'Address added successfully' });
+        res.status(200).send({ message: 'Address updated successfully' });
     } catch (error) {
         console.error('Error adding address:', error.message);
     }
@@ -85,7 +84,7 @@ exports.deleteAddress = async (req, res) => {
 
         await user.save();
 
-        res.status(200).send({ message: 'Address removed from user' });
+        res.status(200).send({ message: 'Address deleted Successfully' });
 
     } catch (error) {
         console.error('Failed to delete address:', error);

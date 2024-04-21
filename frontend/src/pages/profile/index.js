@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
-
-import { MenuIcon, ShoppingCartIcon, UserIcon } from '@heroicons/react/solid';
+//import { UserCircleIcon } from '@heroicons/react/outline';
+import { MenuIcon, ShoppingCartIcon, UserIcon, UserCircleIcon } from '@heroicons/react/solid';
 
 const ProfileLayout = ({ children }) => {
   const [userName, setUserName] = useState();
@@ -19,7 +19,7 @@ const ProfileLayout = ({ children }) => {
         <ul className="flex flex-col">
         <li className="mb-2 border-t-2 border-gray-400 flex flex-row">
           {/* <img src='/images/road.jpg' className='h-14 border border-gray-400'/> */}
-          <UserIcon className="h-12 w-12  mr-1" />
+          <UserCircleIcon className="h-14 w-14  mr-1" />
           <div>
             <div className="text-blue-700 hover:text-blue-900 w-full text-left">Welcome,</div>
             <div className="font-bold text-xl hover:text-blue-900 w-full text-left">{userName}</div>

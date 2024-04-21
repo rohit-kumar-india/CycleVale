@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
-import { MenuIcon, ShoppingCartIcon, UserIcon } from '@heroicons/react/outline';
+import { MenuIcon, ShoppingCartIcon, UserCircleIcon, LogoutIcon } from '@heroicons/react/outline';
 
 const Navbar = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -55,19 +55,19 @@ const Navbar = () => {
           {isLoggedIn ? (
             <div onMouseEnter={() => setIsDropdownOpen(true)} onMouseLeave={() => setIsDropdownOpen(false)}>
               <button onClick={toggleDropdown} className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded">
-                <UserIcon className="h-5 w-5 mr-1" /> Profile
+                <UserCircleIcon className="h-5 w-5 mr-1" /> Profile
               </button>
               {isDropdownOpen && (
                 <div className="absolute right-0 top-10 mt-100 py-2 w-48 bg-white rounded-lg shadow-xl">
                   <Link href="/profile" legacyBehavior><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Profile</a></Link>
                   <Link href="/wishlist" legacyBehavior><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Wishlist</a></Link>
                   <Link href="/orders" legacyBehavior><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</a></Link>
-                  <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Logout</button>
+                  <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-red-500 font-semibold flex hover:bg-gray-100"><LogoutIcon className="h-5 w-5 mr-1"/>Logout</button>
                 </div>
               )}
             </div>
           ) : (
-            <Link href="/Login" legacyBehavior><a className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded"><UserIcon className="h-5 w-5 mr-1" /> Login</a></Link>
+            <Link href="/Login" legacyBehavior><a className="py-2 px-3 bg-yellow-400 text-gray-700 hover:bg-yellow-500 hover:text-white flex items-center rounded"><UserCircleIcon className="h-5 w-5 mr-1" /> Login</a></Link>
           )}
         </div>
       </div>

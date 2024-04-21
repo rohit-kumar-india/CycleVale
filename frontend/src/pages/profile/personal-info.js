@@ -1,20 +1,35 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import ProfileLayout from '.';
+import { toast } from 'react-toastify';
 
 const PersonalInfo = () => {
-  const userId = "65db29ba433a6266a8d13f40";
+  const [editMode, setEditMode] = useState(false);
   const [user, setUser] = useState({
+    id:'',
     name: '',
     email: '',
     phoneNo: '',
     gender: '',
     dob: ''
   });
-  const [editMode, setEditMode] = useState(false);
+  
+
+  const toastOptions = {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true,
+    progress: undefined,
+    theme: "light",
+  }
 
   // Fetch user data
   useEffect(() => {
+    let id = localStorage.getItem('userId');
+
     const fetchUserData = async (id) => {
       try {
         const response = await axios.get(`http://localhost:5000/api/users/${id}`); // Adjust URL as needed
@@ -23,7 +38,8 @@ const PersonalInfo = () => {
         console.error('Failed to fetch user data:', error);
       }
     };
-    fetchUserData(userId);
+    console.log(user);
+    fetchUserData(id);
   }, []);
 
   const handleInputChange = (e) => {
@@ -34,9 +50,10 @@ const PersonalInfo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/api/users/${userId}`, user); // Adjust URL as needed
+      await axios.patch(`http://localhost:5000/api/users/${user._id}`, user); // Adjust URL as needed
       setEditMode(false);
-      alert('Information updated successfully!');
+      toast.success("Information updated successfully!", toastOptions)
+      //alert('Information updated successfully!');
     } catch (error) {
       console.error('Failed to update user data:', error);
       alert('Failed to update information.');

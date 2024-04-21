@@ -18,6 +18,7 @@ async function fetchProduct(id) {
 
 
 const ProductDetails = () => {
+  const [userId,setUserId] =useState('');
   const [product, setProduct] = useState(null);
   const router = useRouter();
   const { id } = router.query; // Get the ID from the URL
@@ -65,9 +66,11 @@ const ProductDetails = () => {
   // }
 
   useEffect(() => {
+    let userId = localStorage.getItem('userId');
     if (id) {
       fetchProduct(id).then(setProduct);
     }
+    setUserId(userId)
   }, [id]);
 
   if (!product) {
@@ -95,7 +98,7 @@ const ProductDetails = () => {
               </div>
               <div className='flex flex-row gap-2 justify-center w-full h-15 mt-5'>
               <div onClick={()=> router.push('/')} className='w-full py-2 px-3 bg-yellow-400 transition-all duration-500 hover:cursor-pointer text-gray-700 hover:bg-yellow-500 hover:text-white flex justify-center items-center rounded'><ShoppingBagIcon className="h-10 mr-1" /> Buy Now</div>
-              <div onClick={() => addToCart('65db29ba433a6266a8d13f40',product._id,1)} className='w-full py-2 px-3 bg-yellow-400 transition-all duration-500 hover:cursor-pointer text-gray-700 hover:bg-yellow-500 hover:text-white flex justify-center items-center rounded'><ShoppingCartIcon className="h-10 mr-1" /> Add to Cart</div>
+              <div onClick={() => addToCart(userId,product._id,1)} className='w-full py-2 px-3 bg-yellow-400 transition-all duration-500 hover:cursor-pointer text-gray-700 hover:bg-yellow-500 hover:text-white flex justify-center items-center rounded'><ShoppingCartIcon className="h-10 mr-1" /> Add to Cart</div>
               </div>
       </div>
 

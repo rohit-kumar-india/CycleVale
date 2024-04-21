@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import ProfileLayout from '.';
 
 const SavedUPI = () => {
-  // State to store the list of saved UPI IDs
   const [upiIds, setUpiIds] = useState([]);
-  // State to store the value of the input field for adding new UPI ID
   const [newUpiId, setNewUpiId] = useState('');
 
   // Function to handle UPI ID deletion
@@ -46,7 +44,7 @@ const SavedUPI = () => {
         alignItems: 'center',
         justifyContent: 'center',
         background: 'linear-gradient(to right, #FFA500, #FFD700)',
-        paddingTop: '64px' // Adjust as needed to account for header height
+        //paddingTop: '64px' // Adjust as needed to account for header height
       }}>
         <div className="saved-upi-container" style={{ maxWidth: '800px', width: '100%', padding: '20px' }}>
           <h2 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>Enter UPI ID</h2>
