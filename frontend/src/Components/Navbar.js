@@ -16,7 +16,9 @@ const Navbar = () => {
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('token');
+    localStorage.removeItem('userToken');
+    localStorage.removeItem('userName');
+    localStorage.removeItem('userId');
     setIsLoggedIn(false);
     // Redirect to home page or show logout feedback
   };
