@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { useRouter } from 'next/router';
+import Reviews from './Reviews'
 import axios from 'axios';
 import Head from 'next/head';
 import { ShoppingBagIcon, ShoppingCartIcon } from '@heroicons/react/outline';
+import ReviewList from './ReviewList';
 
 // Placeholder for fetching a single product's details
 async function fetchProduct(id) {
@@ -137,10 +139,15 @@ const ProductDetails = () => {
               <dt className="text-sm font-medium text-gray-500">
                 Description
               </dt>
+
               <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
                 {/* {product.description} */}
               </dd>
+
             </div>
+          <Reviews/>
+          <ReviewList reviews={product.reviews}/>
+          
         </div>
       </div>
       </div>
