@@ -1,5 +1,4 @@
-const express = require('express');
-const router = express.Router();
+const router = require('express').Router();
 const { uploadImage } = require('../controllers/imageController');
 const multer = require('multer');
 const storage = multer.memoryStorage(); // or use diskStorage if you prefer

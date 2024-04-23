@@ -33,7 +33,7 @@ import React from 'react';
 
             <div className="mb-4 border rounded p-2">
                 <h3 className="text-lg font-semibold mb-2">Selected Payment Method</h3>
-                <p>{details.paymentMethod.selectedOption}</p>
+                <p>{details.paymentDetails.selectedOption}</p>
             </div>
 
             <div className="mb-4 border rounded p-2">

@@ -9,8 +9,11 @@
 //     );
 // };
 
+import { CardElement, Elements, useStripe, useElements } from '@stripe/react-stripe-js';
+import { loadStripe } from '@stripe/stripe-js';
 import { useState, useEffect } from "react";
 import axios from "axios";
+import StripeForm from './StripeForm';
 
 const demo = [
     { id: 1, cardNumber: "1234 5678 9012 3456", expiryDate: "12/24" },
@@ -45,6 +48,11 @@ const PaymentOptions = ({ onSelect }) => {
         setSelectedCOD('');
         setCaptcha('');
     };
+
+    
+    const STRIPE_PUBLISHABLE_KEY = "pk_test_51P8KyQSDDXXhwxjmtDRh8o5OZuRulHmyl5ZwMKZzfffP0GJvkaL9pKWjRY07pGmxkXedei74UarR2dhxdiNgsVo000Kdp8zOsx"
+    // Load Stripe outside of component to ensure it's only loaded once
+    const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
 
     useEffect(() => {
 
@@ -82,14 +90,19 @@ const PaymentOptions = ({ onSelect }) => {
     };
 
     const handleProceed = () => {
-        if (selectedOption == 'Credit Card') {
-            onSelect({selectedOption , selectedCard});
-        }else if(selectedOption == 'UPI') {
-            onSelect({selectedOption , selectedUPI});
-        }else if(selectedOption == 'Wallet'){
-            onSelect({selectedOption , selectedWallet});
-        }else if(selectedOption == 'Cash on Delivery'){
-            onSelect({selectedOption});
+        console.log(selectedOption, selectedCard)
+        if (selectedOption == 'card' || selectedOption == 'newCard') {
+            onSelect({ selectedOption, selectedCard});
+        // if (selectedOption == 'card') {
+        //     onSelect({ selectedOption, selectedCard: { token: 'tok_visa' } });
+        // }else if (selectedOption == 'newCard') {
+        //     onSelect({ selectedOption: 'card', selectedCard });   
+        } else if (selectedOption == 'UPI') {
+            onSelect({ selectedOption, selectedUPI });
+        } else if (selectedOption == 'Wallet') {
+            onSelect({ selectedOption, selectedWallet });
+        } else if (selectedOption == 'Cash on Delivery') {
+            onSelect({ selectedOption });
         }
     };
 
@@ -99,7 +112,10 @@ const PaymentOptions = ({ onSelect }) => {
         }
     };
 
-
+    const handleCard = (card) =>{
+        setSelectedCard(card);
+        handleProceed()
+    }
 
 
 
@@ -123,12 +139,12 @@ const PaymentOptions = ({ onSelect }) => {
                 <div className="flex flex-col space-y-4">
                     <div className="border rounded">
                         <button
-                            onClick={() => handleSelectOption('Credit Card')}
-                            className={`px-4 py-2 w-full mb-2 hover:bg-blue-50 ${selectedOption === 'Credit Card' ? 'bg-blue-100' : ''}`}
+                            onClick={() => handleSelectOption('card')}
+                            className={`px-4 py-2 w-full mb-2 hover:bg-blue-50 ${selectedOption === 'card' ? 'bg-blue-100' : ''}`}
                         >
-                            Credit Card
+                            Card Payment
                         </button>
-                        {showCCOptions && selectedOption === 'Credit Card' && (
+                        {showCCOptions && selectedOption === 'card' && (
                             <div className="mx-4">
                                 {/* Display saved credit cards */}
                                 {/* Map through saved credit cards and display each one */}
@@ -149,7 +165,7 @@ const PaymentOptions = ({ onSelect }) => {
                                 ))}
 
                                 {/* Option to add a new credit card */}
-                                <div className="my-2 py-2 cursor-pointer hover:bg-gray-200 border">
+                                {/* <div className="my-2 py-2 cursor-pointer hover:bg-gray-200 border">
                                     <input
                                         type="radio"
                                         id="new"
@@ -190,7 +206,53 @@ const PaymentOptions = ({ onSelect }) => {
                                             </form>
                                         )}
                                     </label>
-                                </div>
+                                </div> */}
+                                <Elements stripe={stripePromise}>
+                                    <stripeForm/>
+                                    <div className="my-2 py-2 cursor-pointer hover:bg-gray-200 border">
+                                        <input
+                                            type="radio"
+                                            id="newCard"
+                                            name="newCard"
+                                            checked={selectedCard && selectedCard === "newCard"}
+                                            onChange={() => handleSavedCardClick("newCard")}
+                                            className="form-radio mx-4 h-4 w-4 cursor-pointer"
+                                        />
+                                        <label htmlFor="newCard" className="text-lg font-semibold mb-2 cursor-pointer">
+                                            Enter stripe Card Details
+                                            {selectedCard === "newCard" && (
+                                                <StripeForm onConfirm={handleCard}/>
+                                                // <form onSubmit={handleAddCreditCard} className="ml-12">
+                                                //     <div id="card-details" className="max-w-md my-2 border border-gray-300 rounded p-2">
+                                                //         <CardElement
+                                                //             options={{
+                                                //                 style: {
+                                                //                     base: {
+                                                //                         fontSize: '16px', color: '#424770',
+                                                //                         '::placeholder': {
+                                                //                             color: '#aab7c4',
+                                                //                         },
+                                                //                     },
+                                                //                     invalid: {
+                                                //                         color: '#9e2146',
+                                                //                     },
+                                                //                 },
+                                                //                 hidePostalCode: true, // Hide the postal code or zip field
+                                                //             }}
+                                                //         />
+                                                //     </div>
+                                                //     <button
+                                                //         type="submit"
+                                                //         disabled={!stripe}
+                                                //         className="bg-green-500 text-white font-semibold py-2 px-4 rounded disabled:bg-gray-400 disabled:cursor-not-allowed"
+                                                //     >
+                                                //         Pay Now
+                                                //     </button>
+                                                // </form>
+                                            )}
+                                        </label>
+                                    </div>
+                                </Elements>
                             </div>
 
                         )}

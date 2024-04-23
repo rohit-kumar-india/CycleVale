@@ -14,6 +14,8 @@ const AddProductForm = () => {
   const [productDetails, setProductDetails] = useState('');
   const [productBrand, setProductBrand] = useState('');
   const [productPhotos, setProductPhotos] = useState([]);
+  const [processing, setProcessing] = useState(false); // State to manage processing status
+  const [dynamicText, setDynamicText] = useState('');
 
   const toastOptions = {
     position: "top-right",
@@ -32,6 +34,8 @@ const AddProductForm = () => {
   }, []);
 
   const handleUpload = async () => {
+    setDynamicText('Uploading Images...');
+
     const formData = new FormData();
     productPhotos.forEach((image) => {
       formData.append('photo', image);
@@ -41,9 +45,9 @@ const AddProductForm = () => {
       const response = await axios.post('http://localhost:5000/api/images/upload-image', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
-      
-      
-        return response.data;
+
+
+      return response.data;
     } catch (error) {
       console.error('Error uploading images:', error);
     }
@@ -52,6 +56,7 @@ const AddProductForm = () => {
   const handleFormSubmit = async (e) => {
     e.preventDefault();
 
+    setProcessing(true);
     const uploadedImages = await handleUpload();
     console.log(uploadedImages);
 
@@ -70,7 +75,7 @@ const AddProductForm = () => {
 
     console.log('Form Data:', formData);
 
-    
+
 
     // const imgs = await Promise.all(imageURLs.map(async (imag) => {
     //   return handleImageUpdate(imag);
@@ -82,12 +87,14 @@ const AddProductForm = () => {
     // }
 
     try {
+      setDynamicText('Adding Product...');
+
       //if (address) {
       const response = await axios.post("http://localhost:5000/api/products", formData);
-      if(response.status===201){
-          toast.success(response.data.message, toastOptions)
-      }else{
-          toast.error(response.data.message, toastOptions)
+      if (response.status === 201) {
+        toast.success(response.data.message, toastOptions)
+      } else {
+        toast.error(response.data.message, toastOptions)
       }
       // } else {
       //     const response = await axios.post('http://localhost:5000/api/users/address',{userId,newAddress: formData});
@@ -98,7 +105,11 @@ const AddProductForm = () => {
       //     }
       // }
     } catch (error) {
+      toast.error(error.message, toastOptions)
       console.error('Failed to save address:', error);
+    } finally {
+      // Hide the processing popup and set processing status to false
+      setProcessing(false);
     }
 
     // Reset form fields after submission (if needed)
