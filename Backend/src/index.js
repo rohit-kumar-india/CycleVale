@@ -8,7 +8,7 @@ const wishlistRoutes = require('./routes/wishlistRoutes');
 const addressRoutes = require('./routes/addressRoutes');
 const imageRoutes = require('./routes/imageRoutes');
 const paymentRoutes = require('./routes/paymentRoutes');
-// const orderRoutes = require('./src/routes/orderRoutes');
+const orderRoutes = require('./routes/orderRoutes');
 // const errorHandler = require('./src/middleware/errorMiddleware');
 require('./middleware/mongoose');
 
@@ -37,7 +37,7 @@ app.use('/api/payments', paymentRoutes);
 // app.use('/api/users/wishlists', wishlistRoutes);
 // app.use('/api/users/carts', cartRoutes);
 app.use('/api/users/address', addressRoutes);
-//app.use('/api/orders', orderRoutes);
+app.use('/api/orders', orderRoutes);
 
 // Error handler middleware
 //app.use(errorHandler);
