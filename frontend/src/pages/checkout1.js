@@ -9,6 +9,8 @@ import Steps from '../Components/Steps';
 import OrderSummary from '@/Components/OrderSummary';
 
 const CheckoutPage = () => {
+    const currentDate = new Date();
+    const userId = '65db29ba433a6266a8d13f40';
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [paymentDetails, setPaymentDetails] = useState('');
@@ -28,6 +30,7 @@ const CheckoutPage = () => {
                 return {
                     ...item,
                     productDetails: productResponse.data.product,
+                    purchasePrice: (productResponse.data.product.discountPercentage > 0 && currentDate >= new Date(productResponse.data.product.discountStart) && currentDate <= new Date(productResponse.data.product.discountEnd)) ? productResponse.data.product.price * (100- productResponse.data.product.discountPercentage) / 100 : productResponse.data.product.price
                 };
             }));
             setCartItems(productDetails);
@@ -44,7 +47,7 @@ const CheckoutPage = () => {
     }, []);
     console.log(cartItems)
     const totalPrice = cartItems.reduce((total, item) => total + item.productDetails.price * item.quantity, 0);
-    const currentDate = new Date();
+    
     const discountPrice = cartItems.reduce((totalD, item) =>
         totalD + ((item.productDetails.discountPercentage > 0 && currentDate >= new Date(item.productDetails.discountStart) && currentDate <= new Date(item.productDetails.discountEnd)) ? item.productDetails.price * item.productDetails.discountPercentage / 100 * item.quantity : 0), 0);
 
@@ -108,32 +111,37 @@ const CheckoutPage = () => {
         setDynamicText('Processing Payments...');
         setProcessing(true);
         console.log(selectedAddress, paymentDetails);
-        if (paymentDetails.selectedOption === 'card' || paymentDetails.selectedOption === 'newCard') {
+        try {
+            if (paymentDetails.selectedOption === 'card' || paymentDetails.selectedOption === 'newCard') {
 
-            try {
-                const response = await axios.post('http://localhost:5000/api/payments', {
+
+                const paymentResponse = await axios.post('http://localhost:5000/api/payments', {
                     paymentType: paymentDetails.selectedOption,
                     paymentCard: paymentDetails.selectedCard,
                     totalAmount: (totalPrice - discountPrice + 10).toFixed(2)
                 });
                 // Redirect to success page or handle next step
-                console.log('Order placed:', response.data);
-            } catch (error) {
-                console.error('Failed to place order:', error);
-            }
+                console.log('Order placed:', paymentResponse.data);
 
-            // const { paymentMethod, error } = await stripe.createPaymentMethod({
-            //     type: 'card',
-            //     card: paymentDetails.selectedCard
-            //   });
-            //   console.log(paymentMethod)
-        }
-        try {
-            const { data } = await axios.post('/api/orders', {
-                address: selectedAddress,
-                paymentDetails,
-                items: cartItems.items,
-                total: cartItems.total
+                //setPaymentDetails(prevPaymentDetails => ({ ...prevPaymentDetails, paymentMethod: paymentDetails.selectedOption, paymentStatus: 'Complete', transactionId: paymentResponse.data.paymentIntent.id }));
+                //console.log(paymentDetails);
+                var paymentId = paymentResponse.data.paymentIntent.id
+                // const { paymentMethod, error } = await stripe.createPaymentMethod({
+                //     type: 'card',
+                //     card: paymentDetails.selectedCard
+                //   });
+                //   console.log(paymentMethod)
+            }
+            const { data } = await axios.post('http://localhost:5000/api/orders/place-order', {
+                userId,
+                shippingDetails: selectedAddress,
+                paymentDetails: {
+                    paymentMethod: paymentDetails.selectedOption, 
+                    paymentStatus: 'Complete', 
+                    transactionId: paymentId
+                },
+                items: cartItems,
+                totalAmount: (totalPrice - discountPrice + 10).toFixed(2)
             });
             // Redirect to success page or handle next step
             console.log('Order placed:', data);
@@ -142,7 +150,7 @@ const CheckoutPage = () => {
         } finally {
             // Hide the processing popup and set processing status to false
             setProcessing(false);
-          }
+        }
     };
 
     return (
@@ -161,8 +169,8 @@ const CheckoutPage = () => {
             {processing && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
                     <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-500"></div>
-                <div className="text-white text-lg ml-4">{dynamicText}</div>
-              </div>
+                    <div className="text-white text-lg ml-4">{dynamicText}</div>
+                </div>
             )}
         </div>
     );

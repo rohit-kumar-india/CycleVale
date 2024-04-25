@@ -132,7 +132,7 @@ const ProductDetails = () => {
                     <span className="font-bold ml-2 text-xl text-green-600">{product.discountPercentage}% off</span>
                   </>
                 ) : (
-                  <span className="font-bold text-xl">₹${product.price}</span>
+                  <span className="font-bold text-xl">₹{product.price}</span>
                 )}
         </div>
         <div className="w-full bg-white px-4 py-5">

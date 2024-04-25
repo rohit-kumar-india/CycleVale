@@ -45,7 +45,7 @@ const ProfileLayout = ({ children }) => {
             <Link href="/profile/account-settings" legacyBehavior><a className="text-blue-700 hover:text-blue-900">Account Settings</a></Link>
           </li>
           <li className="mb-2">
-            <Link href="/profile/orders" legacyBehavior><a className="text-blue-700 hover:text-blue-900">Order History</a></Link>
+            <Link href="/orders" legacyBehavior><a className="text-blue-700 hover:text-blue-900">My Orders</a></Link>
           </li>
           <li className="mb-2">
             <Link href="/wishlist" legacyBehavior><a className="text-blue-700 hover:text-blue-900">Wishlist</a></Link>

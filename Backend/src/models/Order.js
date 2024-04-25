@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-    productId: {
+    product: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Product',
         required: true
@@ -25,7 +25,7 @@ const shippingDetailsSchema = new mongoose.Schema({
     city: { type: String, required: true },
     state: { type: String, required: true },
     country: { type: String, },
-    zipCode: { type: String, required: true }
+    pincode: { type: String, required: true, match: [/^\d{6}$/, 'Please fill a valid pincode'] }
 }, { _id: false });
 
 const paymentDetailsSchema = new mongoose.Schema({
