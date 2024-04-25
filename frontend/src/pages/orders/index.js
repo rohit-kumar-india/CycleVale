@@ -9,12 +9,13 @@ const Orders = () => {
   const [orders, setOrders] = useState([]);
 
   useEffect(() => {
-    fetchOrders();
+    let id = localStorage.getItem('userId');
+    fetchOrders(id);
   }, []);
 
-  const fetchOrders = async () => {
+  const fetchOrders = async (userId) => {
     try {
-      const orderResponse = await axios.get('http://localhost:5000/api/orders/order-history/65db29ba433a6266a8d13f40');
+      const orderResponse = await axios.get(`http://localhost:5000/api/orders/order-history/${userId}`);
       setOrders(orderResponse.data);
       const orderData = orderResponse.data;
       console.log(orderResponse.data)
@@ -59,7 +60,7 @@ const Orders = () => {
                     <p className="text-xl font-semibold">{order.items[0].product.brand}</p>
                     <p className="text-gray-600">{order.items[0].product.name}</p>
                   </div>
-                  <p className="ml-auto font-semibold mr-48">{`₹${order.totalAmount.toFixed(2)}`}</p>
+                  <p className="ml-auto font-semibold mr-28">{`₹${order.totalAmount.toFixed(2)}`}</p>
                 </div>
                 </div>
               </Link>

@@ -1,6 +1,7 @@
 // pages/checkout.js
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useRouter } from 'next/router';
 import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import AddressSelection from '../Components/AddressSelection';
 import PaymentOptions from '../Components/PaymentOptions';
@@ -10,7 +11,8 @@ import OrderSummary from '@/Components/OrderSummary';
 
 const CheckoutPage = () => {
     const currentDate = new Date();
-    const userId = '65db29ba433a6266a8d13f40';
+    const router = useRouter();
+    const [userId,setUserId] =useState('');
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [paymentDetails, setPaymentDetails] = useState('');
@@ -34,7 +36,7 @@ const CheckoutPage = () => {
                 };
             }));
             setCartItems(productDetails);
-
+            setUserId(id);
         } catch (error) {
             console.error('Failed to fetch cart or product details', error);
         } finally {
@@ -44,7 +46,6 @@ const CheckoutPage = () => {
 
     useEffect(() => {
         let id = localStorage.getItem('userId');
-        console.log(id);
         fetchCartDetails(id);
     }, []);
     console.log(cartItems)
@@ -134,7 +135,10 @@ const CheckoutPage = () => {
                 //   });
                 //   console.log(paymentMethod)
             }
-            const { data } = await axios.post('http://localhost:5000/api/orders/place-order', {
+
+            setDynamicText('Payment Done... Placing your order...');
+
+            const orderResponse = await axios.post('http://localhost:5000/api/orders/place-order', {
                 userId,
                 shippingDetails: selectedAddress,
                 paymentDetails: {
@@ -146,7 +150,12 @@ const CheckoutPage = () => {
                 totalAmount: (totalPrice - discountPrice + 10).toFixed(2)
             });
             // Redirect to success page or handle next step
-            console.log('Order placed:', data);
+            console.log('Order placed:', orderResponse);
+            if(orderResponse.status === 201){
+                setTimeout(() => {
+                    router.push(`/orders/${orderResponse.data.order._id}`);
+                  }, 2000);
+            }
         } catch (error) {
             console.error('Failed to place order:', error);
         } finally {
