@@ -20,6 +20,8 @@ const AddressSelection = ({ onSelect }) => {
     const [selectedAddressId, setSelectedAddressId] = useState('');
 
     useEffect(() => {
+        let id = localStorage.getItem('userId');
+        console.log(id);
         // Fetch addresses from API
         async function fetchAddresses(id) {
             setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
@@ -36,7 +38,7 @@ const AddressSelection = ({ onSelect }) => {
         }
         }
 
-        fetchAddresses(userId);
+        fetchAddresses(id);
     }, []);
 
     if (isLoading) {

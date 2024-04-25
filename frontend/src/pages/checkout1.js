@@ -43,7 +43,9 @@ const CheckoutPage = () => {
     };
 
     useEffect(() => {
-        fetchCartDetails('65db29ba433a6266a8d13f40');
+        let id = localStorage.getItem('userId');
+        console.log(id);
+        fetchCartDetails(id);
     }, []);
     console.log(cartItems)
     const totalPrice = cartItems.reduce((total, item) => total + item.productDetails.price * item.quantity, 0);
