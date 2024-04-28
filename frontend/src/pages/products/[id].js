@@ -93,10 +93,12 @@ const ProductDetails = () => {
         <div className='max-w-7xl flex'>
       <div className=" flex flex-col bg-white px-4 py-5 sm:px-6 w-[50%]">
               {/* <img src={product.image || '/images/cyclefront2.jpeg'} alt={product.name} width={500} height={500} objectFit="contain" /> */}
-              <img src={'/images/cyclefront2.jpeg'} alt={product.name} className='w-full h-full object-contain' />
+              <img src={product.imageURLs[0]? product.imageURLs[0]: '/images/cyclefront2.jpeg'} alt={product.name} className='w-full h-full object-contain' />
               <div className='flex flex-row gap-2 w-full mt-5'>
-              <img src={'/images/cyclefront2.jpeg'} alt={product.name} width={80} objectFit="contain" />
-              <img src={'/images/cyclefront2.jpeg'} alt={product.name} width={80}  objectFit="contain" />
+                {product.imageURLs.map(image => (
+              <img src={ image? image:'/images/cyclefront2.jpeg'} alt={product.name} width={80} objectFit="contain" />
+              //<img src={'/images/cyclefront2.jpeg'} alt={product.name} width={80}  objectFit="contain" />
+              ) )}
               </div>
               <div className='flex flex-row gap-2 justify-center w-full h-15 mt-5'>
               <div onClick={()=> router.push('/')} className='w-full py-2 px-3 bg-yellow-400 transition-all duration-500 hover:cursor-pointer text-gray-700 hover:bg-yellow-500 hover:text-white flex justify-center items-center rounded'><ShoppingBagIcon className="h-10 mr-1" /> Buy Now</div>

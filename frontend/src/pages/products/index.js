@@ -148,7 +148,7 @@ const Products = () => {
               return (
                 <>
                   <ProductCard key={product._id} Product={{ ...product, wishlisted: isWishlisted }} />
-                  <Link href={`/products/${product._id}`} className="transform overflow-hidden hover:shadow-lg bg-white duration-200 hover:scale-105 cursor-pointer">
+                  {/* <Link href={`/products/${product._id}`} className="transform overflow-hidden hover:shadow-lg bg-white duration-200 hover:scale-105 cursor-pointer">
                     <img src="/images/cyclefront2.jpeg" alt="Product image" className="w-full px-5" />
                     <div className="p-4 text-black/[0.9]">
                       <h2 className="font-bold text-xl mb-1" >{product.name}</h2>
@@ -172,7 +172,7 @@ const Products = () => {
                         )}
                       </div>
                     </div>
-                  </Link>
+                  </Link> */}
                 </>
               );
             })}

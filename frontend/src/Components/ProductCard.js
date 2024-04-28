@@ -87,7 +87,7 @@ const ProductCard = ({ Product }) => {
           )}
         </button>
       </div>
-      <img src="/images/cyclefront2.jpeg" alt="Product image" className="w-full px-5" />
+      <img src={product.imageURLs[0]? product.imageURLs[0]: '/images/cyclefront2.jpeg'} alt="Product image" className="w-full px-5" />
       <div className="p-4 text-black/[0.9]">
         <h2 className="font-bold text-xl mb-1" >{product.name}</h2>
         <div className="flex items-center mb-1">
