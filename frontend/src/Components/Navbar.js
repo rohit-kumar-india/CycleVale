@@ -1,8 +1,10 @@
 import { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { MenuIcon, ShoppingCartIcon, UserCircleIcon, LogoutIcon } from '@heroicons/react/outline';
 
 const Navbar = () => {
+  const router = useRouter();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -21,6 +23,7 @@ const Navbar = () => {
     localStorage.removeItem('userId');
     setIsLoggedIn(false);
     // Redirect to home page or show logout feedback
+    router.push('/')
   };
 
   return (

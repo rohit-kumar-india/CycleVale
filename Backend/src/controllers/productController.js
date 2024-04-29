@@ -72,5 +72,41 @@ exports.addProduct = async (req, res, next) => {
     }
 };
 
-
+// Route to add a review for a product
+exports.addReview = async (req, res) => {
+    const { user, name, rating, comment } = req.body;
+    const productId = req.params.productId;
+  
+    try {
+      const product = await Product.findById(productId);
+  
+      if (!product) {
+        return res.status(404).json({ message: 'Product not found' });
+      }
+  
+      // Create a new review
+      const review = {
+        name,
+        rating,
+        comment,
+        user
+        //user: req.user._id // Assuming you have authentication middleware that adds user info to req.user
+      };
+  
+      // Add the review to the product's reviews array
+      product.reviews.push(review);
+  
+      // Update the product's rating and numReviews based on the new review
+      product.rating = (product.rating * product.numReviews + rating) / (product.numReviews + 1);
+      product.numReviews += 1;
+  
+      // Save the updated product
+      await product.save();
+  
+      res.status(201).json({ message: 'Review added successfully', review });
+    } catch (error) {
+      console.error('Error adding review:', error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
 

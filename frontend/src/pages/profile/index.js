@@ -2,16 +2,26 @@ import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 //import { UserCircleIcon } from '@heroicons/react/outline';
 import { MenuIcon, ShoppingCartIcon, UserIcon, UserCircleIcon } from '@heroicons/react/solid';
+import { useRouter } from 'next/router';
 
 const ProfileLayout = ({ children }) => {
+  const router = useRouter();
   const [userName, setUserName] = useState();
+  const [processing, setProcessing] = useState(false); // State to manage processing status
+  const [dynamicText, setDynamicText] = useState('Loading..');
+  
   
 
   useEffect(() => {
+    //setProcessing(true);
+   const token = localStorage.getItem('userToken');
+    if(!token){
+      router.push('/Login')
+    }
     let username = localStorage.getItem('userName');
     setUserName(username)
-  }, []);
-
+  },[]);
+  
   return (
     <div className="mt-[60px] flex min-h-screen max-w-7xl mx-auto">
       {/* Left Menu */}
@@ -55,6 +65,13 @@ const ProfileLayout = ({ children }) => {
       <div className="w-3/4 p-4">
         {children}
       </div>
+      {/* Processing popup */}
+      {processing && (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+              <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+              <div className="text-white text-lg ml-4">{dynamicText}</div>
+          </div>
+      )}
     </div>
   );
 };

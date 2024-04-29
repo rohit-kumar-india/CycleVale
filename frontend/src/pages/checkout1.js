@@ -12,7 +12,7 @@ import OrderSummary from '@/Components/OrderSummary';
 const CheckoutPage = () => {
     const currentDate = new Date();
     const router = useRouter();
-    const [userId,setUserId] =useState('');
+    const [userId, setUserId] = useState('');
     const [currentStep, setCurrentStep] = useState(1);
     const [selectedAddress, setSelectedAddress] = useState(null);
     const [paymentDetails, setPaymentDetails] = useState('');
@@ -32,7 +32,7 @@ const CheckoutPage = () => {
                 return {
                     ...item,
                     productDetails: productResponse.data.product,
-                    purchasePrice: (productResponse.data.product.discountPercentage > 0 && currentDate >= new Date(productResponse.data.product.discountStart) && currentDate <= new Date(productResponse.data.product.discountEnd)) ? productResponse.data.product.price * (100- productResponse.data.product.discountPercentage) / 100 : productResponse.data.product.price
+                    purchasePrice: (productResponse.data.product.discountPercentage > 0 && currentDate >= new Date(productResponse.data.product.discountStart) && currentDate <= new Date(productResponse.data.product.discountEnd)) ? productResponse.data.product.price * (100 - productResponse.data.product.discountPercentage) / 100 : productResponse.data.product.price
                 };
             }));
             setCartItems(productDetails);
@@ -45,12 +45,17 @@ const CheckoutPage = () => {
     };
 
     useEffect(() => {
+        const token = localStorage.getItem('userToken');
+    if(!token){
+      router.push('/Login')
+    }else{
         let id = localStorage.getItem('userId');
         fetchCartDetails(id);
+    }
     }, []);
     console.log(cartItems)
     const totalPrice = cartItems.reduce((total, item) => total + item.productDetails.price * item.quantity, 0);
-    
+
     const discountPrice = cartItems.reduce((totalD, item) =>
         totalD + ((item.productDetails.discountPercentage > 0 && currentDate >= new Date(item.productDetails.discountStart) && currentDate <= new Date(item.productDetails.discountEnd)) ? item.productDetails.price * item.productDetails.discountPercentage / 100 * item.quantity : 0), 0);
 
@@ -142,8 +147,8 @@ const CheckoutPage = () => {
                 userId,
                 shippingDetails: selectedAddress,
                 paymentDetails: {
-                    paymentMethod: paymentDetails.selectedOption, 
-                    paymentStatus: 'Complete', 
+                    paymentMethod: paymentDetails.selectedOption,
+                    paymentStatus: 'Complete',
                     transactionId: paymentId
                 },
                 items: cartItems,
@@ -151,10 +156,10 @@ const CheckoutPage = () => {
             });
             // Redirect to success page or handle next step
             console.log('Order placed:', orderResponse);
-            if(orderResponse.status === 201){
+            if (orderResponse.status === 201) {
                 setTimeout(() => {
                     router.push(`/orders/${orderResponse.data.order._id}`);
-                  }, 2000);
+                }, 2000);
             }
         } catch (error) {
             console.error('Failed to place order:', error);
@@ -179,7 +184,7 @@ const CheckoutPage = () => {
             {/* Processing popup */}
             {processing && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-gray-500"></div>
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
                     <div className="text-white text-lg ml-4">{dynamicText}</div>
                 </div>
             )}

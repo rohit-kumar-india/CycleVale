@@ -6,17 +6,7 @@ import { toast } from 'react-toastify';
 
 const AddProductForm = () => {
   const [user, setUser] = useState('');
-  // const [productName, setProductName] = useState('');
-  // const [productPrice, setProductPrice] = useState('');
-  // const [discountPrice, setDiscountPrice] = useState('');
-  // const [countInStock, setCountInStock] = useState('');
-  // const [productCategory, setProductCategory] = useState('');
-  // const [productDetails, setProductDetails] = useState('');
-  // const [productBrand, setProductBrand] = useState('');
-  const [processing, setProcessing] = useState(false); // State to manage processing status
-  const [dynamicText, setDynamicText] = useState('');
-  const [productPhotos, setProductPhotos] = useState([]);
-  const [productData, setProductData] = useState({
+  const emptyProductForm = {
     user: '',
     name: '',
     brand: '',
@@ -28,8 +18,20 @@ const AddProductForm = () => {
     category: '',
     description: '',
     imageURLs: [],
-  });
+  };
+  // const [productName, setProductName] = useState('');
+  // const [productPrice, setProductPrice] = useState('');
+  // const [discountPrice, setDiscountPrice] = useState('');
+  // const [countInStock, setCountInStock] = useState('');
+  // const [productCategory, setProductCategory] = useState('');
+  // const [productDetails, setProductDetails] = useState('');
+  // const [productBrand, setProductBrand] = useState('');
+  const [processing, setProcessing] = useState(false); // State to manage processing status
+  const [dynamicText, setDynamicText] = useState('');
+  const [productPhotos, setProductPhotos] = useState([]);
+  const [productData, setProductData] = useState(emptyProductForm);
 
+  
   const toastOptions = {
     position: "top-right",
     autoClose: 2000,
@@ -126,7 +128,9 @@ const AddProductForm = () => {
       //if (address) {
       const response = await axios.post("http://localhost:5000/api/products", {...productData, imageURLs: uploadedImages });
       if (response.status === 201) {
-        toast.success(response.data.message, toastOptions)
+        toast.success(response.data.message, toastOptions);
+        resetProductForm();
+        setProductPhotos([]);
       } else {
         toast.error(response.data.message, toastOptions)
       }
@@ -173,6 +177,10 @@ const AddProductForm = () => {
     // }));
     console.log(productData,productPhotos)
   };
+
+  const resetProductForm = async() => {
+    setProductData(emptyProductForm);
+  }
 
   return (
     <Layout>

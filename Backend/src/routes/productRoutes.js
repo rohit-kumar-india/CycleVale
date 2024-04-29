@@ -10,12 +10,14 @@ router.get('/', productController.getAllProduct);
 //Update products
 router.patch('/:id', productController.updateProduct);
 
-//Update products
+//Delete products
 router.delete('/:id', productController.deleteProduct);
-
 
 // Add products
 router.post('/', productController.addProduct);
+
+// Route to add a review for a product
+router.post('/:productId/reviews', productController.addReview);
 
 
 module.exports = router;

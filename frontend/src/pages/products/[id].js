@@ -22,6 +22,7 @@ async function fetchProduct(id) {
 const ProductDetails = () => {
   const [userId,setUserId] =useState('');
   const [product, setProduct] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(product? product.imageURLs[0]: null);
   const router = useRouter();
   const { id } = router.query; // Get the ID from the URL
 
@@ -70,7 +71,9 @@ const ProductDetails = () => {
   useEffect(() => {
     let userId = localStorage.getItem('userId');
     if (id) {
-      fetchProduct(id).then(setProduct);
+      fetchProduct(id).then((res)=> {
+        console.log(res)
+        setProduct(res)});
     }
     setUserId(userId)
   }, [id]);
@@ -89,25 +92,47 @@ const ProductDetails = () => {
         <title>{product.name}</title>
       </Head>
       <div className="mt-[60px] w-full flex justify-center flex-row bg-white shadow  mx-auto">
-        {/* Left Section for Images */}
-        <div className='max-w-7xl flex'>
-      <div className=" flex flex-col bg-white px-4 py-5 sm:px-6 w-[50%]">
+        
+        <div className='max-w-7xl flex' >
+          {/* Left Section for Images */}
+            <div className=" flex flex-col bg-white px-4 py-5 sm:px-6 w-[50%] sticky top-[60px] relative" style={{ maxHeight: '600px', overflow: 'auto' }}>
               {/* <img src={product.image || '/images/cyclefront2.jpeg'} alt={product.name} width={500} height={500} objectFit="contain" /> */}
-              <img src={product.imageURLs[0]? product.imageURLs[0]: '/images/cyclefront2.jpeg'} alt={product.name} className='w-full h-full object-contain' />
-              <div className='flex flex-row gap-2 w-full mt-5'>
-                {product.imageURLs.map(image => (
-              <img src={ image? image:'/images/cyclefront2.jpeg'} alt={product.name} width={80} objectFit="contain" />
-              //<img src={'/images/cyclefront2.jpeg'} alt={product.name} width={80}  objectFit="contain" />
-              ) )}
+              <img
+                src={selectedImage ? selectedImage : product.imageURLs[0]}
+                alt={product.name}
+                className="w-[500px] h-[500px] object-contain overflow-hidden inset-0"
+              />
+              <div className="flex flex-row gap-2 w-full mt-5">
+                {product.imageURLs.map((image, index) => (
+                  <img
+                    key={index}
+                    src={image ? image : '/images/cyclefront2.jpeg'}
+                    alt={product.name}
+                    width={80}
+                    objectFit="contain"
+                    onClick={() => setSelectedImage(image)}
+                    className="cursor-pointer"
+                  />
+                ))}
               </div>
-              <div className='flex flex-row gap-2 justify-center w-full h-15 mt-5'>
-              <div onClick={()=> router.push('/')} className='w-full py-2 px-3 bg-yellow-400 transition-all duration-500 hover:cursor-pointer text-gray-700 hover:bg-yellow-500 hover:text-white flex justify-center items-center rounded'><ShoppingBagIcon className="h-10 mr-1" /> Buy Now</div>
-              <div onClick={() => addToCart(userId,product._id,1)} className='w-full py-2 px-3 bg-yellow-400 transition-all duration-500 hover:cursor-pointer text-gray-700 hover:bg-yellow-500 hover:text-white flex justify-center items-center rounded'><ShoppingCartIcon className="h-10 mr-1" /> Add to Cart</div>
-              </div>
-      </div>
+              <div className="flex flex-row gap-2 justify-center w-full h-15 mt-5">
+                <div
+                  onClick={() => router.push('/')}
+                  className="w-full py-2 px-3 bg-yellow-400 transition-all duration-500 hover:cursor-pointer text-gray-700 hover:bg-yellow-500 hover:text-white flex justify-center items-center rounded"
+                >
+                  <ShoppingBagIcon className="h-10 mr-1" /> Buy Now
+                </div>
+                <div
+                  onClick={() => addToCart(userId, product._id, 1)}
+                  className="w-full py-2 px-3 bg-yellow-400 transition-all duration-500 hover:cursor-pointer text-gray-700 hover:bg-yellow-500 hover:text-white flex justify-center items-center rounded"
+                >
+                  <ShoppingCartIcon className="h-10 mr-1" /> Add to Cart
+                </div>
+            </div>
+        </div>
 
         {/* Right Section for product details */}
-        <div className="px-4 sm:px-6 border-t border-gray-200">
+        <div className="px-4 sm:px-6 border-t border-gray-200 flex-grow">
           
         <div className="py-5">
           <h3 className="font-bold text-xl leading-6 text-gray-900">
@@ -147,12 +172,11 @@ const ProductDetails = () => {
               </dd>
 
             </div>
+            <ReviewList reviews={product.reviews}/>
           <Reviews/>
-          <ReviewList reviews={product.reviews}/>
-          
         </div>
       </div>
-      </div>
+    </div>
     </>
   );
 };
