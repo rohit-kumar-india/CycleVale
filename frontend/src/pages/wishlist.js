@@ -11,42 +11,46 @@ const initialWishlists = [
 const wishlist = () => {
   const id = '65db29ba433a6266a8d13f40';
   const [wishlists, setWishlists] = useState([]);
-  const [selectedWishlist, setSelectedWishlist] = useState(wishlists[0]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [selectedWishlist, setSelectedWishlist] = useState(null);
+  const [processing, setProcessing] = useState(false); // State to manage processing status
+  const [dynamicText, setDynamicText] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
-const fetchWishlistDetails = async (id) => {
-  setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
+  const fetchWishlistDetails = async (id) => {
+    //setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
 
-  try {
-    // Fetch the user's wishlist
-    const wishlistResponse = await axios.get(`http://localhost:5000/api/users/${id}/wishlists`);
-    const wishlists = wishlistResponse.data;
+    try {
+      setDynamicText('Fetching Wishlists...');
+      setProcessing(true);
+      // Fetch the user's wishlist
+      const wishlistResponse = await axios.get(`http://localhost:5000/api/users/${id}/wishlists`);
+      const wishlists = wishlistResponse.data;
 
-    // Map over each wishlist to fetch details for all products in each list
-    const detailedWishlists = await Promise.all(wishlists.map(async (wishlist) => {
-      const detailedItems = await Promise.all(wishlist.items.map(async (item) => {
-        const productResponse = await axios.get(`http://localhost:5000/api/products/${item.product}`);
-        return {
-          ...item,
-          productDetails: {
-            ...productResponse.data.product,
-            wishlisted: true // Adding the new field here
-          }
-          //productResponse.data.product
-        };
+      // Map over each wishlist to fetch details for all products in each list
+      const detailedWishlists = await Promise.all(wishlists.map(async (wishlist) => {
+        const detailedItems = await Promise.all(wishlist.items.map(async (item) => {
+          const productResponse = await axios.get(`http://localhost:5000/api/products/${item.product}`);
+          return {
+            ...item,
+            productDetails: {
+              ...productResponse.data.product,
+              wishlisted: true // Adding the new field here
+            }
+            //productResponse.data.product
+          };
+        }));
+
+        return { ...wishlist, items: detailedItems };
       }));
-      
-      return { ...wishlist, items: detailedItems };
-    }));
 
-    setWishlists(detailedWishlists); // Assuming you have a state setter for wishlists
-    setSelectedWishlist(detailedWishlists[0]);
-  } catch (error) {
-    console.error('Failed to fetch wishlist or product details', error);
-  } finally {
-    setIsLoading(false); // Update loading state
-  }
-};
+      setWishlists(detailedWishlists); // Assuming you have a state setter for wishlists
+      setSelectedWishlist(detailedWishlists[0]);
+    } catch (error) {
+      console.error('Failed to fetch wishlist or product details', error);
+    } finally {
+      setProcessing(false);
+    }
+  };
 
 
   // const fetchWishlistDetails = async (id) => {
@@ -84,10 +88,12 @@ const fetchWishlistDetails = async (id) => {
   if (isLoading) {
     return <div className='mt-[60px] height-[600px]'>Loading wishlist...</div>;
   }
-  
+
 
   const createWishlist = async () => {
     try {
+      setDynamicText('Creating Wishlist...');
+      setProcessing(true);
       const newName = prompt('Wishlist name:');
       if (newName) {
 
@@ -100,6 +106,8 @@ const fetchWishlistDetails = async (id) => {
       }
     } catch (error) {
       console.error("Failed to add Wishlist", error);
+    } finally {
+      setProcessing(false);
     }
   };
 
@@ -132,16 +140,19 @@ const fetchWishlistDetails = async (id) => {
         </ul>
         <button className="m-4 p-2 bg-green-500 text-white rounded" onClick={createWishlist}>Create New Wishlist</button>
       </div>
+      {selectedWishlist === null ? (
+        <p>Wishlist not found.</p>
+      ) : (
+        <>
+          {/* Products List */}
 
-      {/* Products List */}
-      
-      <div className="w-3/4 bg-white p-5">
-        <h2 className="font-semibold text-2xl mb-4 pt-4">&gt; {selectedWishlist.name}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {selectedWishlist.items.map(item => (
-<>
-              <ProductCard key={item._id} Product={item.productDetails} />
-              {/* <Link href={`/products/${product._id}`} className="transform overflow-hidden hover:shadow-lg bg-white duration-200 hover:scale-105 cursor-pointer">
+          <div className="w-3/4 bg-white p-5">
+            <h2 className="font-semibold text-2xl mb-4 pt-4">&gt; {selectedWishlist.name}</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {selectedWishlist.items.map(item => (
+                <>
+                  <ProductCard key={item._id} Product={item.productDetails} />
+                  {/* <Link href={`/products/${product._id}`} className="transform overflow-hidden hover:shadow-lg bg-white duration-200 hover:scale-105 cursor-pointer">
                 <img src="/images/cyclefront2.jpeg" alt="Product image" className="w-full px-5" />
                 <div className="p-4 text-black/[0.9]">
                   <h2 className="font-bold text-xl mb-1" >{product.name}</h2>
@@ -166,10 +177,10 @@ const fetchWishlistDetails = async (id) => {
                   </div>
                 </div>
               </Link> */}
-              </>
-            ))}
-          </div>
-        {/* <div className="grid grid-cols-3 gap-4">
+                </>
+              ))}
+            </div>
+            {/* <div className="grid grid-cols-3 gap-4">
           {console.log(selectedWishlist)}
           {selectedWishlist.items.map(item => (
             <div key={item.id} className="border p-4 rounded-lg">
@@ -181,7 +192,16 @@ const fetchWishlistDetails = async (id) => {
             </div>
           ))}
         </div> */}
-      </div>
+          </div>
+        </>
+      )}
+      {/* Processing popup */}
+      {processing && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+          <div className="text-white text-lg ml-4">{dynamicText}</div>
+        </div>
+      )}
     </div>
   );
 };

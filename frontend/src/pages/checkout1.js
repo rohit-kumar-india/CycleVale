@@ -46,12 +46,12 @@ const CheckoutPage = () => {
 
     useEffect(() => {
         const token = localStorage.getItem('userToken');
-    if(!token){
-      router.push('/Login')
-    }else{
-        let id = localStorage.getItem('userId');
-        fetchCartDetails(id);
-    }
+        if (!token) {
+            router.push('/Login')
+        } else {
+            let id = localStorage.getItem('userId');
+            fetchCartDetails(id);
+        }
     }, []);
     console.log(cartItems)
     const totalPrice = cartItems.reduce((total, item) => total + item.productDetails.price * item.quantity, 0);
