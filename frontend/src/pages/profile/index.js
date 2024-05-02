@@ -13,7 +13,6 @@ const ProfileLayout = ({ children }) => {
   
 
   useEffect(() => {
-    //setProcessing(true);
    const token = localStorage.getItem('userToken');
     if(!token){
       router.push('/Login')

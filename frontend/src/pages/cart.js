@@ -11,9 +11,10 @@ import { toast } from 'react-toastify';
 
 const cart = () => {
   const [cartItems, setCartItems] = useState([]);
+  const [processing, setProcessing] = useState(false); // State to manage processing status
+  const [dynamicText, setDynamicText] = useState('');
   const [orderSummary, setOrderSummary] = useState({});
-  const [isLoading, setIsLoading] = useState(true);
-  const [id,setId] = useState('');
+  const [id, setId] = useState('');
   const router = useRouter();
 
   const toastOptions = {
@@ -36,6 +37,8 @@ const cart = () => {
   // }
   const fetchCartDetails = async (id) => {
     try {
+      setDynamicText('Fetching Cart Items...');
+      setProcessing(true);
       const cartResponse = await axios.get(`http://localhost:5000/api/carts/${id}`);
       const cartData = cartResponse.data.cart;
       const productDetails = await Promise.all(cartData.items.map(async (item) => {
@@ -47,16 +50,18 @@ const cart = () => {
       }));
       setCartItems(productDetails);
       setId(id);
-      
+
     } catch (error) {
       console.error('Failed to fetch cart or product details', error);
     } finally {
-      setIsLoading(false);
+      setProcessing(false);
     }
   };
 
   const deleteCartItem = async (productId) => {
     try {
+      setDynamicText('Removing Item...');
+      setProcessing(true);
       const response = await axios.delete(`http://localhost:5000/api/carts/${id}/${productId}`);
       console.log(response);
       const updatedCartItems = cartItems.filter(item => item.product !== productId);
@@ -65,6 +70,8 @@ const cart = () => {
       //fetchCartDetails(id);
     } catch (error) {
       console.error('Failed to delete item from cart', error);
+    } finally {
+      setProcessing(false);
     }
   }
 
@@ -76,6 +83,8 @@ const cart = () => {
     }
     // API call to update quantity in the database
     try {
+      setDynamicText('Updating Item Quantity...');
+      setProcessing(true);
       await axios.patch(`http://localhost:5000/api/carts/${id}/${productId}`, { quantity: newQuantity });
       console.log("Quantity updated");
       // Update quantity in the state/UI
@@ -89,6 +98,8 @@ const cart = () => {
       toast.success(`Quantity is updated to ${newQuantity}`, toastOptions)
     } catch (error) {
       console.error("Failed to update quantity", error);
+    } finally {
+      setProcessing(false);
     }
   };
 
@@ -104,23 +115,14 @@ const cart = () => {
     //}
   }, []);
 
-
-
-  if (isLoading) {
-    return <div className='mt-[60px]'>Loading cart...</div>;
-  }
-  // Example cart items and total calculation
-  // Replace this with your actual cart context or state management logic
-  //const cartItems = useContext(CartContext);
-
   const totalPrice = cartItems.reduce((total, item) => total + item.productDetails.price * item.quantity, 0);
   const currentDate = new Date();
   //const isDiscountActive = product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd);
-  const discountPrice = cartItems.reduce((totalD, item) => 
-        //(item.productDetails.discountPercentage > 0 && currentDate >= new Date(item.productDetails.discountStart) && currentDate <= new Date(item.productDetails.discountEnd)) ? 
-        totalD + ((item.productDetails.discountPercentage > 0 && currentDate >= new Date(item.productDetails.discountStart) && currentDate <= new Date(item.productDetails.discountEnd)) ? item.productDetails.price * item.productDetails.discountPercentage/ 100 * item.quantity : 0) , 0);
+  const discountPrice = cartItems.reduce((totalD, item) =>
+    //(item.productDetails.discountPercentage > 0 && currentDate >= new Date(item.productDetails.discountStart) && currentDate <= new Date(item.productDetails.discountEnd)) ? 
+    totalD + ((item.productDetails.discountPercentage > 0 && currentDate >= new Date(item.productDetails.discountStart) && currentDate <= new Date(item.productDetails.discountEnd)) ? item.productDetails.price * item.productDetails.discountPercentage / 100 * item.quantity : 0), 0);
 
-        //setOrderSummary({totalPrice,discountPrice, itemNo: cartItems.length})
+  //setOrderSummary({totalPrice,discountPrice, itemNo: cartItems.length})
 
   // useEffect(() => {
   //   const handleScroll = () => {
@@ -159,7 +161,7 @@ const cart = () => {
               {/* Product Image and Details */}
               <div className="flex w-2/5">
                 <div className="w-20">
-                  <img className="h-24" src='/images/cyclefront2.jpeg' alt={item.productDetails.name} />
+                  <img className="h-24 object-contain" src={item.productDetails.imageURLs[0]} alt={item.productDetails.name} />
                 </div>
                 <div className="flex flex-col justify-between ml-4 flex-grow">
                   <span className="font-bold text-sm">{item.productDetails.name}</span>
@@ -193,9 +195,16 @@ const cart = () => {
         </div>
 
         {/* Right Panel - Pricing Details */}
-        
+
         <OrderSummary TotalPrice={totalPrice} DiscountPrice={discountPrice} itemNo={cartItems.length} />
       </div>
+      {/* Processing popup */}
+      {processing && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+          <div className="text-white text-lg ml-4">{dynamicText}</div>
+        </div>
+      )}
     </div>
   );
   // <div id="summary" className='w-full md:w-1/4 px-8 py-10 transition-all duration-1000'>

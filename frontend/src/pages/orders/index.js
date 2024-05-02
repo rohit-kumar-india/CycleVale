@@ -7,6 +7,8 @@ import axios from 'axios';
 
 const Orders = () => {
   const [orders, setOrders] = useState([]);
+  const [processing, setProcessing] = useState(false); // State to manage processing status
+  const [dynamicText, setDynamicText] = useState('');
 
   useEffect(() => {
     let id = localStorage.getItem('userId');
@@ -15,6 +17,8 @@ const Orders = () => {
 
   const fetchOrders = async (userId) => {
     try {
+      setDynamicText('Fetching Your Orders...');
+      setProcessing(true);
       const orderResponse = await axios.get(`http://localhost:5000/api/orders/order-history/${userId}`);
       setOrders(orderResponse.data);
       const orderData = orderResponse.data;
@@ -33,7 +37,9 @@ const Orders = () => {
       console.log(orders);
     } catch (error) {
       console.error('Error fetching orders:', error);
-    }
+    } finally {
+      setProcessing(false);
+  }
   };
 
   return (
@@ -53,7 +59,7 @@ const Orders = () => {
                   <p className="text-gray-600">{`Date: ${new Date(order.createdAt).toLocaleDateString()}`}</p>
                   <p className="text-gray-600">{`Order #${order._id}`}</p>
                 </div>
-                {console.log(order.items[0].product.brand)}
+                {/* {console.log(order.items[0].product.brand)} */}
                 <div className="flex items-center mb-2 px-6">
                   <img src={order.items[0].product.imageURLs[0]} alt={order.items[0].product.imageURLs[0]} className="h-16 w-16 mr-4 rounded-md" />
                   <div>
@@ -68,6 +74,13 @@ const Orders = () => {
             ))
           )}
         </div>
+        {/* Processing popup */}
+        {processing && (
+                <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+                    <div className="text-white text-lg ml-4">{dynamicText}</div>
+                </div>
+            )}
       </div>
     //</Layout>
   );

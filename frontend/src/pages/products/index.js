@@ -70,6 +70,41 @@ const Products = () => {
       '2 Star': false,
       '2 Star': false
     },
+    ageGroup: {
+      younger: false,
+      adult: false,
+      older: false
+    },
+    type: {
+      hybrid: false,
+      mountain: false,
+      road: false
+    },
+    idealFor: {
+      boys: false,
+      girls: false,
+      mens: false
+    },
+    speed: {
+      none: false,
+      '1 Gear': false,
+      '3 Gears': false,
+      '7 Gears': false,
+      '21 Gears': false,
+      '27 Gears': false
+    },
+    gearType: {
+      nonGear: false,
+      gear: false
+    },
+    brake: {
+      disc: false,
+      wire: false
+    },
+    availability: {
+      inStock: false,
+      outOfStock: false
+    }
   });
 
   if (isLoading) {
@@ -100,9 +135,9 @@ const Products = () => {
 
         <div className="flex flex-row gap-6 border-1 p-6">
 
-          <div className='flex flex-col justify-left gap-2 w-full shadow-lg'>
-            <div className='font-bold text-xl text-center'>Filters</div>
-            <div className='mb-6 pl-2 hover:shadow-lg'>
+          <div className='flex flex-col justify-left gap-2 w-full shadow-lg px-6 w-[35%]'>
+            <div className='font-bold text-xl text-center p-4 border-b-2'>Filters</div>
+            <div className='my-2 pl-2 hover:shadow-lg'>
               <h2 className='font-bold text-l mb-2'>Ratings</h2>
               {Object.keys(filters.ratings).map((key) => (
                 <label key={key} className="flex items-center mb-2">
@@ -118,19 +153,65 @@ const Products = () => {
             </div>
 
             <div className='mb-6 pl-2 hover:shadow-lg'>
-              <h2 className='font-bold text-l mb-2'>Ratings</h2>
-              {Object.keys(filters.ratings).map((key) => (
+              <h2 className='font-bold text-l mb-2'>Age Group</h2>
+              {Object.keys(filters.ageGroup).map((key) => (
                 <label key={key} className="flex items-center mb-2">
                   <input
                     type="checkbox"
-                    checked={filters.ratings[key]}
-                    onChange={() => handleCheckboxChange('ratings', key)}
+                    checked={filters.ageGroup[key]}
+                    onChange={() => handleCheckboxChange('ageGroup', key)}
                     className="form-checkbox"
                   />
                   <span className="ml-2">{key}</span>
                 </label>
               ))}
             </div>
+            
+            <div className='mb-6 pl-2 hover:shadow-lg'>
+              <h2 className='font-bold text-l mb-2'>Type</h2>
+              {Object.keys(filters.type).map((key) => (
+                <label key={key} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={filters.type[key]}
+                    onChange={() => handleCheckboxChange('type', key)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">{key}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className='mb-6 pl-2 hover:shadow-lg'>
+              <h2 className='font-bold text-l mb-2'>Ideal For</h2>
+              {Object.keys(filters.idealFor).map((key) => (
+                <label key={key} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={filters.idealFor[key]}
+                    onChange={() => handleCheckboxChange('idealFor', key)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">{key}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className='mb-6 pl-2 hover:shadow-lg'>
+              <h2 className='font-bold text-l mb-2'>Speed</h2>
+              {Object.keys(filters.speed).map((key) => (
+                <label key={key} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={filters.speed[key]}
+                    onChange={() => handleCheckboxChange('speed', key)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">{key}</span>
+                </label>
+              ))}
+            </div>
+
           </div>
 
 
