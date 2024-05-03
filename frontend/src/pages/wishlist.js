@@ -9,12 +9,11 @@ const initialWishlists = [
 ];
 
 const wishlist = () => {
-  const id = '65db29ba433a6266a8d13f40';
+  const [userId, setUserId] = useState(null);
   const [wishlists, setWishlists] = useState([]);
   const [selectedWishlist, setSelectedWishlist] = useState(null);
   const [processing, setProcessing] = useState(false); // State to manage processing status
   const [dynamicText, setDynamicText] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
 
   const fetchWishlistDetails = async (id) => {
     //setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
@@ -53,6 +52,12 @@ const wishlist = () => {
   };
 
 
+  useEffect(() => {
+    const userId = localStorage.getItem('userId');
+    fetchWishlistDetails(userId);
+    setUserId(userId);
+  }, []);
+
   // const fetchWishlistDetails = async (id) => {
   //   try {
   //     const wishlistResponse = await axios.get(`http://localhost:5000/api/users/${id}/wishlists`);
@@ -81,15 +86,6 @@ const wishlist = () => {
   //   }
   // };
 
-  useEffect(() => {
-    fetchWishlistDetails(id);
-  }, []);
-
-  if (isLoading) {
-    return <div className='mt-[60px] height-[600px]'>Loading wishlist...</div>;
-  }
-
-
   const createWishlist = async () => {
     try {
       setDynamicText('Creating Wishlist...');
@@ -97,7 +93,7 @@ const wishlist = () => {
       const newName = prompt('Wishlist name:');
       if (newName) {
 
-        let response = await axios.post('http://localhost:5000/api/users/wishlist', { userId: id, wishlistName: newName });
+        let response = await axios.post('http://localhost:5000/api/users/wishlist', { userId, wishlistName: newName });
         console.log(response);
 
         setWishlists(response.data.wishlists);
