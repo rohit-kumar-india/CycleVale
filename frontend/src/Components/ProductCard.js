@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import axios from 'axios';
 import { HeartIcon as HeartOutline } from '@heroicons/react/outline'; // For the hollow heart
@@ -7,8 +7,8 @@ import { toast } from 'react-toastify';
 
 
 const ProductCard = ({ Product }) => {
-  const id = '65db29ba433a6266a8d13f40';
-  const wishlistId = '661fae3cbd1bceabfc32e805';
+  const wishlistId = null;
+  const [userId, setUserId] = useState(null);
   const [product, setProduct] = useState(Product);
   const [wishlistItems, setWishlistItems] = useState(['66123921333320dfc5c3c8e0',]);
   const currentDate = new Date();
@@ -26,9 +26,14 @@ const ProductCard = ({ Product }) => {
     theme: "light",
   }
 
+  useEffect(() => {
+    let userId = localStorage.getItem('userId');
+    setUserId(userId);
+  }, []);
+
   const removeFromWishlist = async (productId) => {
     try {
-      const response = await axios.delete('http://localhost:5000/api/wishlists/item', { data: { userId: id, wishlistId, productId } });
+      const response = await axios.delete('http://localhost:5000/api/wishlists/item', { data: { userId, wishlistId, productId } });
       console.log(response);
       toast.success("removed from Wishlist", toastOptions)
       // const updatedWishlistItems = wishlistItems.filter(item => item !== productId);
@@ -44,7 +49,7 @@ const ProductCard = ({ Product }) => {
 
   const addToWishlist = async (productId) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/wishlists/item', { userId: id, wishlistId, productId });
+      const response = await axios.post('http://localhost:5000/api/wishlists/item', { userId, wishlistId, productId });
       console.log(response);
       toast.success("added to Wishlist", toastOptions)
       setProduct({ ...product, wishlisted: true });
@@ -87,7 +92,7 @@ const ProductCard = ({ Product }) => {
           )}
         </button>
       </div>
-      <img src={product.imageURLs[0]? product.imageURLs[0]: '/images/cyclefront2.jpeg'} alt="Product image" className="w-full px-5" />
+      <img src={product.imageURLs[0] ? product.imageURLs[0] : '/images/cyclefront2.jpeg'} alt="Product image" className="w-full px-5" />
       <div className="p-4 text-black/[0.9]">
         <h2 className="font-bold text-xl mb-1" >{product.name}</h2>
         <div className="flex items-center mb-1">

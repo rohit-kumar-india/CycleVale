@@ -52,16 +52,20 @@ exports.getwishlistbyUserId = async (req, res) => {
 
 exports.addWishlistItem = async (req, res) => {
     const { userId, wishlistId, productId } = req.body;
-
+    let wishlist = null
     try {
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).send('User not found');
         }
 
-        let wishlist = user.wishlists.find(wl => wl._id.toString() === wishlistId);
-        if (!wishlist) {
-            return res.status(404).send("Wishlist does not exists");
+        if (wishlistId === null) {
+            wishlist = user.wishlists[0];
+        } else {
+            wishlist = user.wishlists.find(wl => wl._id.toString() === wishlistId);
+            if (!wishlist) {
+                return res.status(404).send("Wishlist does not exists");
+            }
         }
         //console.log(wishlist)
         let item = wishlist.items.find(item => item.product.toString() === productId);
@@ -69,7 +73,7 @@ exports.addWishlistItem = async (req, res) => {
         if (item) {
             return res.status(400).send("Item already present in Wishlist");
         }
-        
+
         // Add the product to the wishlist
         wishlist.items.push({ product: productId });
         await user.save();
@@ -83,17 +87,19 @@ exports.addWishlistItem = async (req, res) => {
 
 exports.removeWishlistItem = async (req, res) => {
     const { userId, wishlistId, productId } = req.body;
-
+    let wishlist = null
     try {
         const user = await User.findById(userId);
         if (!user) {
             return res.status(404).send('User not found');
         }
-
-        let wishlist = user.wishlists.find(wl => wl._id.toString() === wishlistId);
-        
-        if (!wishlist) {
-            return res.status(404).send("Wishlist does not exists");
+        if (wishlistId === null) {
+            wishlist = user.wishlists[0];
+        } else {
+            wishlist = user.wishlists.find(wl => wl._id.toString() === wishlistId);
+            if (!wishlist) {
+                return res.status(404).send("Wishlist does not exists");
+            }
         }
 
         let updateditems = wishlist.items.filter(item => item.product.toString() !== productId);

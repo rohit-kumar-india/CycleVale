@@ -16,7 +16,7 @@ async function fetchProducts() {
 }
 
 const Products = () => {
-  const id = '65db29ba433a6266a8d13f40';
+  const [userId, setUserId] = useState(null);
   const [products, setProducts] = useState([]);
   const [wishlistItems, setWishlistItems] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
@@ -58,8 +58,10 @@ const Products = () => {
   };
 
   useEffect(() => {
-    fetchWishlistDetails(id);
+    let userId = localStorage.getItem('userId');
+    fetchWishlistDetails(userId);
     fetchProducts().then(setProducts);
+    //setUserId(userId);
   }, []);
 
   const [filters, setFilters] = useState({
@@ -130,106 +132,106 @@ const Products = () => {
   // const discountedPrice = isDiscountActive ? (product.price - (product.price * product.discountPercentage / 100)).toFixed(2) : product.price;
   return (
     <>
-    <div className="mt-[60px] w-full flex justify-center">
-      <div className="flex gap-10 flex-col max-w-7xl">
+      <div className="mt-[60px] w-full flex justify-center">
+        <div className="flex gap-10 flex-col max-w-7xl">
 
-        <div className="flex flex-row gap-6 border-1 p-6">
+          <div className="flex flex-row gap-6 border-1 p-6">
 
-          <div className='flex flex-col justify-left gap-2 w-full shadow-lg px-6 w-[35%]'>
-            <div className='font-bold text-xl text-center p-4 border-b-2'>Filters</div>
-            <div className='my-2 pl-2 hover:shadow-lg'>
-              <h2 className='font-bold text-l mb-2'>Ratings</h2>
-              {Object.keys(filters.ratings).map((key) => (
-                <label key={key} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    checked={filters.ratings[key]}
-                    onChange={() => handleCheckboxChange('ratings', key)}
-                    className="form-checkbox"
-                  />
-                  <span className="ml-2">{key}</span>
-                </label>
-              ))}
+            <div className='flex flex-col justify-left gap-2 w-full shadow-lg px-6 w-[35%]'>
+              <div className='font-bold text-xl text-center p-4 border-b-2'>Filters</div>
+              <div className='my-2 pl-2 hover:shadow-lg'>
+                <h2 className='font-bold text-l mb-2'>Ratings</h2>
+                {Object.keys(filters.ratings).map((key) => (
+                  <label key={key} className="flex items-center mb-2">
+                    <input
+                      type="checkbox"
+                      checked={filters.ratings[key]}
+                      onChange={() => handleCheckboxChange('ratings', key)}
+                      className="form-checkbox"
+                    />
+                    <span className="ml-2">{key}</span>
+                  </label>
+                ))}
+              </div>
+
+              <div className='mb-6 pl-2 hover:shadow-lg'>
+                <h2 className='font-bold text-l mb-2'>Age Group</h2>
+                {Object.keys(filters.ageGroup).map((key) => (
+                  <label key={key} className="flex items-center mb-2">
+                    <input
+                      type="checkbox"
+                      checked={filters.ageGroup[key]}
+                      onChange={() => handleCheckboxChange('ageGroup', key)}
+                      className="form-checkbox"
+                    />
+                    <span className="ml-2">{key}</span>
+                  </label>
+                ))}
+              </div>
+
+              <div className='mb-6 pl-2 hover:shadow-lg'>
+                <h2 className='font-bold text-l mb-2'>Type</h2>
+                {Object.keys(filters.type).map((key) => (
+                  <label key={key} className="flex items-center mb-2">
+                    <input
+                      type="checkbox"
+                      checked={filters.type[key]}
+                      onChange={() => handleCheckboxChange('type', key)}
+                      className="form-checkbox"
+                    />
+                    <span className="ml-2">{key}</span>
+                  </label>
+                ))}
+              </div>
+
+              <div className='mb-6 pl-2 hover:shadow-lg'>
+                <h2 className='font-bold text-l mb-2'>Ideal For</h2>
+                {Object.keys(filters.idealFor).map((key) => (
+                  <label key={key} className="flex items-center mb-2">
+                    <input
+                      type="checkbox"
+                      checked={filters.idealFor[key]}
+                      onChange={() => handleCheckboxChange('idealFor', key)}
+                      className="form-checkbox"
+                    />
+                    <span className="ml-2">{key}</span>
+                  </label>
+                ))}
+              </div>
+
+              <div className='mb-6 pl-2 hover:shadow-lg'>
+                <h2 className='font-bold text-l mb-2'>Speed</h2>
+                {Object.keys(filters.speed).map((key) => (
+                  <label key={key} className="flex items-center mb-2">
+                    <input
+                      type="checkbox"
+                      checked={filters.speed[key]}
+                      onChange={() => handleCheckboxChange('speed', key)}
+                      className="form-checkbox"
+                    />
+                    <span className="ml-2">{key}</span>
+                  </label>
+                ))}
+              </div>
+
             </div>
 
-            <div className='mb-6 pl-2 hover:shadow-lg'>
-              <h2 className='font-bold text-l mb-2'>Age Group</h2>
-              {Object.keys(filters.ageGroup).map((key) => (
-                <label key={key} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    checked={filters.ageGroup[key]}
-                    onChange={() => handleCheckboxChange('ageGroup', key)}
-                    className="form-checkbox"
-                  />
-                  <span className="ml-2">{key}</span>
-                </label>
-              ))}
-            </div>
-            
-            <div className='mb-6 pl-2 hover:shadow-lg'>
-              <h2 className='font-bold text-l mb-2'>Type</h2>
-              {Object.keys(filters.type).map((key) => (
-                <label key={key} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    checked={filters.type[key]}
-                    onChange={() => handleCheckboxChange('type', key)}
-                    className="form-checkbox"
-                  />
-                  <span className="ml-2">{key}</span>
-                </label>
-              ))}
-            </div>
 
-            <div className='mb-6 pl-2 hover:shadow-lg'>
-              <h2 className='font-bold text-l mb-2'>Ideal For</h2>
-              {Object.keys(filters.idealFor).map((key) => (
-                <label key={key} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    checked={filters.idealFor[key]}
-                    onChange={() => handleCheckboxChange('idealFor', key)}
-                    className="form-checkbox"
-                  />
-                  <span className="ml-2">{key}</span>
-                </label>
-              ))}
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {products.map((product) => {
+                {//wishlistItems.includes(product.id)
+                  //product.id ? 'a':'b'
+                  //isWishlisted({product.name})
+                }
 
-            <div className='mb-6 pl-2 hover:shadow-lg'>
-              <h2 className='font-bold text-l mb-2'>Speed</h2>
-              {Object.keys(filters.speed).map((key) => (
-                <label key={key} className="flex items-center mb-2">
-                  <input
-                    type="checkbox"
-                    checked={filters.speed[key]}
-                    onChange={() => handleCheckboxChange('speed', key)}
-                    className="form-checkbox"
-                  />
-                  <span className="ml-2">{key}</span>
-                </label>
-              ))}
-            </div>
+                // Check if the current product ID is in the wishlistItems array
+                const isWishlisted = wishlistItems.includes(product._id);
 
-          </div>
-
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {products.map((product) => {
-              {//wishlistItems.includes(product.id)
-                //product.id ? 'a':'b'
-                //isWishlisted({product.name})
-              }
-
-              // Check if the current product ID is in the wishlistItems array
-              const isWishlisted = wishlistItems.includes(product._id);
-
-              // Pass the wishlisted status as a prop to the ProductCard
-              return (
-                <>
-                  <ProductCard key={product._id} Product={{ ...product, wishlisted: isWishlisted }} />
-                  {/* <Link href={`/products/${product._id}`} className="transform overflow-hidden hover:shadow-lg bg-white duration-200 hover:scale-105 cursor-pointer">
+                // Pass the wishlisted status as a prop to the ProductCard
+                return (
+                  <>
+                    <ProductCard key={product._id} Product={{ ...product, wishlisted: isWishlisted }} />
+                    {/* <Link href={`/products/${product._id}`} className="transform overflow-hidden hover:shadow-lg bg-white duration-200 hover:scale-105 cursor-pointer">
                     <img src="/images/cyclefront2.jpeg" alt="Product image" className="w-full px-5" />
                     <div className="p-4 text-black/[0.9]">
                       <h2 className="font-bold text-xl mb-1" >{product.name}</h2>
@@ -254,17 +256,17 @@ const Products = () => {
                       </div>
                     </div>
                   </Link> */}
-                </>
-              );
-            })}
+                  </>
+                );
+              })}
+            </div>
+
           </div>
 
+
+
         </div>
-
-
-
       </div>
-    </div>
     </>
   )
 }
