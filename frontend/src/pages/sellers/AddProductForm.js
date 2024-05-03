@@ -7,7 +7,6 @@ import { toast } from 'react-toastify';
 const AddProductForm = () => {
   const [user, setUser] = useState('');
   const emptyProductForm = {
-    user: '',
     name: '',
     brand: '',
     price: '',
@@ -179,7 +178,7 @@ const AddProductForm = () => {
   };
 
   const resetProductForm = async() => {
-    setProductData(emptyProductForm);
+    setProductData({...productData,...emptyProductForm});
   }
 
   return (
