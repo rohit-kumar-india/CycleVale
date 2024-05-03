@@ -107,9 +107,13 @@ const cart = () => {
   // console.log("hello")
   // fetchCartItems('65db29ba433a6266a8d13f40').then(setCartItems);
   useEffect(() => {
-    let id = localStorage.getItem('userId');
-
-    fetchCartDetails(id);
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      router.push('/Login')
+    } else {
+      let id = localStorage.getItem('userId');
+      fetchCartDetails(id);
+    }
     //fetchProductDetails('66123921333320dfc5c3c8e0').then(setCartItems);
     //fetchCartItems('65db29ba433a6266a8d13f40').then(setCartItems);
     //}

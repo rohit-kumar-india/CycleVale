@@ -1,5 +1,6 @@
-import axios from 'axios';
 import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useRouter } from 'next/router';
 import ProductCard from '@/Components/ProductCard';
 
 // Mock data for demonstration
@@ -14,6 +15,7 @@ const wishlist = () => {
   const [selectedWishlist, setSelectedWishlist] = useState(null);
   const [processing, setProcessing] = useState(false); // State to manage processing status
   const [dynamicText, setDynamicText] = useState('');
+  const router = useRouter();
 
   const fetchWishlistDetails = async (id) => {
     //setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
@@ -53,9 +55,14 @@ const wishlist = () => {
 
 
   useEffect(() => {
-    const userId = localStorage.getItem('userId');
-    fetchWishlistDetails(userId);
-    setUserId(userId);
+    const token = localStorage.getItem('userToken');
+    if (!token) {
+      router.push('/Login')
+    } else {
+      const userId = localStorage.getItem('userId');
+      fetchWishlistDetails(userId);
+      setUserId(userId);
+    }
   }, []);
 
   // const fetchWishlistDetails = async (id) => {
