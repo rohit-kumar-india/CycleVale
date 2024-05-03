@@ -20,7 +20,7 @@ async function fetchProduct(id) {
 
 
 const ProductDetails = () => {
-  const [userId,setUserId] =useState('');
+  const [userId,setUserId] =useState(null);
   const [product, setProduct] = useState(null);
   const [selectedImage, setSelectedImage] = useState(product? product.imageURLs[0]: null);
   const router = useRouter();
@@ -39,24 +39,28 @@ const ProductDetails = () => {
   }
 
   async function addToCart(userId, productId, quantity) {
-    const response = await fetch('http://localhost:5000/api/carts', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        userId,
-        productId,
-        quantity,
-      }),
-    });
-  
-    if (!response.ok) {
-      throw new Error('Failed to add to cart');
+    if(!userId){
+      router.push('/Login');
+    }else{
+      const response = await fetch('http://localhost:5000/api/carts', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          userId,
+          productId,
+          quantity,
+        }),
+      });
+    
+      if (!response.ok) {
+        throw new Error('Failed to add to cart');
+      }
+    
+      const data = await response.json();
+      toast.success("added in cart successfully", toastOptions)
     }
-  
-    const data = await response.json();
-    toast.success("added in cart successfully", toastOptions)
   }
   // Example usage
   // addToCart('507f1f77bcf86cd799439011', '507f1f77bcf86cd799439012', 1)

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { useRouter } from 'next/router';
 import Link from 'next/link';
 import axios from 'axios';
 import { HeartIcon as HeartOutline } from '@heroicons/react/outline'; // For the hollow heart
@@ -10,6 +11,7 @@ const ProductCard = ({ Product }) => {
   const wishlistId = null;
   const [userId, setUserId] = useState(null);
   const [product, setProduct] = useState(Product);
+  const router = useRouter();
   const [wishlistItems, setWishlistItems] = useState(['66123921333320dfc5c3c8e0',]);
   const currentDate = new Date();
   const isDiscountActive = product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd);
@@ -65,7 +67,10 @@ const ProductCard = ({ Product }) => {
 
   const handleWishlistToggle = (e) => {
     e.preventDefault(); // Prevent link navigation
-    if (product.wishlisted) {
+    if (!userId) {
+      router.push('/Login');
+    }
+    else if (product.wishlisted) {
       removeFromWishlist(product._id);
 
     } else {
