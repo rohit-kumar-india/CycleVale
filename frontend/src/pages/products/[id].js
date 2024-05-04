@@ -221,7 +221,7 @@ const ProductDetails = () => {
         <div className="px-4 sm:px-6 border-t border-gray-200 flex-grow">
           
         <div className="py-5">
-          <h3 className="font-bold text-xl leading-6 text-gray-900">
+          <h3 className="font-bold text-xl leading-6 text-gray-900 max-w-prose">
             {product.name}
           </h3>
           <p className="mt-1 max-w-2xl text-sm text-gray-500">
