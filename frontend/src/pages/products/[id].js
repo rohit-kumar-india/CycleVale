@@ -4,7 +4,8 @@ import { useRouter } from 'next/router';
 import Reviews from './Reviews'
 import axios from 'axios';
 import Head from 'next/head';
-import { ShoppingBagIcon, ShoppingCartIcon } from '@heroicons/react/outline';
+import { ShoppingBagIcon, ShoppingCartIcon, HeartIcon as HeartOutline } from '@heroicons/react/outline';
+import { HeartIcon as HeartSolid } from '@heroicons/react/solid'; // For the filled heart
 import ReviewList from './ReviewList';
 
 // Placeholder for fetching a single product's details
@@ -20,8 +21,10 @@ async function fetchProduct(id) {
 
 
 const ProductDetails = () => {
+  const wishlistId = null;
   const [userId,setUserId] =useState(null);
   const [product, setProduct] = useState(null);
+  const [isWishlisted, setIsWishlisted] = useState(false);
   const [selectedImage, setSelectedImage] = useState(product? product.imageURLs[0]: null);
   const router = useRouter();
   const { id } = router.query; // Get the ID from the URL
@@ -37,6 +40,31 @@ const ProductDetails = () => {
     progress: undefined,
     theme: "light",
   }
+
+  const checkWishlisted = async (userId) => {
+    //setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
+
+    try {
+      // setDynamicText('Fetching Wishlists...');
+      // setProcessing(true);
+      // Fetch the user's wishlist
+      const wishlistResponse = await axios.get(`http://localhost:5000/api/users/${userId}/wishlists`);
+      const wishlists = wishlistResponse.data;
+
+      for (let wishlist of wishlists) {
+        wishlist.items.forEach(item => {
+          if(item.product === id){
+            setIsWishlisted(true);
+          };
+        });
+      }
+
+    } catch (error) {
+      console.error('Failed to fetch wishlist or product details', error);
+    } finally {
+      // setProcessing(false);
+    }
+  };
 
   async function addToCart(userId, productId, quantity) {
     if(!userId){
@@ -78,6 +106,7 @@ const ProductDetails = () => {
       fetchProduct(id).then((res)=> {
         console.log(res)
         setProduct(res)});
+      checkWishlisted(userId);
     }
     setUserId(userId)
   }, [id]);
@@ -85,6 +114,54 @@ const ProductDetails = () => {
   if (!product) {
     return <div>Loading...</div>; // Or any other loading state
   }
+
+  const removeFromWishlist = async (productId) => {
+    try {
+      const response = await axios.delete('http://localhost:5000/api/wishlists/item', { data: { userId, wishlistId, productId } });
+      console.log(response);
+      toast.success("removed from Wishlist", toastOptions)
+      setIsWishlisted(false)
+      // const updatedWishlistItems = wishlistItems.filter(item => item !== productId);
+      // setWishlistItems(updatedWishlistItems);
+      // product.wishlisted = false;
+      //setProduct({ ...product, wishlisted: false });
+      //console.log(product);
+      //fetchCartDetails(id);
+    } catch (error) {
+      console.error('Failed to delete item from cart', error);
+    }
+  };
+
+  const addToWishlist = async (productId) => {
+    try {
+      const response = await axios.post('http://localhost:5000/api/wishlists/item', { userId, wishlistId, productId });
+      console.log(response);
+      toast.success("added to Wishlist", toastOptions)
+      setIsWishlisted(true)
+      //setProduct({ ...product, wishlisted: true });
+      // const updatedCartItems = cartItems.filter(item => item.product !== productId);
+      //setWishlistItems([...wishlistItems, productId]);
+      //product.wishlisted = true;
+      //console.log(product);
+      //fetchCartDetails(id);
+    } catch (error) {
+      console.error('Failed to delete item from cart', error);
+    }
+  }
+
+  const handleWishlistToggle = (e) => {
+    e.preventDefault(); // Prevent link navigation
+    if (!userId) {
+      router.push('/Login');
+    }
+    else if (isWishlisted) {
+      removeFromWishlist(product._id);
+
+    } else {
+      addToWishlist(product._id);
+
+    }
+  };
 
   const currentDate = new Date();
   const isDiscountActive = product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd);
@@ -101,6 +178,15 @@ const ProductDetails = () => {
           {/* Left Section for Images */}
             <div className=" flex flex-col bg-white px-4 py-5 sm:px-6 w-[50%] sticky top-[60px] relative" style={{ maxHeight: '600px', overflow: 'auto' }}>
               {/* <img src={product.image || '/images/cyclefront2.jpeg'} alt={product.name} width={500} height={500} objectFit="contain" /> */}
+              <div className="absolute right-14 top-6 z-10">
+                <button onClick={handleWishlistToggle} className="p-2 bg-white rounded-full shadow-md hover:bg-gray-200 transition duration-250 ease-in-out">
+                  {isWishlisted ? (
+                    <HeartSolid className="h-6 w-6 text-red-500" />
+                  ) : (
+                    <HeartOutline className="h-6 w-6 text-red-500" />
+                  )}
+                </button>
+              </div>
               <img
                 src={selectedImage ? selectedImage : product.imageURLs[0]}
                 alt={product.name}
@@ -113,7 +199,7 @@ const ProductDetails = () => {
                     src={image ? image : '/images/cyclefront2.jpeg'}
                     alt={product.name}
                     width={80}
-                    objectFit="contain"
+                    //objectFit="contain"
                     onClick={() => setSelectedImage(image)}
                     className="cursor-pointer"
                   />
