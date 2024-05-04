@@ -248,13 +248,13 @@ const ProductDetails = () => {
                   <span className="font-bold text-xl">₹{product.price}</span>
                 )}
         </div>
-        <div className="w-full bg-white px-4 py-5">
-              <dt className="text-sm font-medium text-gray-500">
-                Description
+        <div className="w-full bg-white py-5">
+              <dt className="text-xl font-medium text-gray-900 py-2">
+              Product Description
               </dt>
 
-              <dd className="mt-1 text-sm text-gray-900 sm:col-span-2">
-                {/* {product.description} */}
+              <dd className="mt-1 text-sm text-gray-900 pl-4 sm:col-span-2 max-w-prose">
+                {product.description}
               </dd>
 
             </div>

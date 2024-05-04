@@ -40,8 +40,8 @@ const AddReviewForm = ({ productId, onReviewSubmit }) => {
 
   return (
     <div className="mt-8">
-      <h3 className="text-lg font-bold mb-4">Add a Review</h3>
-      <form onSubmit={handleSubmit} className="flex flex-col space-y-4">
+      <h3 className="text-xl font-medium mb-4">Add a Review</h3>
+      <form onSubmit={handleSubmit} className="flex flex-col space-y-4 px-4">
         <div>
           <label className="block text-sm font-medium text-gray-700">Rating</label>
           <StarRating rating={rating} onRatingChange={handleRatingChange} />
