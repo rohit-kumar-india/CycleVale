@@ -8,24 +8,16 @@ import { ShoppingBagIcon, ShoppingCartIcon, HeartIcon as HeartOutline } from '@h
 import { HeartIcon as HeartSolid } from '@heroicons/react/solid'; // For the filled heart
 import ReviewList from './ReviewList';
 
-// Placeholder for fetching a single product's details
-async function fetchProduct(id) {
-  try {
-    const response = await axios.get(`http://localhost:5000/api/products/${id}`);
-    return response.data.product;
-  } catch (error) {
-    console.error('Error fetching product:', error);
-  }
-}
-
-
-
 const ProductDetails = () => {
   const wishlistId = null;
   const [userId,setUserId] =useState(null);
   const [product, setProduct] = useState(null);
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [selectedImage, setSelectedImage] = useState(product? product.imageURLs[0]: null);
+  const [processing, setProcessing] = useState(false); // State to manage processing status
+  const [dynamicText, setDynamicText] = useState('');
+  let isDiscountActive = false;
+  let discountedPrice = null;
   const router = useRouter();
   const { id } = router.query; // Get the ID from the URL
 
@@ -41,12 +33,25 @@ const ProductDetails = () => {
     theme: "light",
   }
 
+  // Function for fetching a single product's details
+  const fetchProduct = async (id) => {
+    try {
+      setDynamicText('Fetching Product Details...');
+      setProcessing(true);
+      const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+      return response.data.product;
+    } catch (error) {
+      console.error('Error fetching product:', error);
+    } finally {
+      setProcessing(false);
+    }
+  }
+
   const checkWishlisted = async (userId) => {
-    //setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
 
     try {
-      // setDynamicText('Fetching Wishlists...');
-      // setProcessing(true);
+      setDynamicText('Fetching Wishlists...');
+      setProcessing(true);
       // Fetch the user's wishlist
       const wishlistResponse = await axios.get(`http://localhost:5000/api/users/${userId}/wishlists`);
       const wishlists = wishlistResponse.data;
@@ -62,7 +67,7 @@ const ProductDetails = () => {
     } catch (error) {
       console.error('Failed to fetch wishlist or product details', error);
     } finally {
-      // setProcessing(false);
+      setProcessing(false);
     }
   };
 
@@ -90,43 +95,31 @@ const ProductDetails = () => {
       toast.success("added in cart successfully", toastOptions)
     }
   }
-  // Example usage
-  // addToCart('507f1f77bcf86cd799439011', '507f1f77bcf86cd799439012', 1)
-  //   .then(() => console.log('Item added to cart'))
-  //   .catch(error => console.error('Error:', error));
-  
-
-  // const handleClick = () => {
-  //   router.push('/')
-  // }
 
   useEffect(() => {
     let userId = localStorage.getItem('userId');
     if (id) {
       fetchProduct(id).then((res)=> {
-        console.log(res)
-        setProduct(res)});
+        setProduct(res)
+      });
       checkWishlisted(userId);
     }
     setUserId(userId)
   }, [id]);
 
-  if (!product) {
-    return <div>Loading...</div>; // Or any other loading state
-  }
+  // if (!product) {
+  //   return <div>Loading...</div>; // Or any other loading state
+  // }
 
   const removeFromWishlist = async (productId) => {
     try {
       const response = await axios.delete('http://localhost:5000/api/wishlists/item', { data: { userId, wishlistId, productId } });
-      console.log(response);
-      toast.success("removed from Wishlist", toastOptions)
-      setIsWishlisted(false)
-      // const updatedWishlistItems = wishlistItems.filter(item => item !== productId);
-      // setWishlistItems(updatedWishlistItems);
-      // product.wishlisted = false;
-      //setProduct({ ...product, wishlisted: false });
-      //console.log(product);
-      //fetchCartDetails(id);
+      
+      if(response.status === 200){
+        toast.success("removed from Wishlist", toastOptions);
+        setIsWishlisted(false);
+      }
+
     } catch (error) {
       console.error('Failed to delete item from cart', error);
     }
@@ -135,15 +128,12 @@ const ProductDetails = () => {
   const addToWishlist = async (productId) => {
     try {
       const response = await axios.post('http://localhost:5000/api/wishlists/item', { userId, wishlistId, productId });
-      console.log(response);
-      toast.success("added to Wishlist", toastOptions)
-      setIsWishlisted(true)
-      //setProduct({ ...product, wishlisted: true });
-      // const updatedCartItems = cartItems.filter(item => item.product !== productId);
-      //setWishlistItems([...wishlistItems, productId]);
-      //product.wishlisted = true;
-      //console.log(product);
-      //fetchCartDetails(id);
+      
+      if(response.status === 201){
+        toast.success("added to Wishlist", toastOptions)
+        setIsWishlisted(true)
+      }
+
     } catch (error) {
       console.error('Failed to delete item from cart', error);
     }
@@ -163,11 +153,18 @@ const ProductDetails = () => {
     }
   };
 
-  const currentDate = new Date();
-  const isDiscountActive = product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd);
-  const discountedPrice = isDiscountActive ? (product.price - (product.price * product.discountPercentage / 100)).toFixed(2) : product.price;
-
+  if(product){
+    const currentDate = new Date();
+    isDiscountActive = product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd);
+    discountedPrice = isDiscountActive ? (product.price - (product.price * product.discountPercentage / 100)).toFixed(2) : product.price;
+    
+  }
+  
   return (
+    <>
+    {!product ? (
+      <p>Product Details not found.</p>
+    ):(
     <>
       <Head>
         <title>{product.name}</title>
@@ -267,6 +264,16 @@ const ProductDetails = () => {
         </div>
       </div>
     </div>
+    </>
+    )}
+      {/* Processing popup */}
+      {processing && (
+        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+          <div className="text-white text-lg ml-4">{dynamicText}</div>
+        </div>
+      )}
+    
     </>
   );
 };
