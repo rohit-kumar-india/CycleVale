@@ -173,8 +173,7 @@ const ProductDetails = () => {
         
         <div className='max-w-7xl flex' >
           {/* Left Section for Images */}
-            <div className=" flex flex-col bg-white px-4 py-5 sm:px-6 w-[50%] sticky top-[60px] relative" style={{ maxHeight: '600px', overflow: 'auto' }}>
-              {/* <img src={product.image || '/images/cyclefront2.jpeg'} alt={product.name} width={500} height={500} objectFit="contain" /> */}
+            <div className="flex flex-col bg-white px-4 py-5 sm:px-6 w-[50%] h-screen sticky pb-20 top-[60px]" >
               <div className="absolute right-14 top-6 z-10">
                 <button onClick={handleWishlistToggle} className="p-2 bg-white rounded-full shadow-md hover:bg-gray-200 transition duration-250 ease-in-out">
                   {isWishlisted ? (
