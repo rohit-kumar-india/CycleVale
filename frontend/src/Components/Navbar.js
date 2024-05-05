@@ -67,7 +67,7 @@ const Navbar = () => {
                   <Link href="/profile" legacyBehavior><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Profile</a></Link>
                   <Link href="/wishlist" legacyBehavior><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Wishlist</a></Link>
                   <Link href="/orders" legacyBehavior><a className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">My Orders</a></Link>
-                  <button onClick={handleLogout} className="block w-full text-left px-4 py-2 text-sm text-red-500 font-semibold flex hover:bg-gray-100"><LogoutIcon className="h-5 w-5 mr-1"/>Logout</button>
+                  <button onClick={handleLogout} className="flex w-full text-left px-4 py-2 text-sm text-red-500 font-semibold hover:bg-gray-100"><LogoutIcon className="h-5 w-5 mr-1"/>Logout</button>
                 </div>
               )}
             </div>
@@ -83,52 +83,10 @@ const Navbar = () => {
         <Link href="/products" legacyBehavior><a className="block py-2 px-4 text-sm text-gray-700 hover:bg-orange-500">Cycles</a></Link>
         <Link href="/about" legacyBehavior><a className="block py-2 px-4 text-sm text-gray-700 hover:bg-orange-500">About</a></Link>
         <Link href="/contact" legacyBehavior><a className="block py-2 px-4 text-sm text-gray-700 hover:bg-orange-500">Contact</a></Link>
-        <Link href="/cart" legacyBehavior><a className="block py-2 px-4 text-sm text-gray-700 hover:bg-orange-500 flex items-center"><ShoppingCartIcon className="h-5 w-5 mr-1" /> Cart</a></Link>
+        <Link href="/cart" legacyBehavior><a className="flex py-2 px-4 text-sm text-gray-700 hover:bg-orange-500  items-center"><ShoppingCartIcon className="h-5 w-5 mr-1" /> Cart</a></Link>
       </div>
     </nav>
   );
 };
 
 export default Navbar;
-
-
-
-
-
-// import React from 'react'
-// import Link from 'next/link';
-// import styles from '@/styles/Header.module.css';
-
-// const Header = () => {
-//     return (
-//         <>
-//         <nav className="bg-gray-800 text-white p-4">
-//       <div className="container mx-auto flex justify-between items-center">
-//         <Link href="/" legacyBehavior>
-//           <a className="text-lg font-bold">CycleVale</a>
-//         </Link>
-//         <div>
-//         <Link href="/about" legacyBehavior>
-//             <a className="px-4">About</a>
-//           </Link>
-//           <Link href="/contact" legacyBehavior>
-//             <a className="px-4">Contact</a>
-//             </Link>
-//           <Link href="/products" legacyBehavior>
-//             <a className="px-4">Products</a>
-//           </Link>
-//           <Link href="/cart" legacyBehavior>
-//             <a className="px-4">Cart</a>
-//           </Link>
-//           <Link href="/Login" legacyBehavior>
-//             <a className="px-4">Login</a>
-//           </Link>
-//         </div>
-//       </div>
-//     </nav>
-//         </>
-//     );
-// };
-
-
-// export default Header
