@@ -26,7 +26,6 @@ const PaymentOptions = ({ onSelect }) => {
     const [selectedCard, setSelectedCard] = useState('');
     const [selectedUPI, setSelectedUPI] = useState('');
     const [selectedWallet, setSelectedWallet] = useState('');
-    const [selectedCOD, setSelectedCOD] = useState('');
     const [captcha, setCaptcha] = useState('');
     const [newCreditCard, setNewCreditCard] = useState({ cardNumber: "", expiryDate: "", cvv: "" });
     const [paymentDetails, setPaymentDetails] = useState({});
@@ -37,9 +36,9 @@ const PaymentOptions = ({ onSelect }) => {
         setShowCCOptions(true);
         setShowWalletOptions(true);
         setShowCODOptions(true);
+        setSelectedCard('');
         setSelectedUPI('');
         setSelectedWallet('');
-        setSelectedCOD('');
         setCaptcha('');
     };
 
@@ -78,9 +77,6 @@ const PaymentOptions = ({ onSelect }) => {
 
     const handleWalletSelection = (wallet) => {
         setSelectedWallet(wallet);
-    };
-    const handleCODSelection = (cod) => {
-        setSelectedCOD(cod);
     };
 
     const handleProceed = () => {
@@ -341,7 +337,7 @@ const PaymentOptions = ({ onSelect }) => {
                     <div className="border rounded">
                         <button
                             onClick={() => handleSelectOption('COD')}
-                            className={`px-4 py-2 w-full mb-2 hover:bg-blue-50 ${selectedOption === 'Cash on Delivery' ? 'bg-blue-100' : ''}`}
+                            className={`px-4 py-2 w-full mb-2 hover:bg-blue-50 ${selectedOption === 'COD' ? 'bg-blue-100' : ''}`}
                         >
                             Cash on Delivery
                         </button>
@@ -352,7 +348,7 @@ const PaymentOptions = ({ onSelect }) => {
                                     type="text"
                                     placeholder="Captcha"
                                     value="CycleVale"
-                                    className="border rounded px-2 py-1 my-2 mr-2"
+                                    className="border rounded px-2 py-1 my-2 mr-2 font-semibold"
                                     disabled
                                 />
                                 <input
@@ -369,7 +365,7 @@ const PaymentOptions = ({ onSelect }) => {
                 <button
                     onClick={handleProceed}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded disabled:opacity-50 my-4"
-                    disabled={!selectedOption}
+                    disabled={!(selectedOption && (selectedCard || selectedUPI || selectedWallet || captcha==="CycleVale"))}
                 >
                     Select Payment & Proceed
                 </button>
