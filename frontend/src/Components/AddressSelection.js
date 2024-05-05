@@ -1,15 +1,5 @@
-// const AddressSelection = ({ addresses, onNext, onBack }) => {
-//     return (
-//         <div>
-//             <h2 className="text-xl font-bold mb-4">Select Shipping Address</h2>
-//             {/* List addresses and allow selection */}
-//             <button onClick={onNext} className="mt-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Proceed to Payment</button>
-//             <button onClick={onBack} className="mt-4 ml-4 bg-gray-500 hover:bg-gray-700 text-white font-bold py-2 px-4 rounded">Back to Cart</button>
-//         </div>
-//     );
-// };
-
 import { useState, useEffect } from "react";
+import Link from "next/link";
 import axios from "axios";
 
 // components/AddressSelection.js
@@ -59,6 +49,15 @@ const AddressSelection = ({ onSelect }) => {
         <div className="m-10">
             <h2 className="text-xl font-semibold mb-4">Choose a Delivery Address</h2>
             <form className="space-y-4">
+                {addresses.length === 0 ? (
+                    <>
+                    <div className="m-6">No Address Found.</div>
+                    <Link href="/profile/addresses" legacyBehavior >
+                        <a className="flex mt-4 w-fit bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded disabled:opacity-50 cursor-pointer">Add Address to proceed</a>
+                    </Link>
+                    </>
+                ):(
+                <>
                 {addresses.map((address) => (
                     <div key={address._id} className="flex items-center space-x-4 border p-4 hover:bg-gray-200 cursor-pointer">
                         <input
@@ -76,14 +75,17 @@ const AddressSelection = ({ onSelect }) => {
                         </label>
                     </div>
                 ))}
+
                 <button 
                     type="button"
                     onClick={handleProceed}
-                    className="mt-4 w-full bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50 cursor-pointer"
+                    className="mt-4 w-fit bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded disabled:opacity-50 cursor-pointer"
                     disabled={!selectedAddressId}
                 >
                     Proceed
                 </button>
+                </>
+                )}
             </form>
         </div>
         // <div className="m-10">
