@@ -133,9 +133,9 @@ const cart = () => {
                   <img className="h-24 object-contain" src={item.productDetails.imageURLs[0]} alt={item.productDetails.name} />
                 </div>
                 <div className="flex flex-col justify-between ml-4 flex-grow">
-                  <span className="font-bold text-sm">{item.productDetails.name}</span>
-                  <span className="text-red-500 font-bold text-xs">{item.productDetails.brand}</span>
-                  <a onClick={() => deleteCartItem(item.product)} className="font-semibold hover:text-red-500 text-gray-500 text-xs cursor-pointer">Remove</a>
+                  <span className="font-bold text-sm">{item.productDetails.brand}</span>
+                  <span className="font-semibold text-sm max-w-60">{item.productDetails.name}</span>
+                  <a onClick={() => deleteCartItem(item.product)} className="font-semibold text-red-500 hover:font-bold text-xs cursor-pointer">Remove</a>
                 </div>
               </div>
               {/* Quantity */}
