@@ -37,8 +37,6 @@ const Products = () => {
   }
 
   const fetchWishlistDetails = async (id) => {
-    //setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
-
     try {
       setDynamicText('Fetching Wishlist Details...');
       setProcessing(true);
@@ -128,115 +126,112 @@ const Products = () => {
     }
   };
 
-  const currentDate = new Date();
-  // const isDiscountActive = product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd);
-  // const discountedPrice = isDiscountActive ? (product.price - (product.price * product.discountPercentage / 100)).toFixed(2) : product.price;
   return (
     <>
-      <div className="mt-[60px] w-full flex justify-center">
-        <div className="flex gap-10 flex-col max-w-7xl">
+      <div className="mt-[60px] w-full flex justify-center ">
+        <div className="flex flex-row gap-6 max-w-7xl border-1 p-6">
 
-          <div className="flex flex-row gap-6 border-1 p-6">
+          {/* Left side Filters Section */}
+          <div className='flex flex-col justify-left gap-2 shadow-lg px-6 w-[50%]'>
 
-            <div className='flex flex-col justify-left gap-2 w-full shadow-lg px-6 w-[35%]'>
-              <div className='font-bold text-xl text-center p-4 border-b-2'>Filters</div>
-              <div className='my-2 pl-2 hover:shadow-lg'>
-                <h2 className='font-bold text-l mb-2'>Ratings</h2>
-                {Object.keys(filters.ratings).map((key) => (
-                  <label key={key} className="flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      checked={filters.ratings[key]}
-                      onChange={() => handleCheckboxChange('ratings', key)}
-                      className="form-checkbox"
-                    />
-                    <span className="ml-2">{key}</span>
-                  </label>
-                ))}
-              </div>
-
-              <div className='mb-6 pl-2 hover:shadow-lg'>
-                <h2 className='font-bold text-l mb-2'>Age Group</h2>
-                {Object.keys(filters.ageGroup).map((key) => (
-                  <label key={key} className="flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      checked={filters.ageGroup[key]}
-                      onChange={() => handleCheckboxChange('ageGroup', key)}
-                      className="form-checkbox"
-                    />
-                    <span className="ml-2">{key}</span>
-                  </label>
-                ))}
-              </div>
-
-              <div className='mb-6 pl-2 hover:shadow-lg'>
-                <h2 className='font-bold text-l mb-2'>Type</h2>
-                {Object.keys(filters.type).map((key) => (
-                  <label key={key} className="flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      checked={filters.type[key]}
-                      onChange={() => handleCheckboxChange('type', key)}
-                      className="form-checkbox"
-                    />
-                    <span className="ml-2">{key}</span>
-                  </label>
-                ))}
-              </div>
-
-              <div className='mb-6 pl-2 hover:shadow-lg'>
-                <h2 className='font-bold text-l mb-2'>Ideal For</h2>
-                {Object.keys(filters.idealFor).map((key) => (
-                  <label key={key} className="flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      checked={filters.idealFor[key]}
-                      onChange={() => handleCheckboxChange('idealFor', key)}
-                      className="form-checkbox"
-                    />
-                    <span className="ml-2">{key}</span>
-                  </label>
-                ))}
-              </div>
-
-              <div className='mb-6 pl-2 hover:shadow-lg'>
-                <h2 className='font-bold text-l mb-2'>Speed</h2>
-                {Object.keys(filters.speed).map((key) => (
-                  <label key={key} className="flex items-center mb-2">
-                    <input
-                      type="checkbox"
-                      checked={filters.speed[key]}
-                      onChange={() => handleCheckboxChange('speed', key)}
-                      className="form-checkbox"
-                    />
-                    <span className="ml-2">{key}</span>
-                  </label>
-                ))}
-              </div>
-
+            <div className='font-bold text-xl text-center p-4 border-b-2'>Filters</div>
+            <div className='my-2 pl-2 hover:shadow-lg'>
+              <h2 className='font-bold text-l mb-2'>Ratings</h2>
+              {Object.keys(filters.ratings).map((key) => (
+                <label key={key} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={filters.ratings[key]}
+                    onChange={() => handleCheckboxChange('ratings', key)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">{key}</span>
+                </label>
+              ))}
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {products.map((product) => {
-                // Check if the current product ID is in the wishlistItems array
-                const isWishlisted = wishlistItems.includes(product._id);
-
-                return (
-                  // Passed the wishlisted status as a prop to the ProductCard
-                  <ProductCard key={product._id} Product={{ ...product, wishlisted: isWishlisted }} />
-                );
-              })}
+            <div className='mb-6 pl-2 hover:shadow-lg'>
+              <h2 className='font-bold text-l mb-2'>Age Group</h2>
+              {Object.keys(filters.ageGroup).map((key) => (
+                <label key={key} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={filters.ageGroup[key]}
+                    onChange={() => handleCheckboxChange('ageGroup', key)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">{key}</span>
+                </label>
+              ))}
             </div>
-            {/* Processing popup */}
-            {processing && (
-              <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-                <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
-                <div className="text-white text-lg ml-4">{dynamicText}</div>
-              </div>
-            )}
+
+            <div className='mb-6 pl-2 hover:shadow-lg'>
+              <h2 className='font-bold text-l mb-2'>Type</h2>
+              {Object.keys(filters.type).map((key) => (
+                <label key={key} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={filters.type[key]}
+                    onChange={() => handleCheckboxChange('type', key)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">{key}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className='mb-6 pl-2 hover:shadow-lg'>
+              <h2 className='font-bold text-l mb-2'>Ideal For</h2>
+              {Object.keys(filters.idealFor).map((key) => (
+                <label key={key} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={filters.idealFor[key]}
+                    onChange={() => handleCheckboxChange('idealFor', key)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">{key}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className='mb-6 pl-2 hover:shadow-lg'>
+              <h2 className='font-bold text-l mb-2'>Speed</h2>
+              {Object.keys(filters.speed).map((key) => (
+                <label key={key} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={filters.speed[key]}
+                    onChange={() => handleCheckboxChange('speed', key)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">{key}</span>
+                </label>
+              ))}
+            </div>
 
           </div>
+
+          {/* Right side Products Section */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            {products.map((product) => {
+              // Check if the current product ID is in the wishlistItems array
+              const isWishlisted = wishlistItems.includes(product._id);
+
+              return (
+                // Passed the wishlisted status as a prop to the ProductCard
+                <ProductCard key={product._id} Product={{ ...product, wishlisted: isWishlisted }} />
+              );
+            })}
+          </div>
+          {/* Processing popup */}
+          {processing && (
+            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+              <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+              <div className="text-white text-lg ml-4">{dynamicText}</div>
+            </div>
+          )}
+
         </div>
       </div>
     </>
