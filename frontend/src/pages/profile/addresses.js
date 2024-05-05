@@ -5,7 +5,7 @@ import ProfileLayout from '.';
 import { toast } from 'react-toastify';
 
 const Addresses = () => {
-    const [userId,setUserId] =useState('');
+    const [userId, setUserId] = useState('');
     const [addresses, setAddresses] = useState([]);
     const [currentAddress, setCurrentAddress] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
@@ -20,7 +20,7 @@ const Addresses = () => {
         draggable: true,
         progress: undefined,
         theme: "light",
-      }
+    }
 
     const fetchAddressDetails = async (id) => {
         //userId=id;
@@ -44,9 +44,9 @@ const Addresses = () => {
         try {
             const response = await axios.delete('http://localhost:5000/api/users/address/delete', { data: { userId, addressId } });
             //console.log(response);
-            if(response.status===200){
+            if (response.status === 200) {
                 toast.success(response.data.message, toastOptions)
-            }else{
+            } else {
                 toast.error(response.data.message, toastOptions)
             }
             const updatedAddresses = addresses.filter(address => address._id !== addressId);
@@ -66,7 +66,7 @@ const Addresses = () => {
     }, []);
 
 
-console.log(userId);
+    console.log(userId);
 
     if (isLoading) {
         return <div className='mt-[60px] height-[600px]'>Loading Products...</div>;
@@ -95,22 +95,33 @@ console.log(userId);
                         + Add New Address
                     </button>
                 </div>
-                {addresses.map((address) => (
-                    <div key={address._id} className="p-4 border border-gray-300 rounded mb-2 flex justify-between items-center">
-                        <div>
-                            <p>{address.name}, {address.mobile}</p>
-                            <p>{address.address}, {address.landmark}{address.landmark && ","} {address.city}, {address.state} - {address.pincode}</p>
+                {addresses.length === 0 ? (
+                    <>
+                        <div className="m-6">No Address Found.</div>
+                        <button
+                            onClick={() => openModal()}
+                            className="mb-4 bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+                        >
+                            + Add Address
+                        </button>
+                    </>
+                ) : (
+                    addresses.map((address) => (
+                        <div key={address._id} className="p-4 border border-gray-300 rounded mb-2 flex justify-between items-center">
+                            <div>
+                                <p>{address.name}, {address.mobile}</p>
+                                <p>{address.address}, {address.landmark}{address.landmark && ","} {address.city}, {address.state} - {address.pincode}</p>
+                            </div>
+                            <div>
+                                <button onClick={() => openModal(address)} className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2">
+                                    Edit
+                                </button>
+                                <button onClick={() => deleteAddress(address._id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
+                                    Delete
+                                </button>
+                            </div>
                         </div>
-                        <div>
-                            <button onClick={() => openModal(address)} className="bg-green-500 hover:bg-green-700 text-white font-bold py-1 px-2 rounded mr-2">
-                                Edit
-                            </button>
-                            <button onClick={() => deleteAddress(address._id)} className="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded">
-                                Delete
-                            </button>
-                        </div>
-                    </div>
-                ))}
+                    )))}
 
                 {modalOpen && (
                     <AddressModal userId={userId} address={currentAddress} closeModal={closeModal} />
