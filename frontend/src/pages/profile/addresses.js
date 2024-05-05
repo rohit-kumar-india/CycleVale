@@ -9,7 +9,8 @@ const Addresses = () => {
     const [addresses, setAddresses] = useState([]);
     const [currentAddress, setCurrentAddress] = useState(null);
     const [modalOpen, setModalOpen] = useState(false);
-    const [isLoading, setIsLoading] = useState(true);
+    const [processing, setProcessing] = useState(false);
+    const [dynamicText, setDynamicText] = useState('');
 
     const toastOptions = {
         position: "top-right",
@@ -23,55 +24,46 @@ const Addresses = () => {
     }
 
     const fetchAddressDetails = async (id) => {
-        //userId=id;
-        setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
         try {
-            console.log(userId);
+            setDynamicText('Fetching Addresses...');
+            setProcessing(true);
             // Fetch the user's address
             const addressResponse = await axios.get(`http://localhost:5000/api/users/address/${id}`);
             console.log(addressResponse)
             const addresss = addressResponse.data;
-            setAddresses(addresss); // Update the state once after processing all items
+            setAddresses(addresss);
             setUserId(id);
         } catch (error) {
             console.error('Failed to fetch address or product details', error);
         } finally {
-            setIsLoading(false); // Update loading state
+            setProcessing(false);
         }
     };
 
     const deleteAddress = async (addressId) => {
         try {
+            setDynamicText('Deleting Address...');
+            setProcessing(true);
             const response = await axios.delete('http://localhost:5000/api/users/address/delete', { data: { userId, addressId } });
-            //console.log(response);
             if (response.status === 200) {
                 toast.success(response.data.message, toastOptions)
             } else {
                 toast.error(response.data.message, toastOptions)
             }
             const updatedAddresses = addresses.filter(address => address._id !== addressId);
-            // setWishlistItems(updatedWishlistItems);
-            // product.wishlisted = false;
-            //setProduct({ ...product, wishlisted: false });
             setAddresses(updatedAddresses);
+
         } catch (error) {
             console.error('Failed to delete item from cart', error);
+        } finally {
+            setProcessing(false);
         }
     };
 
     useEffect(() => {
         let id = localStorage.getItem('userId');
-        console.log(id);
         fetchAddressDetails(id);
     }, []);
-
-
-    console.log(userId);
-
-    if (isLoading) {
-        return <div className='mt-[60px] height-[600px]'>Loading Products...</div>;
-    }
-
 
     const openModal = (address = null) => {
         setCurrentAddress(address); // null for new address
@@ -125,6 +117,13 @@ const Addresses = () => {
 
                 {modalOpen && (
                     <AddressModal userId={userId} address={currentAddress} closeModal={closeModal} />
+                )}
+                {/* Processing popup */}
+                {processing && (
+                    <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+                        <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+                        <div className="text-white text-lg ml-4">{dynamicText}</div>
+                    </div>
                 )}
             </div>
         </ProfileLayout>

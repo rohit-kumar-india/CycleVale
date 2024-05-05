@@ -5,7 +5,6 @@ import axios from "axios";
 // components/AddressSelection.js
 const AddressSelection = ({ onSelect }) => {
     const [addresses, setAddresses] = useState([]);
-    const [isLoading, setIsLoading] = useState(false);
     const [selectedAddressId, setSelectedAddressId] = useState('');
     const [processing, setProcessing] = useState(false); // State to manage processing status
     const [dynamicText, setDynamicText] = useState('');
@@ -31,10 +30,6 @@ const AddressSelection = ({ onSelect }) => {
         let userId = localStorage.getItem('userId');
         fetchAddresses(userId);
     }, []);
-
-    if (isLoading) {
-        return <div className='mt-[60px] min-h-screen height-[600px]'>Loading Products...</div>;
-    }
 
     const handleSelectionChange = (event) => {
         setSelectedAddressId(event.target.value);
