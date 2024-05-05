@@ -132,7 +132,7 @@ const Products = () => {
         <div className="flex flex-row gap-6 max-w-7xl border-1 p-6">
 
           {/* Left side Filters Section */}
-          <div className='flex flex-col justify-left gap-2 shadow-lg px-6 w-[50%]'>
+          <div className='flex flex-col justify-left gap-2 shadow-lg px-6 w-[50%] h-fit'>
 
             <div className='font-bold text-xl text-center p-4 border-b-2'>Filters</div>
             <div className='my-2 pl-2 hover:shadow-lg'>
