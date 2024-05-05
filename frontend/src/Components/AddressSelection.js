@@ -75,10 +75,10 @@ const AddressSelection = ({ onSelect }) => {
                         <button
                             type="button"
                             onClick={handleProceed}
-                            className="mt-4 w-fit bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded disabled:opacity-50 cursor-pointer"
+                            className="my-4 w-fit bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded disabled:opacity-50"
                             disabled={!selectedAddressId}
                         >
-                            Proceed
+                            Select Address & Proceed
                         </button>
                     </>
                 )}

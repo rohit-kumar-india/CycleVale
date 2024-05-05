@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useRouter } from 'next/router';
 
-const OrderSummary = ({ TotalPrice, DiscountPrice, itemNo }) => {
+const OrderSummary = ({ TotalPrice, DiscountPrice, itemNo, page, step, paymentMethod, onConfirm }) => {
+  console.log(step)
   const router = useRouter();
 
   return (
-    <div id="summary" className='w-full md:w-1/4 px-8 py-10 transition-all duration-1000 sticky top-[60px] h-fit'>
+    <div id="summary" className=' min-w-1/4  px-8 py-10 transition-all duration-1000 sticky top-[60px] h-fit'>
       <div>
         {/* <div id="summary" className={`${height<250 ? "fixed transition-all duration-1000" : "relative transition-all duration-1000"} transition-all duration-1000`}> */}
         <h1 className="font-semibold text-2xl border-b pb-8">Order Summary</h1>
@@ -38,7 +39,15 @@ const OrderSummary = ({ TotalPrice, DiscountPrice, itemNo }) => {
             <span>Total Amount</span>
             <span>₹{(TotalPrice - DiscountPrice + 10).toFixed(2)}</span>
           </div>
-          <button onClick={() => router.push('/checkout1')} className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full rounded">Checkout</button>
+          {page === "cart" ? (
+            <button onClick={() => router.push('/checkout1')} className="bg-indigo-500 font-semibold hover:bg-indigo-600 py-3 text-sm text-white uppercase w-full rounded">Checkout</button>
+          ) : page === "checkout" ? (
+            <button onClick={onConfirm}
+              className="font-semibold bg-green-500 hover:bg-green-700 py-3 text-sm text-white uppercase w-full rounded disabled:opacity-50"
+              disabled={step!=3}>
+              Confirm Order {paymentMethod==="COD"?"": "& Pay"}
+            </button>
+          ) : ""}
         </div>
       </div>
     </div>

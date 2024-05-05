@@ -162,7 +162,7 @@ const cart = () => {
         </div>
 
         {/* Right Panel - Pricing Details */}
-        <OrderSummary TotalPrice={totalPrice} DiscountPrice={discountPrice} itemNo={cartItems.length} />
+        <OrderSummary TotalPrice={totalPrice} DiscountPrice={discountPrice} itemNo={cartItems.length} page={"cart"} />
       </div>
       {/* Processing popup */}
       {processing && (

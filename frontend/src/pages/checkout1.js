@@ -180,7 +180,7 @@ const CheckoutPage = () => {
             </div>
 
             {/* Right section */}
-            <OrderSummary TotalPrice={totalPrice} DiscountPrice={discountPrice} itemNo={cartItems.length} />
+            <OrderSummary TotalPrice={totalPrice} DiscountPrice={discountPrice} itemNo={cartItems.length} page={"checkout"} step={currentStep} paymentMethod={paymentDetails.selectedOption} onConfirm={confirmOrder} />
             {/* Processing popup */}
             {processing && (
                 <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">

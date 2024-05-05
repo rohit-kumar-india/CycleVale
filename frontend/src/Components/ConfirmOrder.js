@@ -3,8 +3,8 @@
 import React from 'react';
 
 //const ConfirmOrder = ({ address, paymentMethod, products, onConfirm }) => {
-    const ConfirmOrder = ({ details, onConfirm }) => {
-        console.log(details)
+const ConfirmOrder = ({ details, onConfirm }) => {
+    console.log(details)
 
     const address = {
         name: 'John Doe',
@@ -33,7 +33,7 @@ import React from 'react';
 
             <div className="mb-4 border rounded p-2">
                 <h3 className="text-lg font-semibold mb-2">Selected Payment Method</h3>
-                <p>{details.paymentDetails.selectedOption}</p>
+                <p>{details.paymentDetails.selectedOption==="COD"?"COD (Pay on Delivery)":details.paymentDetails.selectedOption}</p>
             </div>
 
             <div className="mb-4 border rounded p-2">
@@ -50,7 +50,10 @@ import React from 'react';
 
             <p>Please review your order details before confirming your purchase.</p>
 
-            <button onClick={onConfirm} className="mt-6 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded inline-block">Confirm Order</button>
+            <button onClick={onConfirm}
+                className="mt-6 bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-6 rounded inline-block">
+                Confirm Order {details.paymentDetails.selectedOption === "COD"? "":"& Pay"}
+            </button>
         </div>
     );
 };

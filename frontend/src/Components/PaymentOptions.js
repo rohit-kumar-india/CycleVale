@@ -15,12 +15,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import StripeForm from './StripeForm';
 
-const demo = [
-    { id: 1, cardNumber: "1234 5678 9012 3456", expiryDate: "12/24" },
-    { id: 2, cardNumber: "5678 1234 9012 3456", expiryDate: "06/23" },
-    { id: 3, cardNumber: "9012 3456 1234 5678", expiryDate: "09/25" },
-]
-
 // components/PaymentOptions.js
 const PaymentOptions = ({ onSelect }) => {
     const userId = "65db29ba433a6266a8d13f40";
@@ -49,7 +43,7 @@ const PaymentOptions = ({ onSelect }) => {
         setCaptcha('');
     };
 
-    
+
     const STRIPE_PUBLISHABLE_KEY = "pk_test_51P8KyQSDDXXhwxjmtDRh8o5OZuRulHmyl5ZwMKZzfffP0GJvkaL9pKWjRY07pGmxkXedei74UarR2dhxdiNgsVo000Kdp8zOsx"
     // Load Stripe outside of component to ensure it's only loaded once
     const stripePromise = loadStripe(STRIPE_PUBLISHABLE_KEY);
@@ -92,16 +86,16 @@ const PaymentOptions = ({ onSelect }) => {
     const handleProceed = () => {
         console.log(selectedOption, selectedCard)
         if (selectedOption == 'card' || selectedOption == 'newCard') {
-            onSelect({ selectedOption, selectedCard});
-        // if (selectedOption == 'card') {
-        //     onSelect({ selectedOption, selectedCard: { token: 'tok_visa' } });
-        // }else if (selectedOption == 'newCard') {
-        //     onSelect({ selectedOption: 'card', selectedCard });   
+            onSelect({ selectedOption, selectedCard });
+            // if (selectedOption == 'card') {
+            //     onSelect({ selectedOption, selectedCard: { token: 'tok_visa' } });
+            // }else if (selectedOption == 'newCard') {
+            //     onSelect({ selectedOption: 'card', selectedCard });   
         } else if (selectedOption == 'UPI') {
             onSelect({ selectedOption, selectedUPI });
         } else if (selectedOption == 'Wallet') {
             onSelect({ selectedOption, selectedWallet });
-        } else if (selectedOption == 'Cash on Delivery') {
+        } else if (selectedOption == 'COD') {
             onSelect({ selectedOption });
         }
     };
@@ -112,7 +106,7 @@ const PaymentOptions = ({ onSelect }) => {
         }
     };
 
-    const handleCard = (card) =>{
+    const handleCard = (card) => {
         setSelectedCard(card);
         handleProceed()
     }
@@ -208,7 +202,7 @@ const PaymentOptions = ({ onSelect }) => {
                                     </label>
                                 </div> */}
                                 <Elements stripe={stripePromise}>
-                                    <stripeForm/>
+                                    <stripeForm />
                                     <div className="my-2 py-2 cursor-pointer hover:bg-gray-200 border">
                                         <input
                                             type="radio"
@@ -221,7 +215,7 @@ const PaymentOptions = ({ onSelect }) => {
                                         <label htmlFor="newCard" className="text-lg font-semibold mb-2 cursor-pointer">
                                             Enter stripe Card Details
                                             {selectedCard === "newCard" && (
-                                                <StripeForm onConfirm={handleCard}/>
+                                                <StripeForm onConfirm={handleCard} />
                                                 // <form onSubmit={handleAddCreditCard} className="ml-12">
                                                 //     <div id="card-details" className="max-w-md my-2 border border-gray-300 rounded p-2">
                                                 //         <CardElement
@@ -346,12 +340,12 @@ const PaymentOptions = ({ onSelect }) => {
                     {/* Add more payment options as needed */}
                     <div className="border rounded">
                         <button
-                            onClick={() => handleSelectOption('Cash on Delivery')}
+                            onClick={() => handleSelectOption('COD')}
                             className={`px-4 py-2 w-full mb-2 hover:bg-blue-50 ${selectedOption === 'Cash on Delivery' ? 'bg-blue-100' : ''}`}
                         >
                             Cash on Delivery
                         </button>
-                        {showCODOptions && selectedOption === 'Cash on Delivery' && (
+                        {showCODOptions && selectedOption === 'COD' && (
                             <div className="mx-4">
                                 {/* Display captcha or other verification options */}
                                 <input
@@ -374,10 +368,10 @@ const PaymentOptions = ({ onSelect }) => {
                 </div>
                 <button
                     onClick={handleProceed}
-                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded disabled:opacity-50"
+                    className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded disabled:opacity-50 my-4"
                     disabled={!selectedOption}
                 >
-                    Proceed
+                    Select Payment & Proceed
                 </button>
             </div>
 
