@@ -18,19 +18,13 @@ const AddProductForm = () => {
     description: '',
     imageURLs: [],
   };
-  // const [productName, setProductName] = useState('');
-  // const [productPrice, setProductPrice] = useState('');
-  // const [discountPrice, setDiscountPrice] = useState('');
-  // const [countInStock, setCountInStock] = useState('');
-  // const [productCategory, setProductCategory] = useState('');
-  // const [productDetails, setProductDetails] = useState('');
-  // const [productBrand, setProductBrand] = useState('');
+
   const [processing, setProcessing] = useState(false); // State to manage processing status
   const [dynamicText, setDynamicText] = useState('');
   const [productPhotos, setProductPhotos] = useState([]);
   const [productData, setProductData] = useState(emptyProductForm);
 
-  
+
   const toastOptions = {
     position: "top-right",
     autoClose: 2000,
@@ -71,81 +65,43 @@ const AddProductForm = () => {
       const response = await axios.post('http://localhost:5000/api/images/upload-image', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
+      if (response.status === 200) {
+        toast.success("Images Uploaded Successfully...", toastOptions);
+        return response.data;
+      } else {
+        toast.error(response.data.message, toastOptions)
+      }
 
-      return response.data;
     } catch (error) {
-      console.error('Error uploading images:', error);
+      console.log(error)
+      toast.error(error.response.data.message, toastOptions)
+      console.error('Error uploading images:', error, error.response.data.error);
     }
   };
 
   const handleFormSubmit = async (e) => {
     e.preventDefault();
     setProcessing(true);
-    
+
     const uploadedImages = await handlePhotoUpload();
-    console.log(uploadedImages);
-
-    // Construct formData object with all input values
-    // setProductData((prevProductData) => ({
-    //   ...prevProductData,
-    //   imageURLs: uploadedImages,
-    // }));
-    // const formData = {
-    //   user,
-    //   name: productName,
-    //   price: productPrice,
-    //   discountPercentage: discountPrice,
-    //   countInStock,
-    //   category: productCategory,
-    //   description: productDetails,
-    //   brand: productBrand,
-    //   //imageURLs: uploadedImages
-    // };
-
-    //console.log('Form Data:', productData);
-
-
-
-    // const imgs = await Promise.all(imageURLs.map(async (imag) => {
-    //   return handleImageUpdate(imag);
-    // }));
-
-    // const updatedData = {
-    //   ...formData,
-    //   images: imgs
-    // }
-    // setProductData((prevProductData) => ({
-    //   ...prevProductData,
-    //   user: user,
-    //   //imageURLs: uploadedImages,
-    // }));
-    //console.log(productData)
 
     try {
       setDynamicText('Adding Product...');
 
-      //if (address) {
-      const response = await axios.post("http://localhost:5000/api/products", {...productData, imageURLs: uploadedImages });
-      if (response.status === 201) {
-        toast.success(response.data.message, toastOptions);
-        resetProductForm();
-        setProductPhotos([]);
-      } else {
-        toast.error(response.data.message, toastOptions)
+      if (uploadedImages) {
+        const response = await axios.post("http://localhost:5000/api/products", {...productData, imageURLs: uploadedImages });
+        if (response.status === 201) {
+          toast.success(response.data.message, toastOptions);
+          resetProductForm();
+          setProductPhotos([]);
+        } else {
+          toast.error(response.data.message, toastOptions)
+        }
       }
-      // } else {
-      //     const response = await axios.post('http://localhost:5000/api/users/address',{userId,newAddress: formData});
-      //     if(response.status===200){
-      //         toast.success(response.data.message, toastOptions)
-      //     }else{
-      //         toast.error(response.data.message, toastOptions)
-      //     }
-      // }
     } catch (error) {
-      toast.error(error.message, toastOptions)
+      toast.error(error.response.data.error._message, toastOptions)
       console.error('Failed to save address:', error);
     } finally {
-      // Hide the processing popup and set processing status to false
       setProcessing(false);
     }
   };
@@ -174,11 +130,11 @@ const AddProductForm = () => {
     //   ...prevFormData,
     //   productPhotos: prevFormData.productPhotos.filter((_, i) => i !== index),
     // }));
-    console.log(productData,productPhotos)
+    console.log(productData, productPhotos)
   };
 
-  const resetProductForm = async() => {
-    setProductData({...productData,...emptyProductForm});
+  const resetProductForm = async () => {
+    setProductData({ ...productData, ...emptyProductForm });
   }
 
   return (
@@ -345,12 +301,12 @@ const AddProductForm = () => {
           Add Product
         </button>
         {/* Processing popup */}
-      {processing && (
-        <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
-          <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
-          <div className="text-white text-lg ml-4">{dynamicText}</div>
-        </div>
-      )}
+        {processing && (
+          <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+            <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+            <div className="text-white text-lg ml-4">{dynamicText}</div>
+          </div>
+        )}
       </form>
     </Layout>
   );
