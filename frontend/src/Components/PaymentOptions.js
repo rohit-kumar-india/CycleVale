@@ -27,7 +27,7 @@ const PaymentOptions = ({ onSelect }) => {
     const [selectedUPI, setSelectedUPI] = useState('');
     const [selectedWallet, setSelectedWallet] = useState('');
     const [captcha, setCaptcha] = useState('');
-    const [newCreditCard, setNewCreditCard] = useState({ cardNumber: "", expiryDate: "", cvv: "" });
+    const [newUPI, setNewUPI] = useState('');
     const [paymentDetails, setPaymentDetails] = useState({});
 
     const handleSelectOption = (option) => {
@@ -81,12 +81,8 @@ const PaymentOptions = ({ onSelect }) => {
 
     const handleProceed = () => {
         console.log(selectedOption, selectedCard)
-        if (selectedOption == 'card' || selectedOption == 'newCard') {
+        if (selectedOption == 'card') {
             onSelect({ selectedOption, selectedCard });
-            // if (selectedOption == 'card') {
-            //     onSelect({ selectedOption, selectedCard: { token: 'tok_visa' } });
-            // }else if (selectedOption == 'newCard') {
-            //     onSelect({ selectedOption: 'card', selectedCard });   
         } else if (selectedOption == 'UPI') {
             onSelect({ selectedOption, selectedUPI });
         } else if (selectedOption == 'Wallet') {
@@ -96,15 +92,14 @@ const PaymentOptions = ({ onSelect }) => {
         }
     };
 
-    const handleAddCreditCard = () => {
-        if (selectedOption) {
-            onSelect(selectedOption);
-        }
+    const handleUPI = () => {
+        setSelectedUPI(newUPI);
+        handleProceed();
     };
 
     const handleCard = (card) => {
         setSelectedCard(card);
-        handleProceed()
+        handleProceed();
     }
 
 
@@ -274,7 +269,7 @@ const PaymentOptions = ({ onSelect }) => {
                                     </div>
                                 ))}
 
-                                {/* Option to add a new credit card */}
+                                {/* Option to enter new UPI Details */}
                                 <div className="my-2 py-2 cursor-pointer hover:bg-gray-200 border">
                                     <input
                                         type="radio"
@@ -284,19 +279,19 @@ const PaymentOptions = ({ onSelect }) => {
                                         onChange={() => handleUPISelection("new")}
                                         className="form-radio mx-4 h-4 w-4 cursor-pointer"
                                     />
-                                    <label htmlFor="new" className="text-lg font-semibold mb-2 cursor-pointer">
+                                    <label htmlFor="new" className="text-lg font-semibold my-2 cursor-pointer">
                                         Enter UPI
                                         {selectedUPI === "new" && (
-                                            <form onSubmit={handleAddCreditCard} className="ml-12">
+                                            <form onSubmit={handleUPI} className="flex ml-12 my-2">
                                                 <input
                                                     type="text"
-                                                    placeholder="UPT Id"
-                                                    value={newCreditCard.cardNumber}
-                                                    onChange={(e) => setNewCreditCard({ ...newCreditCard, cardNumber: e.target.value })}
-                                                    className="border rounded px-2 py-1 mt-2 mb-2 mr-2"
+                                                    placeholder="Enter UPI Id"
+                                                    value={newUPI}
+                                                    onChange={(e) => setNewUPI(e.target.value)}
+                                                    className="border rounded p-2 w-96 font-normal text-base"
                                                     required
                                                 />
-                                                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Add Card</button>
+                                                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold ml-4 py-2 px-4 rounded min-w-max">Select UPI</button>
                                             </form>
                                         )}
                                     </label>
@@ -365,12 +360,11 @@ const PaymentOptions = ({ onSelect }) => {
                 <button
                     onClick={handleProceed}
                     className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded disabled:opacity-50 my-4"
-                    disabled={!(selectedOption && (selectedCard || selectedUPI || selectedWallet || captcha==="CycleVale"))}
+                    disabled={!(selectedOption && ((selectedCard && selectedCard !== "newCard") || (selectedUPI && selectedUPI !== "new") || selectedWallet || captcha === "CycleVale"))}
                 >
                     Select Payment & Proceed
                 </button>
             </div>
-
         </>
     );
 };

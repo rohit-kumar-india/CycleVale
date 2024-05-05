@@ -139,6 +139,12 @@ const CheckoutPage = () => {
                 //     card: paymentDetails.selectedCard
                 //   });
                 //   console.log(paymentMethod)
+            } else if (paymentDetails.selectedOption === 'UPI') {
+                var paymentStatus = "Complete";
+
+            } else if (paymentDetails.selectedOption === 'Wallet') {
+                var paymentStatus = "Complete";
+
             } else if (paymentDetails.selectedOption === 'COD') {
                 var paymentStatus = "Pending";
             }
@@ -151,7 +157,7 @@ const CheckoutPage = () => {
                 paymentDetails: {
                     paymentMethod: paymentDetails.selectedOption,
                     paymentStatus,
-                    transactionId: paymentDetails.selectedOption === 'COD' ? null : paymentId
+                    transactionId: paymentDetails.selectedOption === 'card' ? paymentId : null
                 },
                 items: cartItems,
                 totalAmount: (totalPrice - discountPrice + 10).toFixed(2)
