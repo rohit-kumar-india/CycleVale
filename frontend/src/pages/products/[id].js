@@ -173,7 +173,7 @@ const ProductDetails = () => {
         
         <div className='flex flex-col md:flex-row'>
           {/* Left Section for Images */}
-            <div className="flex flex-col bg-white px-4 py-5 sm:px-6 w-fit h-screen md:sticky pb-20 top-[60px]" >
+            <div className="flex flex-col bg-white px-4 py-5 sm:px-6 md:w-[50%] h-screen md:sticky pb-20 top-[60px]" >
               <div className="absolute right-14 md:top-6 top-20 z-10">
                 <button onClick={handleWishlistToggle} className="p-2 bg-white rounded-full shadow-md hover:bg-gray-200 transition duration-250 ease-in-out">
                   {isWishlisted ? (
