@@ -99,7 +99,8 @@ const ProductCard = ({ Product }) => {
       </div>
       <img src={product.imageURLs[0] ? product.imageURLs[0] : '/images/cyclefront2.jpeg'} alt="Product image" className="w-full px-5" />
       <div className="p-4 text-black/[0.9]">
-        <h2 className="font-bold text-xl mb-1" >{product.name}</h2>
+        <h2 className="font-bold text-md text-gray-500" >{product.brand}</h2>
+        <h2 className="font-semibold text-md mb-1" >{product.name}</h2>
         <div className="flex items-center mb-1">
           <span className="ml-1 text-sm">{product.rating}</span>
           <svg className="w-5 h-5 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -107,16 +108,16 @@ const ProductCard = ({ Product }) => {
           </svg>
           <span className="ml-1 text-sm"> ({product.numReviews} Reviews)</span>
         </div>
-        <div className="flex items-center text-black/[0.7]">
+        <div className="flex items-center text-black/[0.8]">
           {product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd) ? (
             <>
-              <p className="mr-2 text-lg font-semibold">₹{(product.price - (product.price * product.discountPercentage / 100)).toFixed(2)}</p>
-              <p className="text-base  font-medium line-through"> ₹{product.price} </p>
+              <p className="mr-2 text-md font-bold">₹{(product.price - (product.price * product.discountPercentage / 100)).toFixed(2)}</p>
+              <p className="text-base font-medium line-through"> ₹{product.price} </p>
               <p className="ml-2 text-base font-medium text-green-500"> {product.discountPercentage}% off</p>
             </>
 
           ) : (
-            <p className="mr-2 text-lg font-semibold">₹{product.price}</p>
+            <p className="mr-2 text-md font-semibold">₹{product.price}</p>
           )}
         </div>
       </div>
