@@ -143,7 +143,7 @@ const invoice = () => {
                     <h2 className="text-lg font-bold ">Shipping Details</h2>
                     <p>{order.shippingDetails.name}</p>
                     <p>{`${order.shippingDetails.address}, ${order.shippingDetails.city}`}</p>
-                    <p>{`${order.shippingDetails.state}, ${order.shippingDetails.country ? order.shippingDetails.country : ""}, ${order.shippingDetails.pincode}`}</p>
+                    <p>{`${order.shippingDetails.state}${order.shippingDetails.country ? ","+ order.shippingDetails.country : ""}, ${order.shippingDetails.pincode}`}</p>
                     {/* <p>Email: {customerInfo.email}</p> */}
                     <p>Phone: {order.shippingDetails.mobile}</p>
                   </div>
@@ -174,10 +174,10 @@ const invoice = () => {
                     <p className="text-sm text-gray-500">{product.brand}</p>
                     <p className="text-sm text-gray-500">{product.description}</p> */}
                           </td>
-                          <td className="border border-gray-300 p-2">₹{item.product.price}</td>
-                          <td className="border border-gray-300 p-2">- ₹{item.product.price - item.purchasePrice}</td>
+                          <td className="border border-gray-300 p-2">₹{item.product.price.toFixed(2)}</td>
+                          <td className="border border-gray-300 p-2">- ₹{(item.product.price - item.purchasePrice).toFixed(2)}</td>
                           <td className="border border-gray-300 p-2">{item.quantity}</td>
-                          <td className="border border-gray-300 p-2">₹{item.purchasePrice}</td>
+                          <td className="border border-gray-300 p-2">₹{item.purchasePrice.toFixed(2)}</td>
                         </tr>
                       ))}
                       {/* Total Amount Row */}
