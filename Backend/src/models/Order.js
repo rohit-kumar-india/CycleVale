@@ -38,8 +38,7 @@ const paymentDetailsSchema = new mongoose.Schema({
         required: true
     },
     transactionId: {
-        type: String,
-        required: true
+        type: String
     }
 }, { _id: false });
 

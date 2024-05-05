@@ -118,7 +118,6 @@ const CheckoutPage = () => {
     const confirmOrder = async () => {
         setDynamicText('Processing Payments...');
         setProcessing(true);
-        console.log(selectedAddress, paymentDetails);
         try {
             if (paymentDetails.selectedOption === 'card' || paymentDetails.selectedOption === 'newCard') {
 
@@ -133,12 +132,15 @@ const CheckoutPage = () => {
 
                 //setPaymentDetails(prevPaymentDetails => ({ ...prevPaymentDetails, paymentMethod: paymentDetails.selectedOption, paymentStatus: 'Complete', transactionId: paymentResponse.data.paymentIntent.id }));
                 //console.log(paymentDetails);
-                var paymentId = paymentResponse.data.paymentIntent.id
+                var paymentId = paymentResponse.data.paymentIntent.id;
+                var paymentStatus = "Complete";
                 // const { paymentMethod, error } = await stripe.createPaymentMethod({
                 //     type: 'card',
                 //     card: paymentDetails.selectedCard
                 //   });
                 //   console.log(paymentMethod)
+            } else if (paymentDetails.selectedOption === 'COD') {
+                var paymentStatus = "Pending";
             }
 
             setDynamicText('Payment Done... Placing your order...');
@@ -148,8 +150,8 @@ const CheckoutPage = () => {
                 shippingDetails: selectedAddress,
                 paymentDetails: {
                     paymentMethod: paymentDetails.selectedOption,
-                    paymentStatus: 'Complete',
-                    transactionId: paymentId
+                    paymentStatus,
+                    transactionId: paymentDetails.selectedOption === 'COD' ? null : paymentId
                 },
                 items: cartItems,
                 totalAmount: (totalPrice - discountPrice + 10).toFixed(2)
