@@ -3,11 +3,6 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import OrderSummary from '@/Components/OrderSummary';
 import { toast } from 'react-toastify';
-// Import your cart context or state management hook
-// import { CartContext } from '../path/to/your/context';
-
-
-
 
 const cart = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -111,22 +106,6 @@ const cart = () => {
   const currentDate = new Date();
   const discountPrice = cartItems.reduce((totalD, item) =>
     totalD + ((item.productDetails.discountPercentage > 0 && currentDate >= new Date(item.productDetails.discountStart) && currentDate <= new Date(item.productDetails.discountEnd)) ? item.productDetails.price * item.productDetails.discountPercentage / 100 * item.quantity : 0), 0);
-
-  //setOrderSummary({totalPrice,discountPrice, itemNo: cartItems.length})
-
-  // useEffect(() => {
-  //   const handleScroll = () => {
-  //     // Perform actions on scroll
-  //   setHeight(window.scrollY)
-
-
-  //   };
-  //   window.addEventListener('scroll', handleScroll);
-  //   return () => {
-  //     window.removeEventListener('scroll', handleScroll);
-  //   };
-  // }, []);
-
 
   return (
     <div className="mt-[60px] container max-w-7xl mx-auto">
