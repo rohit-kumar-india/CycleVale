@@ -4,31 +4,32 @@ import axios from "axios";
 
 // components/AddressSelection.js
 const AddressSelection = ({ onSelect }) => {
-    const userId = "65db29ba433a6266a8d13f40";
     const [addresses, setAddresses] = useState([]);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedAddressId, setSelectedAddressId] = useState('');
+    const [processing, setProcessing] = useState(false); // State to manage processing status
+    const [dynamicText, setDynamicText] = useState('');
 
-    useEffect(() => {
-        let id = localStorage.getItem('userId');
-        console.log(id);
-        // Fetch addresses from API
-        async function fetchAddresses(id) {
-            setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
+    // Fetch addresses from API
+    const fetchAddresses = async (id) => {
         try {
+            setDynamicText('Fetching Addresses...');
+            setProcessing(true);
             // Fetch the user's address
             const addressResponse = await axios.get(`http://localhost:5000/api/users/address/${id}`);
             const addresss = addressResponse.data;
-            setAddresses(addresss); // Update the state once after processing all items
+            setAddresses(addresss);
 
         } catch (error) {
             console.error('Failed to fetch address or product details', error);
         } finally {
-            setIsLoading(false); // Update loading state
+            setProcessing(false);
         }
-        }
+    }
 
-        fetchAddresses(id);
+    useEffect(() => {
+        let userId = localStorage.getItem('userId');
+        fetchAddresses(userId);
     }, []);
 
     if (isLoading) {
@@ -51,56 +52,51 @@ const AddressSelection = ({ onSelect }) => {
             <form className="space-y-4">
                 {addresses.length === 0 ? (
                     <>
-                    <div className="m-6">No Address Found.</div>
-                    <Link href="/profile/addresses" legacyBehavior >
-                        <a className="flex mt-4 w-fit bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded disabled:opacity-50 cursor-pointer">Add Address to proceed</a>
-                    </Link>
+                        <div className="m-6">No Address Found.</div>
+                        <Link href="/profile/addresses" legacyBehavior >
+                            <a className="flex mt-4 w-fit bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded disabled:opacity-50 cursor-pointer">Add Address to proceed</a>
+                        </Link>
                     </>
-                ):(
-                <>
-                {addresses.map((address) => (
-                    <div key={address._id} className="flex items-center space-x-4 border p-4 hover:bg-gray-200 cursor-pointer">
-                        <input
-                            type="radio"
-                            id={address._id}
-                            name="address"
-                            value={address._id}
-                            checked={selectedAddressId === address._id}
-                            onChange={handleSelectionChange}
-                            className="form-radio h-5 w-5 text-blue-600 cursor-pointer"
-                        />
-                        <label htmlFor={address._id} className="flex-1 min-w-0 cursor-pointer">
-                            <p className="text-sm font-medium text-gray-900 truncate">{address.name}, {address.mobile}</p>
-                            <p className="text-sm text-gray-500 truncate">{address.address}, {address.landmark}, {address.city}, {address.state} {address.pincode}</p>
-                        </label>
-                    </div>
-                ))}
+                ) : (
+                    <>
+                        {addresses.map((address) => (
+                            <div key={address._id} className="flex items-center space-x-4 border p-4 hover:bg-gray-200 cursor-pointer">
+                                <input
+                                    type="radio"
+                                    id={address._id}
+                                    name="address"
+                                    value={address._id}
+                                    checked={selectedAddressId === address._id}
+                                    onChange={handleSelectionChange}
+                                    className="form-radio h-5 w-5 text-blue-600 cursor-pointer"
+                                />
+                                <label htmlFor={address._id} className="flex-1 min-w-0 cursor-pointer">
+                                    <p className="text-sm font-medium text-gray-900 truncate">{address.name}, {address.mobile}</p>
+                                    <p className="text-sm text-gray-500 truncate">{address.address}, {address.landmark}, {address.city}, {address.state} {address.pincode}</p>
+                                </label>
+                            </div>
+                        ))}
 
-                <button 
-                    type="button"
-                    onClick={handleProceed}
-                    className="mt-4 w-fit bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded disabled:opacity-50 cursor-pointer"
-                    disabled={!selectedAddressId}
-                >
-                    Proceed
-                </button>
-                </>
+                        <button
+                            type="button"
+                            onClick={handleProceed}
+                            className="mt-4 w-fit bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-8 rounded disabled:opacity-50 cursor-pointer"
+                            disabled={!selectedAddressId}
+                        >
+                            Proceed
+                        </button>
+                    </>
                 )}
             </form>
+            {/* Processing popup */}
+            {processing && (
+                <div className="fixed top-32 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+                    <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+                    <div className="text-white text-lg ml-4">{dynamicText}</div>
+                </div>
+            )}
         </div>
-        // <div className="m-10">
-        //     <h2 className="text-xl font-semibold mb-4">Choose a Delivery Address</h2>
-        //     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        //         {addresses.map((address) => (
-        //             <div key={address._id} className="p-4 border rounded hover:border-blue-500 cursor-pointer" onClick={() => onSelect(address)}>
-        //                 <p>{address.name}, {address.mobile}</p>
-        //                 <p>{address.address}, {address.landmark}, {address.city}, {address.state} {address.pincode}</p>
-        //             </div>
-        //         ))}
-        //     </div>
-        // </div>
     );
 };
-
 
 export default AddressSelection;
