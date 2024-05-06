@@ -14,7 +14,11 @@ exports.getProductbyId = async (req, res, next) => {
 
 exports.getAllProduct = async (req, res, next) => {
     try{
-        const products = await Product.find();
+        const { limit, page } = req.query;
+        const limitValue = parseInt(limit, 10) || 10;
+        const pageValue = parseInt(page, 10) || 1;
+        const skip = (pageValue - 1) * limitValue;
+        const products = await Product.find().skip(skip).limit(limitValue);
         if(!products)
             return res.status(404).send({ message: "No Products Found."});
         res.status(200).send({products});

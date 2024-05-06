@@ -3,6 +3,7 @@ import Link from 'next/link';
 import axios from 'axios';
 import ProductCard from '@/Components/ProductCard';
 import { toast } from 'react-toastify';
+import { ArrowLeftIcon, ArrowRightIcon } from '@heroicons/react/outline';
 
 const Products = () => {
   const [userId, setUserId] = useState(null);
@@ -10,6 +11,8 @@ const Products = () => {
   const [wishlistItems, setWishlistItems] = useState([]);
   const [processing, setProcessing] = useState(false); // State to manage processing status
   const [dynamicText, setDynamicText] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [isNoMore, setIsNoMore] = useState(false)
 
   const toastOptions = {
     position: "top-right",
@@ -23,12 +26,16 @@ const Products = () => {
   }
 
   // Function for fetching all product
-  const fetchProducts = async () => {
+  const fetchProducts = async (page) => {
     try {
       setDynamicText('Fetching Products...');
       setProcessing(true);
-      const response = await axios.get('http://localhost:5000/api/products');
-      return response.data.products;
+      const response = await axios.get(`http://localhost:5000/api/products?limit=10&page=${page}`);
+      const data =  response.data.products;
+      if(data.length<10 || data.length===0){
+        setIsNoMore(true);
+      }
+      setProducts(data)
     } catch (error) {
       console.error('Error fetching products:', error);
     } finally {
@@ -64,7 +71,7 @@ const Products = () => {
   useEffect(() => {
     let userId = localStorage.getItem('userId');
     fetchWishlistDetails(userId);
-    fetchProducts().then(setProducts);
+    // fetchProducts().then(setProducts);
     //setUserId(userId);
   }, []);
 
@@ -125,6 +132,21 @@ const Products = () => {
       setFilters({ ...filters, [category]: !filters[category] });
     }
   };
+
+  const nextPage = () => {
+    setCurrentPage(currentPage + 1);
+  };
+
+  const prevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  useEffect(() => {
+    fetchProducts(currentPage);
+
+  }, [currentPage]);
 
   return (
     <>
@@ -223,6 +245,25 @@ const Products = () => {
                 <ProductCard key={product._id} Product={{ ...product, wishlisted: isWishlisted }} />
               );
             })}
+
+             {/* navigation buttons */}
+             <div className='mt-10 flex gap-6'>
+                <button
+                  onClick={() => prevPage()}
+                  disabled={currentPage === 1}
+                  className={`flex justify-center items-center gap-2 hover:bg-deep-purple rounded-full px-3 text-dark-cyan hover:text-white transition-all duration-700 ${currentPage === 1 ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                > <ArrowLeftIcon className="w-6 " />
+                  prev
+                </button>
+                <span className='border rounded-full border-2 border-deep-purple flex justify-center items-center w-7 h-7'>{currentPage}</span>
+                <button
+                  disabled={isNoMore === true}
+                  onClick={() => nextPage()}
+                  className={`flex justify-center items-center gap-2 hover:bg-deep-purple rounded-full px-3 text-dark-cyan hover:text-white transition-all duration-700 ${isNoMore === true ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                  >next
+                  <ArrowRightIcon className="w-6 "/>
+                </button>
+              </div>
           </div>
           {/* Processing popup */}
           {processing && (
