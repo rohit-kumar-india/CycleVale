@@ -18,7 +18,7 @@ exports.getOrderHistory = async (req, res) => {
     try {
         const userId = req.params.userId;
         // Find all orders for the given user ID
-        const orders = await Order.find({ userId }).populate('items.product');
+        const orders = await Order.find({ userId }).populate('items.product').sort({ createdAt: -1 });
         res.status(200).json(orders );
     } catch (error) {
         console.error('Error retrieving order history:', error);
