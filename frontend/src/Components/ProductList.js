@@ -8,7 +8,7 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/products');
+        const response = await axios.get('http://localhost:5000/api/products?limit=9&page=1');
           setProducts(response.data.products);
       } catch (error) {
         console.error('Error fetching products:', error);
