@@ -25,24 +25,6 @@ const Products = () => {
     theme: "light",
   }
 
-  // Function for fetching all product
-  const fetchProducts = async (page) => {
-    try {
-      setDynamicText('Fetching Products...');
-      setProcessing(true);
-      const response = await axios.get(`http://localhost:5000/api/products?limit=10&page=${page}`);
-      const data =  response.data.products;
-      if(data.length<10 || data.length===0){
-        setIsNoMore(true);
-      }
-      setProducts(data)
-    } catch (error) {
-      console.error('Error fetching products:', error);
-    } finally {
-      setProcessing(false);
-    }
-  }
-
   const fetchWishlistDetails = async (id) => {
     try {
       setDynamicText('Fetching Wishlist Details...');
@@ -81,7 +63,15 @@ const Products = () => {
       '4 Star': false,
       '3 Star': false,
       '2 Star': false,
-      '2 Star': false
+      '1 Star': false,
+      '0 Star': false
+    },
+    brands: {
+      AVON: false,
+      Herculas:false,
+      FIREFOX:false,
+      HERO:false,
+      "Urban Terrain":false
     },
     ageGroup: {
       younger: false,
@@ -120,6 +110,37 @@ const Products = () => {
     }
   });
 
+  // Function for fetching all product
+  const fetchProducts = async (page, filters) => {
+    try {
+      console.log(filters)
+      setDynamicText('Fetching Products...');
+      setProcessing(true);
+      const response = await axios.get(`http://localhost:5000/api/products`, {
+        params: {
+          limit: 10,
+          page: page,
+          filters: JSON.stringify(filters)
+        },
+        data: {
+          filters: {
+            Rohit: "a",
+          }
+        }
+      });
+      console.log(response)
+      const data = response.data;
+      if (data.length < 10 || data.length === 0) {
+        setIsNoMore(true);
+      }
+      setProducts(data)
+    } catch (error) {
+      console.error('Error fetching products:', error);
+    } finally {
+      setProcessing(false);
+    }
+  }
+
   const handleCheckboxChange = (category, value) => {
     // If category is an object (e.g., duration), handle its nested state
     if (typeof filters[category] === 'object') {
@@ -144,9 +165,9 @@ const Products = () => {
   };
 
   useEffect(() => {
-    fetchProducts(currentPage);
+    fetchProducts(currentPage, filters);
 
-  }, [currentPage]);
+  }, [currentPage, filters]);
 
   return (
     <>
@@ -165,6 +186,21 @@ const Products = () => {
                     type="checkbox"
                     checked={filters.ratings[key]}
                     onChange={() => handleCheckboxChange('ratings', key)}
+                    className="form-checkbox"
+                  />
+                  <span className="ml-2">{key}</span>
+                </label>
+              ))}
+            </div>
+
+            <div className='my-2 pl-2 hover:shadow-lg'>
+              <h2 className='font-bold text-l mb-2'>Brands</h2>
+              {Object.keys(filters.brands).map((key) => (
+                <label key={key} className="flex items-center mb-2">
+                  <input
+                    type="checkbox"
+                    checked={filters.brands[key]}
+                    onChange={() => handleCheckboxChange('brands', key)}
                     className="form-checkbox"
                   />
                   <span className="ml-2">{key}</span>
@@ -246,24 +282,24 @@ const Products = () => {
               );
             })}
 
-             {/* navigation buttons */}
-             <div className='mt-10 flex gap-6'>
-                <button
-                  onClick={() => prevPage()}
-                  disabled={currentPage === 1}
-                  className={`flex justify-center items-center gap-2 hover:bg-deep-purple rounded-full px-3 text-dark-cyan hover:text-white transition-all duration-700 ${currentPage === 1 ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                > <ArrowLeftIcon className="w-6 " />
-                  prev
-                </button>
-                <span className='border rounded-full border-2 border-deep-purple flex justify-center items-center w-7 h-7'>{currentPage}</span>
-                <button
-                  disabled={isNoMore === true}
-                  onClick={() => nextPage()}
-                  className={`flex justify-center items-center gap-2 hover:bg-deep-purple rounded-full px-3 text-dark-cyan hover:text-white transition-all duration-700 ${isNoMore === true ? 'cursor-not-allowed' : 'cursor-pointer'}`}
-                  >next
-                  <ArrowRightIcon className="w-6 "/>
-                </button>
-              </div>
+            {/* navigation buttons */}
+            <div className='mt-10 flex gap-6'>
+              <button
+                onClick={() => prevPage()}
+                disabled={currentPage === 1}
+                className={`flex justify-center items-center gap-2 hover:bg-deep-purple rounded-full px-3 text-dark-cyan hover:text-white transition-all duration-700 ${currentPage === 1 ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+              > <ArrowLeftIcon className="w-6 " />
+                prev
+              </button>
+              <span className='border rounded-full border-2 border-deep-purple flex justify-center items-center w-7 h-7'>{currentPage}</span>
+              <button
+                disabled={isNoMore === true}
+                onClick={() => nextPage()}
+                className={`flex justify-center items-center gap-2 hover:bg-deep-purple rounded-full px-3 text-dark-cyan hover:text-white transition-all duration-700 ${isNoMore === true ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+              >next
+                <ArrowRightIcon className="w-6 " />
+              </button>
+            </div>
           </div>
           {/* Processing popup */}
           {processing && (

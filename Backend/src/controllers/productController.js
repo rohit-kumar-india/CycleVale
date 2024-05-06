@@ -14,14 +14,51 @@ exports.getProductbyId = async (req, res, next) => {
 
 exports.getAllProduct = async (req, res, next) => {
     try{
-        const { limit, page } = req.query;
+        const { limit, page, filters } = req.query;
         const limitValue = parseInt(limit, 10) || 10;
         const pageValue = parseInt(page, 10) || 1;
         const skip = (pageValue - 1) * limitValue;
-        const products = await Product.find().skip(skip).limit(limitValue);
+
+        const filterObject = {};
+        if(filters){
+            const decodedFilters =JSON.parse(filters);
+            
+            
+
+            // Add filters based on the ratings
+            const selectedRatings = Object.entries(decodedFilters?.ratings)
+                .filter(([rating, selected]) => selected)
+                .map(([rating]) => rating);
+
+            if (selectedRatings.length > 0) {
+                let minRating = 5;
+                selectedRatings.forEach(rating => {
+                    let min = parseInt(rating.split(' ')[0], 10);
+                    if (minRating > min) {
+                        minRating = min
+                    }
+                });
+                filterObject['rating'] = { $gte: minRating };
+            }
+
+            // Add filters based on the brands
+            const selectedBrands = Object.entries(decodedFilters?.brands)
+                .filter(([brand, selected]) => selected)
+                .map(([brand]) => brand);
+
+            if (selectedBrands.length > 0) {
+                filterObject['brand'] = { $in: selectedBrands };
+            }
+        }
+
+        const products = Object.keys(filterObject).length === 0
+            ? await Product.find().sort({ createdAt: -1 }).skip(skip).limit(limitValue)
+            : await Product.find(filterObject).sort({ createdAt: -1 }).skip(skip).limit(limitValue);
+
+        //const products = await Product.find().sort({ createdAt: -1 }).skip(skip).limit(limitValue);
         if(!products)
             return res.status(404).send({ message: "No Products Found."});
-        res.status(200).send({products});
+        res.status(200).send(products);
     }catch(err){
         res.status(500).send(err.message)
     }
