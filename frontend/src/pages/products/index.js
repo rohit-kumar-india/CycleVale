@@ -118,20 +118,16 @@ const Products = () => {
       setProcessing(true);
       const response = await axios.get(`http://localhost:5000/api/products`, {
         params: {
-          limit: 10,
+          limit: 12,
           page: page,
           filters: JSON.stringify(filters)
         },
-        data: {
-          filters: {
-            Rohit: "a",
-          }
-        }
       });
-      console.log(response)
       const data = response.data;
       if (data.length < 10 || data.length === 0) {
         setIsNoMore(true);
+      }else{
+        setIsNoMore(false);
       }
       setProducts(data)
     } catch (error) {
@@ -285,11 +281,11 @@ const Products = () => {
             </div>
 
             {/* navigation buttons */}
-            <div className='mt-10 flex gap-6'>
+            <div className='my-10 flex justify-center gap-6'>
               <button
                 onClick={() => prevPage()}
                 disabled={currentPage === 1}
-                className={`flex justify-center items-center gap-2 hover:bg-deep-purple rounded-full px-3 text-dark-cyan hover:text-white transition-all duration-700 ${currentPage === 1 ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                className={`flex justify-center items-center gap-2 bg-orange-300 hover:bg-orange-500 rounded-full px-3 text-gray-800 hover:text-white transition-all duration-700 ${currentPage === 1 ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               > <ArrowLeftIcon className="w-6 " />
                 prev
               </button>
@@ -297,7 +293,7 @@ const Products = () => {
               <button
                 disabled={isNoMore === true}
                 onClick={() => nextPage()}
-                className={`flex justify-center items-center gap-2 hover:bg-deep-purple rounded-full px-3 text-dark-cyan hover:text-white transition-all duration-700 ${isNoMore === true ? 'cursor-not-allowed' : 'cursor-pointer'}`}
+                className={`flex justify-center items-center gap-2 bg-orange-300 hover:bg-orange-500 rounded-full px-3 text-gray-800 hover:text-white transition-all duration-700 ${isNoMore === true ? 'cursor-not-allowed' : 'cursor-pointer'}`}
               >next
                 <ArrowRightIcon className="w-6 " />
               </button>
