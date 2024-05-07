@@ -87,7 +87,7 @@ const ProductCard = ({ Product }) => {
   };
 
   return (
-    <Link href={`/products/${product._id}`} className="transform overflow-hidden hover:shadow-lg bg-white duration-200 hover:scale-105 cursor-pointer relative">
+    <Link href={`/products/${product._id}`} className="transform overflow-hidden h-fit hover:shadow-lg bg-white duration-200 hover:scale-105 cursor-pointer relative">
       <div className="absolute right-2 top-2 z-10">
         <button onClick={handleWishlistToggle} className="p-2 bg-white rounded-full shadow-md hover:bg-gray-200 transition duration-250 ease-in-out">
           {product.wishlisted ? (
@@ -97,8 +97,11 @@ const ProductCard = ({ Product }) => {
           )}
         </button>
       </div>
-      <img src={product.imageURLs[0] ? product.imageURLs[0] : '/images/cyclefront2.jpeg'} alt="Product image" className="w-full px-5" />
-      <div className="p-4 text-black/[0.9]">
+      <img src={product.imageURLs[0] ? product.imageURLs[0] : '/images/cyclefront2.jpeg'}
+        alt="Product image"
+        className="w-full px-5 h-[250px] object-contain"
+      />
+      <div className="px-5 py-3 text-black/[0.9]">
         <h2 className="font-bold text-md text-gray-500" >{product.brand}</h2>
         <h2 className="font-semibold text-md mb-1" >{product.name.substring(0, 60)}...</h2>
         <div className="flex items-center mb-1">
