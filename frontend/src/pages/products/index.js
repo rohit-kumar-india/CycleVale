@@ -68,10 +68,10 @@ const Products = () => {
     },
     brands: {
       AVON: false,
-      Herculas:false,
-      FIREFOX:false,
-      HERO:false,
-      "Urban Terrain":false
+      Herculas: false,
+      FIREFOX: false,
+      HERO: false,
+      "Urban Terrain": false
     },
     ageGroup: {
       younger: false,
@@ -175,7 +175,7 @@ const Products = () => {
         <div className="flex flex-row gap-6 max-w-7xl border-1 p-6">
 
           {/* Left side Filters Section */}
-          <div className='flex flex-col justify-left gap-2 shadow-lg px-6 w-[50%] h-fit'>
+          <div className='flex flex-col justify-left gap-2 shadow-lg md:px-5 w-1/3 md:w-1/6 h-fit'>
 
             <div className='font-bold text-xl text-center p-4 border-b-2'>Filters</div>
             <div className='my-2 pl-2 hover:shadow-lg'>
@@ -271,16 +271,18 @@ const Products = () => {
           </div>
 
           {/* Right side Products Section */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {products.map((product) => {
-              // Check if the current product ID is in the wishlistItems array
-              const isWishlisted = wishlistItems.includes(product._id);
+          <div className='w-2/3 md:w-5/6'>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+              {products.map((product) => {
+                // Check if the current product ID is in the wishlistItems array
+                const isWishlisted = wishlistItems.includes(product._id);
 
-              return (
-                // Passed the wishlisted status as a prop to the ProductCard
-                <ProductCard key={product._id} Product={{ ...product, wishlisted: isWishlisted }} />
-              );
-            })}
+                return (
+                  // Passed the wishlisted status as a prop to the ProductCard
+                  <ProductCard key={product._id} Product={{ ...product, wishlisted: isWishlisted }} />
+                );
+              })}
+            </div>
 
             {/* navigation buttons */}
             <div className='mt-10 flex gap-6'>
@@ -291,7 +293,7 @@ const Products = () => {
               > <ArrowLeftIcon className="w-6 " />
                 prev
               </button>
-              <span className='border rounded-full border-2 border-deep-purple flex justify-center items-center w-7 h-7'>{currentPage}</span>
+              <span className='rounded-full border-2 border-deep-purple flex justify-center items-center w-7 h-7'>{currentPage}</span>
               <button
                 disabled={isNoMore === true}
                 onClick={() => nextPage()}
