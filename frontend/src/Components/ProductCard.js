@@ -100,7 +100,7 @@ const ProductCard = ({ Product }) => {
       <img src={product.imageURLs[0] ? product.imageURLs[0] : '/images/cyclefront2.jpeg'} alt="Product image" className="w-full px-5" />
       <div className="p-4 text-black/[0.9]">
         <h2 className="font-bold text-md text-gray-500" >{product.brand}</h2>
-        <h2 className="font-semibold text-md mb-1" >{product.name}</h2>
+        <h2 className="font-semibold text-md mb-1" >{product.name.substring(0, 60)}...</h2>
         <div className="flex items-center mb-1">
           <span className="ml-1 text-sm">{product.rating}</span>
           <svg className="w-5 h-5 text-yellow-500" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
