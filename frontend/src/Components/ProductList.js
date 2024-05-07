@@ -8,7 +8,7 @@ const ProductList = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/products?limit=9&page=1');
+        const response = await axios.get('http://localhost:5000/api/products?limit=8&page=1');
           setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);
@@ -19,7 +19,7 @@ const ProductList = () => {
   }, []);
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
       {products.map((product) => (
         <ProductCard key={product._id} Product={product} />
       ))}
