@@ -80,7 +80,7 @@ const Login = () => {
           </div>
           <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded-md w-full">Login</button>
           <p className="mt-4 text-center">
-            Don't have an account? <Link href="/Signup" legacyBehavior><a className="text-blue-500">Register</a></Link>
+            Don&apos;t have an account? <Link href="/Signup" legacyBehavior><a className="text-blue-500">Register</a></Link>
           </p>
         </form>
       </div>

@@ -8,7 +8,7 @@ import html2canvas from 'html2canvas';
 import jsPDF from 'jspdf';
 
 
-const invoice = () => {
+const Invoice = () => {
   const [order, setOrder] = useState(null);
   const [processing, setProcessing] = useState(false); // State to manage processing status
   const [dynamicText, setDynamicText] = useState('');
@@ -251,7 +251,7 @@ const invoice = () => {
   )
 };
 
-export default invoice;
+export default Invoice;
 
 
 // const InvoicePage = ({ }) => {

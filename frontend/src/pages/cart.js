@@ -4,7 +4,7 @@ import { useRouter } from 'next/router';
 import OrderSummary from '@/Components/OrderSummary';
 import { toast } from 'react-toastify';
 
-const cart = () => {
+const Cart = () => {
   const [cartItems, setCartItems] = useState([]);
   const [processing, setProcessing] = useState(false); // State to manage processing status
   const [dynamicText, setDynamicText] = useState('');
@@ -175,4 +175,4 @@ const cart = () => {
   );
 };
 
-export default cart
+export default Cart

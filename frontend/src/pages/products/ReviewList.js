@@ -6,7 +6,7 @@ const ReviewList = ({ reviews }) => {
   return (
     <div className="container mx-auto py-8">
       <h2 className="text-xl font-medium mb-4">Product Reviews</h2>
-      {reviews.length === 0 ? (
+      {!Array.isArray(reviews) || reviews.length === 0 ? (
         <p className="text-gray-600 px-4">No reviews available.</p>
       ) : (
         <div className="grid gap-4 px-4">

@@ -3,7 +3,7 @@ import { CardElement, useStripe, useElements } from '@stripe/react-stripe-js';
 import { useState } from 'react';
 import axios from 'axios';
 
-const stripeForm = ({ onConfirm }) => {
+const StripeForm = ({ onConfirm }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [error, setError] = useState(null);
@@ -61,4 +61,4 @@ const stripeForm = ({ onConfirm }) => {
   );
 };
 
-export default stripeForm;
+export default StripeForm;

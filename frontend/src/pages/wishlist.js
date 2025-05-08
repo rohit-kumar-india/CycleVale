@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useRouter } from 'next/router';
 import ProductCard from '@/Components/ProductCard';
 
-const wishlist = () => {
+const Wishlist = () => {
   const [userId, setUserId] = useState(null);
   const [wishlists, setWishlists] = useState([]);
   const [selectedWishlist, setSelectedWishlist] = useState(null);
@@ -151,4 +151,4 @@ const wishlist = () => {
   );
 };
 
-export default wishlist
+export default Wishlist

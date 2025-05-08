@@ -37,7 +37,7 @@ const ContactUs = () => {
 
       <div className="max-w-2xl mx-auto my-10">
         <h2 className="text-3xl font-semibold text-center mb-4">Contact Us</h2>
-        <p className="text-center mb-8">Have questions or need help? Fill out the form below, and we'll get in touch with you.</p>
+        <p className="text-center mb-8">Have questions or need help? Fill out the form below, and we&apos;ll get in touch with you.</p>
         
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>

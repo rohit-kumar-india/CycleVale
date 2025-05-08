@@ -77,7 +77,7 @@ const CheckoutPage = () => {
         setCurrentStep(3); // Move to confirm order after payment selection
     };
 
-    const processPayment = async () => {
+    const ProcessPayment = async () => {
         const stripe = useStripe();
         const elements = useElements();
         const [error, setError] = useState(null);

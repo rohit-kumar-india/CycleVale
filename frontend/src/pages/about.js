@@ -19,7 +19,7 @@ const AboutUs = () => {
           About Us
         </div>
         <div className="text-md md:text-xl">
-          Welcome to CycleVale, where cycling meets convenience and quality. We are passionate about providing cycling enthusiasts with a seamless online experience to explore and purchase top-tier bicycles and accessories. Our mission is to make this experience accessible to everyone by curating a diverse range of bikes, from road to mountain, electric to commuter, and everything in between. We prioritize customer satisfaction by offering not just products, but also expert guidance and support, ensuring that each rider finds the perfect fit for their cycling journey. Whether you're a seasoned rider or just starting out, join us in discovering the joy of cycling with CycleVale.
+          Welcome to CycleVale, where cycling meets convenience and quality. We are passionate about providing cycling enthusiasts with a seamless online experience to explore and purchase top-tier bicycles and accessories. Our mission is to make this experience accessible to everyone by curating a diverse range of bikes, from road to mountain, electric to commuter, and everything in between. We prioritize customer satisfaction by offering not just products, but also expert guidance and support, ensuring that each rider finds the perfect fit for their cycling journey. Whether you&apos;re a seasoned rider or just starting out, join us in discovering the joy of cycling with CycleVale.
 
         </div>
       </div>
@@ -48,7 +48,7 @@ const AboutUs = () => {
 
           <section>
             <h2 className="text-2xl font-semibold mb-5">Get in Touch</h2>
-            <p className="text-gray-700 mb-3">Questions, feedback, or just want to say hi? We'd love to hear from you.</p>
+            <p className="text-gray-700 mb-3">Questions, feedback, or just want to say hi? We&apos;d love to hear from you.</p>
             <p className="text-gray-700"><strong>Email:</strong> contact@cyclevale.com</p>
           </section>
         </div>

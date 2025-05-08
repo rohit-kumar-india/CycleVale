@@ -27,9 +27,9 @@ const HeroSection = () => {
       >
         
      {
-      images.map((img) => {
+      images.map((img, index) => {
         return (
-          <SwiperSlide>
+          <SwiperSlide key={index}>
           <div className='h-[90vh] w-[100%] bg-white flex justify-center'>
           <img className='mix-blend-multiply' src={img} layout='fill' objectFit="contain" alt="Men's Bicycles" priority />
           </div>
