@@ -44,7 +44,7 @@ const Login = () => {
         toast.success("Login Successfull.. Redirecting..", toastOptions)
         setTimeout(() => {
           router.push('/');
-        }, 2000);
+        }, 500);
       }
     } catch (error) {
       if (error.response && error.response.status === 401) {
