@@ -15,15 +15,16 @@ export default function App({
   const path = router.pathname;
   return (
     <>
+    <SessionProvider session={session}>
       {path !== "/Login" && path !== "/Signup" && <Navbar />}
       <Head>
         <title>CycleVale</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
       </Head>
-      <SessionProvider session={session}>
-        <Component {...pageProps} />
-      </SessionProvider>
+      <Component {...pageProps}  key={router.asPath} />
       <ToastContainer />
       {path !== "/Login" && path !== "/Signup" && <Footer />}
+      </SessionProvider>
     </>
   )
 }
