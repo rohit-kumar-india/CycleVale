@@ -21,6 +21,10 @@ const Login = () => {
     theme: "light",
   }
 
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
+
   const handleChange = (e) => {
     setCredentials({ ...credentials, [e.target.id]: e.target.value });
   };
@@ -30,7 +34,7 @@ const Login = () => {
     try {
       setDynamicText('Logging in...');
       setProcessing(true);
-      const response = await axios.post('http://localhost:5000/api/users/login', credentials);
+      const response = await axiosInstance.post('/api/users/login', credentials);
 
       localStorage.setItem('userToken', response.data.token);
       localStorage.setItem('userId', response.data.userId);

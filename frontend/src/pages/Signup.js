@@ -28,13 +28,17 @@ const Signup = () => {
     theme: "light",
   }
 
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       setDynamicText('User Onboarding...');
       setProcessing(true);
       if (password === confirmPassword) {
-        const response = await axios.post("http://localhost:5000/api/users/signup", { name, email, password });
+        const response = await axiosInstance.post("/api/users/signup", { name, email, password });
         if (response.status === 201) {
           toast.success("User Registerd Successfully.. Redirecting to Login page.", toastOptions)
           setTimeout(() => {

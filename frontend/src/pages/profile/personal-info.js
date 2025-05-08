@@ -14,6 +14,9 @@ const PersonalInfo = () => {
     dob: ''
   });
   
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
 
   const toastOptions = {
     position: "top-right",
@@ -32,7 +35,7 @@ const PersonalInfo = () => {
 
     const fetchUserData = async (id) => {
       try {
-        const response = await axios.get(`http://localhost:5000/api/users/${id}`); // Adjust URL as needed
+        const response = await axiosInstance.get(`/api/users/${id}`); // API call to fetch user data
         setUser(response.data.user);
       } catch (error) {
         console.error('Failed to fetch user data:', error);
@@ -50,10 +53,9 @@ const PersonalInfo = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.patch(`http://localhost:5000/api/users/${user._id}`, user); // Adjust URL as needed
+      await axiosInstance.patch(`/api/users/${user._id}`, user); // API call to update user data
       setEditMode(false);
       toast.success("Information updated successfully!", toastOptions)
-      //alert('Information updated successfully!');
     } catch (error) {
       console.error('Failed to update user data:', error);
       alert('Failed to update information.');

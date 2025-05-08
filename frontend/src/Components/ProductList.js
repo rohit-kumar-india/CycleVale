@@ -5,10 +5,14 @@ import ProductCard from './ProductCard';
 const ProductList = () => {
   const [products, setProducts] = useState([]);
 
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await axios.get('http://localhost:5000/api/products?limit=8&page=1');
+        const response = await axiosInstance.get('/api/products?limit=8&page=1');
           setProducts(response.data);
       } catch (error) {
         console.error('Error fetching products:', error);

@@ -12,6 +12,10 @@ const Addresses = () => {
     const [processing, setProcessing] = useState(false);
     const [dynamicText, setDynamicText] = useState('');
 
+    const axiosInstance = axios.create({
+        baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+      });
+
     const toastOptions = {
         position: "top-right",
         autoClose: 2000,
@@ -28,13 +32,13 @@ const Addresses = () => {
             setDynamicText('Fetching Addresses...');
             setProcessing(true);
             // Fetch the user's address
-            const addressResponse = await axios.get(`http://localhost:5000/api/users/address/${id}`);
+            const addressResponse = await axiosInstance.get(`/api/users/address/${id}`);
             console.log(addressResponse)
             const addresss = addressResponse.data;
             setAddresses(addresss);
             setUserId(id);
         } catch (error) {
-            console.error('Failed to fetch address or product details', error);
+            console.error('Failed to fetch address details', error);
         } finally {
             setProcessing(false);
         }
@@ -44,7 +48,7 @@ const Addresses = () => {
         try {
             setDynamicText('Deleting Address...');
             setProcessing(true);
-            const response = await axios.delete('http://localhost:5000/api/users/address/delete', { data: { userId, addressId } });
+            const response = await axiosInstance.delete('/api/users/address/delete', { data: { userId, addressId } });
             if (response.status === 200) {
                 toast.success(response.data.message, toastOptions)
             } else {
@@ -54,7 +58,7 @@ const Addresses = () => {
             setAddresses(updatedAddresses);
 
         } catch (error) {
-            console.error('Failed to delete item from cart', error);
+            console.error('Failed to delete address', error);
         } finally {
             setProcessing(false);
         }

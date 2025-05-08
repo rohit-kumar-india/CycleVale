@@ -21,7 +21,10 @@ const ProductDetails = () => {
   const router = useRouter();
   const { id } = router.query; // Get the ID from the URL
 
-  
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
+
   const toastOptions = {
     position: "top-right",
     autoClose: 2000,
@@ -38,7 +41,7 @@ const ProductDetails = () => {
     try {
       setDynamicText('Fetching Product Details...');
       setProcessing(true);
-      const response = await axios.get(`http://localhost:5000/api/products/${id}`);
+      const response = await axiosInstance.get(`/api/products/${id}`);
       return response.data.product;
     } catch (error) {
       console.error('Error fetching product:', error);
@@ -50,10 +53,10 @@ const ProductDetails = () => {
   const checkWishlisted = async (userId) => {
 
     try {
-      setDynamicText('Fetching Wishlists...');
+      setDynamicText('Fetching Product Details...');
       setProcessing(true);
       // Fetch the user's wishlist
-      const wishlistResponse = await axios.get(`http://localhost:5000/api/users/${userId}/wishlists`);
+      const wishlistResponse = await axiosInstance.get(`/api/users/${userId}/wishlists`);
       const wishlists = wishlistResponse.data;
 
       for (let wishlist of wishlists) {
@@ -75,24 +78,21 @@ const ProductDetails = () => {
     if(!userId){
       router.push('/Login');
     }else{
-      const response = await fetch('http://localhost:5000/api/carts', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          userId,
-          productId,
-          quantity,
-        }),
-      });
-    
-      if (!response.ok) {
-        throw new Error('Failed to add to cart');
+      try{
+        setDynamicText('Adding to Cart...');
+        setProcessing(true);
+        const response = await axiosInstance.post('/api/carts', { userId, productId, quantity });
+
+        if(response.status === 200){
+          toast.success("added in cart successfully", toastOptions)
+          setIsWishlisted(false);
+        }
+
+      } catch (error) {
+        console.error('Failed to add to cart', error);
+      } finally {
+        setProcessing(false);
       }
-    
-      const data = await response.json();
-      toast.success("added in cart successfully", toastOptions)
     }
   }
 
@@ -113,7 +113,9 @@ const ProductDetails = () => {
 
   const removeFromWishlist = async (productId) => {
     try {
-      const response = await axios.delete('http://localhost:5000/api/wishlists/item', { data: { userId, wishlistId, productId } });
+      setDynamicText('Removing from Wishlist...');
+      setProcessing(true);
+      const response = await axiosInstance.delete('/api/wishlists/item', { data: { userId, wishlistId, productId } });
       
       if(response.status === 200){
         toast.success("removed from Wishlist", toastOptions);
@@ -122,12 +124,16 @@ const ProductDetails = () => {
 
     } catch (error) {
       console.error('Failed to delete item from cart', error);
+    } finally {
+      setProcessing(false);
     }
   };
 
   const addToWishlist = async (productId) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/wishlists/item', { userId, wishlistId, productId });
+      setDynamicText('Adding to Wishlist...');
+      setProcessing(true);
+      const response = await axiosInstance.post('/api/wishlists/item', { userId, wishlistId, productId });
       
       if(response.status === 201){
         toast.success("added to Wishlist", toastOptions)
@@ -136,6 +142,8 @@ const ProductDetails = () => {
 
     } catch (error) {
       console.error('Failed to delete item from cart', error);
+    } finally {
+      setProcessing(false);
     }
   }
 

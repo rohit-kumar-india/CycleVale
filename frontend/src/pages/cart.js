@@ -11,6 +11,10 @@ const Cart = () => {
   const [id, setId] = useState('');
   const router = useRouter();
 
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
+
   const toastOptions = {
     position: "top-right",
     autoClose: 2000,
@@ -26,10 +30,10 @@ const Cart = () => {
     try {
       setDynamicText('Fetching Cart Items...');
       setProcessing(true);
-      const cartResponse = await axios.get(`http://localhost:5000/api/carts/${id}`);
+      const cartResponse = await axiosInstance.get(`/api/carts/${id}`);
       const cartData = cartResponse.data.cart;
       const productDetails = await Promise.all(cartData.items.map(async (item) => {
-        const productResponse = await axios.get(`http://localhost:5000/api/products/${item.product}`);
+        const productResponse = await axiosInstance.get(`/api/products/${item.product}`);
         return {
           ...item,
           productDetails: productResponse.data.product,
@@ -49,7 +53,7 @@ const Cart = () => {
     try {
       setDynamicText('Removing Item...');
       setProcessing(true);
-      const response = await axios.delete(`http://localhost:5000/api/carts/${id}/${productId}`);
+      const response = await axiosInstance.delete(`/api/carts/${id}/${productId}`);
 
       if (response.status === 200) {
         const updatedCartItems = cartItems.filter(item => item.product !== productId);
@@ -73,7 +77,7 @@ const Cart = () => {
     try {
       setDynamicText('Updating Item Quantity...');
       setProcessing(true);
-      await axios.patch(`http://localhost:5000/api/carts/${id}/${productId}`, { quantity: newQuantity });
+      await axiosInstance.patch(`/api/carts/${id}/${productId}`, { quantity: newQuantity });
 
       // Update quantity in the state/UI
       const updatedCartItems = cartItems.map(item => {

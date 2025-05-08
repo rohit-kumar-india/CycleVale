@@ -17,11 +17,15 @@ const Invoice = () => {
   console.log(orderId)
   //const orderId="662a1bd94ddf5ee87447b191";
 
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
+
   const fetchOrderDetails = async (id) => {
     try {
       setDynamicText('Generating Invoice...');
       setProcessing(true);
-      const response = await axios.get(`http://localhost:5000/api/orders/${id}`);
+      const response = await axiosInstance.get(`/api/orders/${id}`);
       setOrder(response.data);
     } catch (error) {
       console.error('Error fetching order details:', error);

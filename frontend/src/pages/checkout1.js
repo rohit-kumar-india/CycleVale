@@ -21,14 +21,18 @@ const CheckoutPage = () => {
     const [processing, setProcessing] = useState(false); // State to manage processing status
     const [dynamicText, setDynamicText] = useState('');
 
+    const axiosInstance = axios.create({
+        baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+      });
+
     const fetchCartDetails = async (id) => {
         try {
             setDynamicText('Loading cart Items...');
             setProcessing(true);
-            const cartResponse = await axios.get(`http://localhost:5000/api/carts/${id}`);
+            const cartResponse = await axiosInstance.get(`/api/carts/${id}`);
             const cartData = cartResponse.data.cart;
             const productDetails = await Promise.all(cartData.items.map(async (item) => {
-                const productResponse = await axios.get(`http://localhost:5000/api/products/${item.product}`);
+                const productResponse = await axiosInstance.get(`/api/products/${item.product}`);
                 return {
                     ...item,
                     productDetails: productResponse.data.product,
@@ -103,7 +107,7 @@ const CheckoutPage = () => {
             } else {
                 // Send paymentMethod.id to your server
                 try {
-                    const response = await axios.post('/api/payment', {
+                    const response = await axiosInstance.post('/api/payment', {
                         paymentMethodId: paymentMethod.id,
                     });
                     onSuccess(response.data);
@@ -122,7 +126,7 @@ const CheckoutPage = () => {
             if (paymentDetails.selectedOption === 'card' || paymentDetails.selectedOption === 'newCard') {
 
 
-                const paymentResponse = await axios.post('http://localhost:5000/api/payments', {
+                const paymentResponse = await axiosInstance.post('/api/payments', {
                     paymentType: paymentDetails.selectedOption,
                     paymentCard: paymentDetails.selectedCard,
                     totalAmount: (totalPrice - discountPrice + 10).toFixed(2)
@@ -151,7 +155,7 @@ const CheckoutPage = () => {
 
             setDynamicText('Payment Done... Placing your order...');
 
-            const orderResponse = await axios.post('http://localhost:5000/api/orders/place-order', {
+            const orderResponse = await axiosInstance.post('/api/orders/place-order', {
                 userId,
                 shippingDetails: selectedAddress,
                 paymentDetails: {

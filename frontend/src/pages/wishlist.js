@@ -11,6 +11,10 @@ const Wishlist = () => {
   const [dynamicText, setDynamicText] = useState('');
   const router = useRouter();
 
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
+
   const fetchWishlistDetails = async (id) => {
     //setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
 
@@ -18,13 +22,13 @@ const Wishlist = () => {
       setDynamicText('Fetching Wishlists...');
       setProcessing(true);
       // Fetch the user's wishlist
-      const wishlistResponse = await axios.get(`http://localhost:5000/api/users/${id}/wishlists`);
+      const wishlistResponse = await axiosInstance.get(`/api/users/${id}/wishlists`);
       const wishlists = wishlistResponse.data;
 
       // Map over each wishlist to fetch details for all products in each list
       const detailedWishlists = await Promise.all(wishlists.map(async (wishlist) => {
         const detailedItems = await Promise.all(wishlist.items.map(async (item) => {
-          const productResponse = await axios.get(`http://localhost:5000/api/products/${item.product}`);
+          const productResponse = await axiosInstance.get(`/api/products/${item.product}`);
           return {
             ...item,
             productDetails: {
@@ -66,7 +70,7 @@ const Wishlist = () => {
       const newName = prompt('Wishlist name:');
       if (newName) {
 
-        let response = await axios.post('http://localhost:5000/api/users/wishlist', { userId, wishlistName: newName });
+        let response = await axiosInstance.post('/api/users/wishlist', { userId, wishlistName: newName });
         console.log(response);
 
         setWishlists(response.data.wishlists);

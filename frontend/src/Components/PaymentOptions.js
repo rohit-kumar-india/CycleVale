@@ -30,6 +30,10 @@ const PaymentOptions = ({ onSelect }) => {
     const [newUPI, setNewUPI] = useState('');
     const [paymentDetails, setPaymentDetails] = useState({});
 
+    const axiosInstance = axios.create({
+        baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+      });
+
     const handleSelectOption = (option) => {
         setSelectedOption(option);
         setShowUPIOptions(true);
@@ -53,7 +57,7 @@ const PaymentOptions = ({ onSelect }) => {
             //setIsLoading(true); // Assuming you have an isLoading state to manage UI loading feedback
             try {
                 // Fetch the user's address
-                const response = await axios.get(`http://localhost:5000/api/users/${id}/paymentDetails`);
+                const response = await axiosInstance.get(`/api/users/${id}/paymentDetails`);
                 setPaymentDetails(response.data.data); // Update the state once after processing all items
 
             } catch (error) {

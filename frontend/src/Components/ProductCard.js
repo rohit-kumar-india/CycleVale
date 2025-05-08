@@ -12,10 +12,16 @@ const ProductCard = ({ Product }) => {
   const [userId, setUserId] = useState(null);
   const [product, setProduct] = useState(Product);
   const router = useRouter();
+  const [processing, setProcessing] = useState(false);
+  const [dynamicText, setDynamicText] = useState('');
   const [wishlistItems, setWishlistItems] = useState(['66123921333320dfc5c3c8e0',]);
   const currentDate = new Date();
   const isDiscountActive = product.discountPercentage > 0 && currentDate >= new Date(product.discountStart) && currentDate <= new Date(product.discountEnd);
   const discountedPrice = isDiscountActive ? (product.price - (product.price * product.discountPercentage / 100)).toFixed(2) : product.price;
+
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
 
   const toastOptions = {
     position: "top-right",
@@ -35,7 +41,9 @@ const ProductCard = ({ Product }) => {
 
   const removeFromWishlist = async (productId) => {
     try {
-      const response = await axios.delete('http://localhost:5000/api/wishlists/item', { data: { userId, wishlistId, productId } });
+      setDynamicText('Removing from Wishlist...');
+      setProcessing(true);
+      const response = await axiosInstance.delete('/api/wishlists/item', { data: { userId, wishlistId, productId } });
       console.log(response);
       toast.success("removed from Wishlist", toastOptions)
       // const updatedWishlistItems = wishlistItems.filter(item => item !== productId);
@@ -46,13 +54,16 @@ const ProductCard = ({ Product }) => {
       //fetchCartDetails(id);
     } catch (error) {
       console.error('Failed to delete item from cart', error);
+    } finally {
+      setProcessing(false);
     }
   };
 
   const addToWishlist = async (productId) => {
     try {
-      const response = await axios.post('http://localhost:5000/api/wishlists/item', { userId, wishlistId, productId });
-      console.log(response);
+      setDynamicText('Adding to Wishlist...');
+      setProcessing(true);
+      const response = await axiosInstance.post('/api/wishlists/item', { userId, wishlistId, productId });
       toast.success("added to Wishlist", toastOptions)
       setProduct({ ...product, wishlisted: true });
       // const updatedCartItems = cartItems.filter(item => item.product !== productId);
@@ -62,6 +73,8 @@ const ProductCard = ({ Product }) => {
       //fetchCartDetails(id);
     } catch (error) {
       console.error('Failed to delete item from cart', error);
+    } finally {
+      setProcessing(false);
     }
   }
 
@@ -87,6 +100,7 @@ const ProductCard = ({ Product }) => {
   };
 
   return (
+    <>
     <Link href={`/products/${product._id}`} className="transform overflow-hidden h-fit hover:shadow-lg bg-white duration-200 hover:scale-105 cursor-pointer relative">
       <div className="absolute right-2 top-2 z-10">
         <button onClick={handleWishlistToggle} className="p-2 bg-white rounded-full shadow-md hover:bg-gray-200 transition duration-250 ease-in-out">
@@ -124,7 +138,17 @@ const ProductCard = ({ Product }) => {
           )}
         </div>
       </div>
+
+      
     </Link>
+    {/* Processing popup */}
+    {processing && (
+            <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-900 bg-opacity-50 z-50">
+              <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-white"></div>
+              <div className="text-white text-lg ml-4">{dynamicText}</div>
+            </div>
+          )}
+    </>
   )
 }
 

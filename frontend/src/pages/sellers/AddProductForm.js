@@ -24,6 +24,9 @@ const AddProductForm = () => {
   const [productPhotos, setProductPhotos] = useState([]);
   const [productData, setProductData] = useState(emptyProductForm);
 
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
 
   const toastOptions = {
     position: "top-right",
@@ -62,7 +65,7 @@ const AddProductForm = () => {
     });
 
     try {
-      const response = await axios.post('http://localhost:5000/api/images/upload-image', formData, {
+      const response = await axiosInstance.post('/api/images/upload-image', formData, {
         headers: { 'Content-Type': 'multipart/form-data' }
       });
       if (response.status === 200) {
@@ -89,7 +92,7 @@ const AddProductForm = () => {
       setDynamicText('Adding Product...');
 
       if (uploadedImages) {
-        const response = await axios.post("http://localhost:5000/api/products", {...productData, imageURLs: uploadedImages });
+        const response = await axiosInstance.post("/api/products", {...productData, imageURLs: uploadedImages });
         if (response.status === 201) {
           toast.success(response.data.message, toastOptions);
           resetProductForm();

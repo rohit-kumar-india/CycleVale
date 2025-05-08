@@ -15,6 +15,10 @@ const AddressModal = ({ userId, address, closeModal }) => {
         pincode: ''
     });
 
+    const axiosInstance = axios.create({
+        baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+      });
+
     const toastOptions = {
         position: "top-right",
         autoClose: 2000,
@@ -81,7 +85,7 @@ const AddressModal = ({ userId, address, closeModal }) => {
 
     const fetchCityAndState = async (zip) => {
         try {
-            const response = await axios.get(`https://api.example.com/zipcode/${zip}`);
+            const response = await axiosInstance.get(`/zipcode/${zip}`);
             if (response.data) {
                 setFormData(prev => ({
                     ...prev,
@@ -98,14 +102,14 @@ const AddressModal = ({ userId, address, closeModal }) => {
         e.preventDefault();
         try {
             if (address) {
-                const response = await axios.put(`http://localhost:5000/api/users/address/${address._id}`,{userId, updatedAddress: formData});
+                const response = await axiosInstance.put(`/api/users/address/${address._id}`,{userId, updatedAddress: formData});
                 if(response.status===200){
                     toast.success(response.data.message, toastOptions)
                 }else{
                     toast.error(response.data.message, toastOptions)
                 }
             } else {
-                const response = await axios.post('http://localhost:5000/api/users/address',{userId,newAddress: formData});
+                const response = await axiosInstance.post('/api/users/address',{userId,newAddress: formData});
                 if(response.status===200){
                     toast.success(response.data.message, toastOptions)
                 }else{
@@ -114,7 +118,7 @@ const AddressModal = ({ userId, address, closeModal }) => {
             }
             closeModal();
         } catch (error) {
-            console.error('Failed to save address:', error);
+            console.error('Failed to save address.', error);
         }
     };
 

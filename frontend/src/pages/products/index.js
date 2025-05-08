@@ -12,7 +12,11 @@ const Products = () => {
   const [processing, setProcessing] = useState(false); // State to manage processing status
   const [dynamicText, setDynamicText] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
-  const [isNoMore, setIsNoMore] = useState(false)
+  const [isNoMore, setIsNoMore] = useState(false);
+
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
 
   const toastOptions = {
     position: "top-right",
@@ -30,7 +34,7 @@ const Products = () => {
       setDynamicText('Fetching Wishlist Details...');
       setProcessing(true);
       // Fetch the user's wishlist
-      const wishlistResponse = await axios.get(`http://localhost:5000/api/users/${id}/wishlists`);
+      const wishlistResponse = await axiosInstance.get(`/api/users/${id}/wishlists`);
       const wishlists = wishlistResponse.data;
 
       let newWishlistItems = [...wishlistItems]; // Start with a copy of the current wishlistItems
@@ -116,7 +120,7 @@ const Products = () => {
       console.log(filters)
       setDynamicText('Fetching Products...');
       setProcessing(true);
-      const response = await axios.get(`http://localhost:5000/api/products`, {
+      const response = await axiosInstance.get(`/api/products`, {
         params: {
           limit: 12,
           page: page,

@@ -9,13 +9,17 @@ const AddressSelection = ({ onSelect }) => {
     const [processing, setProcessing] = useState(false); // State to manage processing status
     const [dynamicText, setDynamicText] = useState('');
 
+    const axiosInstance = axios.create({
+        baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+      });
+
     // Fetch addresses from API
     const fetchAddresses = async (id) => {
         try {
             setDynamicText('Fetching Addresses...');
             setProcessing(true);
             // Fetch the user's address
-            const addressResponse = await axios.get(`http://localhost:5000/api/users/address/${id}`);
+            const addressResponse = await axiosInstance.get(`/api/users/address/${id}`);
             const addresss = addressResponse.data;
             setAddresses(addresss);
 

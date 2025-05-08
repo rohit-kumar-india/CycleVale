@@ -10,6 +10,10 @@ const Orders = () => {
   const [processing, setProcessing] = useState(false); // State to manage processing status
   const [dynamicText, setDynamicText] = useState('');
 
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
+
   useEffect(() => {
     let id = localStorage.getItem('userId');
     fetchOrders(id);
@@ -19,7 +23,7 @@ const Orders = () => {
     try {
       setDynamicText('Fetching Your Orders...');
       setProcessing(true);
-      const orderResponse = await axios.get(`http://localhost:5000/api/orders/order-history/${userId}`);
+      const orderResponse = await axiosInstance.get(`/api/orders/order-history/${userId}`);
       setOrders(orderResponse.data);
       const orderData = orderResponse.data;
       console.log(orderResponse.data)

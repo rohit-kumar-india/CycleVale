@@ -13,6 +13,10 @@ const OrderDetails = () => {
   const router = useRouter();
   const { orderId } = router.query; // Get the ID from the URL
 
+  const axiosInstance = axios.create({
+    baseURL: process.env.NEXT_PUBLIC_API_BASE_URL,
+  });
+
   useEffect(() => {
     fetchOrderDetails(orderId);
   }, []);
@@ -21,7 +25,7 @@ const OrderDetails = () => {
     try {
       setDynamicText('Loading Order Details...');
       setProcessing(true);
-      const response = await axios.get(`http://localhost:5000/api/orders/${id}`);
+      const response = await axiosInstance.get(`/api/orders/${id}`);
       setOrder(response.data);
     } catch (error) {
       console.error('Error fetching order details:', error);
